@@ -8,7 +8,7 @@ interface SectionShellProps {
 
 export function SectionShell({ eyebrow, title, description, id, children }: SectionShellProps) {
   return (
-    <section className="section-shell reveal" id={id}>
+    <section className="section-shell px-6" id={id}>
       <div className="section-heading">
         <p className="section-eyebrow">{eyebrow}</p>
         <h2>{title}</h2>
