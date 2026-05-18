@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Navbar } from "@/components/navbar";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
 
@@ -46,20 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (() => {
-                const storageKey = "theme";
-                const savedTheme = localStorage.getItem(storageKey);
-                const theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : "light";
-                document.documentElement.classList.add(theme);
-              })();
-            `,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -74,15 +62,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`${plusJakartaSans.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          storageKey="theme"
-        >
-          {children}
-          <ScrollReveal />
-        </ThemeProvider>
+        <Navbar />
+        {children}
+        <ScrollReveal />
       </body>
     </html>
   );

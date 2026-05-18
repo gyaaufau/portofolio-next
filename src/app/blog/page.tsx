@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/navbar";
 import { absoluteUrl, siteConfig, websiteSchema } from "@/data/seo";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -30,16 +29,14 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="page-shell">
-      <Navbar />
-
-      <section className="project-page-top panel">
-        <Link className="back-link" href="/">back / home</Link>
+    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
+      <section className="mt-4 p-5 rounded-xl bg-card border border-border shadow-sm">
+        <Link className="text-primary text-[0.82rem] font-semibold lowercase" href="/">back / home</Link>
       </section>
 
-      <section className="blog-index-page panel">
-        <div className="blog-index-head">
-          <p className="section-eyebrow">blog</p>
+      <section className="grid gap-6 p-5 rounded-xl bg-card border border-border shadow-sm">
+        <div className="grid gap-[0.8rem]">
+          <p className="m-0 mb-[0.75rem] text-primary text-[0.8rem] font-semibold tracking-[0.06em] uppercase">blog</p>
           <h1>Technical writing from Gialoop.</h1>
           <p>
             Articles here are written to answer practical Flutter questions with clear structure, direct takeaways,
@@ -47,15 +44,15 @@ export default function BlogPage() {
           </p>
         </div>
 
-        <article className="blog-card panel">
-          <p className="section-label">Featured Article</p>
+        <article className="p-5 rounded-xl bg-card border border-border shadow-sm">
+          <p className="text-muted-foreground text-[0.8rem] font-semibold tracking-[0.06em] uppercase mb-[0.75rem]">Featured Article</p>
           <h2>
             <Link href={article.href}>{article.title}</Link>
           </h2>
           <p>{article.description}</p>
-          <div className="blog-card-actions">
-            <Link className="button-link secondary" href={article.href}>Read article</Link>
-            <Link className="button-link secondary" href="/projects">See project archive</Link>
+          <div className="flex flex-wrap gap-3 items-center mt-4">
+            <Link className="inline-flex items-center justify-center min-h-[2.75rem] rounded-full px-5 py-[0.72rem] border text-[0.85rem] font-semibold transition-all hover:-translate-y-0.5 bg-secondary border-border text-foreground hover:border-muted hover:bg-card" href={article.href}>Read article</Link>
+            <Link className="inline-flex items-center justify-center min-h-[2.75rem] rounded-full px-5 py-[0.72rem] border text-[0.85rem] font-semibold transition-all hover:-translate-y-0.5 bg-secondary border-border text-foreground hover:border-muted hover:bg-card" href="/projects">See project archive</Link>
           </div>
         </article>
       </section>

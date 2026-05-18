@@ -7,37 +7,31 @@ interface AboutProps {
 
 export function About({ paragraphs, skills = [], tech = [], softSkills = [] }: AboutProps) {
   return (
-    <div className="about-grid bento-grid-3">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-6 w-full">
       {paragraphs.map((paragraph, index) => (
-        <p key={index} className={`about-copy bento-item reveal reveal-delay-${Math.min(index + 1, 3)}`}>
+        <p key={index} className="col-span-full bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden text-muted-foreground leading-relaxed">
           {paragraph}
         </p>
       ))}
-      <div className="about-list-section about-list-section-single bento-item reveal reveal-delay-2">
-        <div className="about-note">
-          <p className="section-label">Skills</p>
-          <ul className="about-list">
-            {skills.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        </div>
+      <div className="bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden">
+        <p className="text-muted-foreground text-[0.8rem] font-semibold tracking-[0.06em] uppercase mb-[0.75rem]">Skills</p>
+        <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          {skills.map((item, idx) => <li key={idx}>{item}</li>)}
+        </ul>
       </div>
       
-      <div className="about-list-section about-list-section-single bento-item reveal reveal-delay-3">
-        <div className="about-note">
-          <p className="section-label">Tech</p>
-          <ul className="about-list">
-            {tech.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        </div>
+      <div className="bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden">
+        <p className="text-muted-foreground text-[0.8rem] font-semibold tracking-[0.06em] uppercase mb-[0.75rem]">Tech</p>
+        <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          {tech.map((item, idx) => <li key={idx}>{item}</li>)}
+        </ul>
       </div>
       
-      <div className="about-list-section about-list-section-single bento-item reveal reveal-delay-4">
-        <div className="about-note">
-          <p className="section-label">Soft Skills</p>
-          <ul className="about-list">
-            {softSkills.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        </div>
+      <div className="bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden">
+        <p className="text-muted-foreground text-[0.8rem] font-semibold tracking-[0.06em] uppercase mb-[0.75rem]">Soft Skills</p>
+        <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+          {softSkills.map((item, idx) => <li key={idx}>{item}</li>)}
+        </ul>
       </div>
     </div>
   );

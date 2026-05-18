@@ -11,51 +11,48 @@ interface CertificatesProps {
 
 export function Certificates({ title, description, showFeaturedChip = false, certificates }: CertificatesProps) {
   return (
-    <div className="certificates-shell">
+    <div>
       {(title || description) && (
-        <div className="projects-group-head">
-          {title && <h3>{title}</h3>}
-          {description && <p>{description}</p>}
+        <div className="mb-6">
+          {title && <h3 className="text-xl font-semibold text-foreground">{title}</h3>}
+          {description && <p className="mt-2 text-muted-foreground">{description}</p>}
         </div>
       )}
 
-      <div className="certificate-list bento-grid-3" aria-label="Certificates">
-        {certificates.map((certificate, index) => {
-          const isFeatured = certificate.featured;
-          const spanClass = isFeatured ? 'bento-span-2' : '';
-          return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Certificates">
+        {certificates.map((certificate) => (
             <Link 
               key={certificate.id}
-              className={`certificate-card bento-item reveal reveal-delay-${Math.min(index + 1, 6)} ${spanClass}`} 
+              className="bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden block" 
               href={`/certificates/${certificate.id}`}
             >
-              <div className="certificate-card-top">
-                <div className="certificate-card-meta">
-                  {showFeaturedChip && isFeatured && <span className="project-featured-chip">Featured</span>}
-                  <span className="certificate-type-chip">{certificate.type}</span>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex flex-wrap gap-2">
+                  {showFeaturedChip && certificate.featured && <span className="text-xs font-medium px-2.5 py-1 rounded-full border border-border bg-[#FAFAF9] text-muted-foreground">Featured</span>}
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full border border-border bg-[#FAFAF9] text-muted-foreground">{certificate.type}</span>
                 </div>
-                <span className="certificate-issued">{certificate.issued}</span>
+                <span className="text-sm text-muted-foreground">{certificate.issued}</span>
               </div>
 
               {certificate.image ? (
-                <div className="certificate-card-preview">
+                <div className="mb-4 overflow-hidden rounded-lg aspect-[4/3]">
                   <Image
                     src={certificate.image.src}
                     alt={certificate.image.alt}
                     width={certificate.image.width}
                     height={certificate.image.height}
+                    className="object-cover w-full h-full"
                   />
                 </div>
               ) : null}
 
-              <div className="certificate-card-copy">
-                <h3>{certificate.title}</h3>
-                <p className="certificate-card-issuer">{certificate.issuer}</p>
-                <p className="certificate-card-summary">{certificate.summary}</p>
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">{certificate.title}</h3>
+                <p className="text-sm font-medium text-muted-foreground mt-1">{certificate.issuer}</p>
+                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{certificate.summary}</p>
               </div>
             </Link>
-          );
-        })}
+        ))}
       </div>
     </div>
   );

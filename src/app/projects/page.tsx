@@ -1,7 +1,7 @@
-import { Navbar } from "@/components/navbar";
 import { Projects } from "@/components/projects";
 import { portfolioProjects } from "@/data/portfolio";
 import { absoluteUrl, siteConfig, websiteSchema } from "@/data/seo";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -25,18 +25,16 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main className="page-shell">
-      <Navbar />
+    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
+      <section className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
+        <Link className="inline-flex items-center gap-1.5 text-primary text-[0.82rem] font-semibold lowercase mb-6" href="/">
+          <ChevronLeft className="w-4 h-4" /> back / home
+        </Link>
 
-      <section className="project-page-top panel">
-        <Link className="back-link" href="/#projects">back / home</Link>
-      </section>
-
-      <section className="project-archive-page panel">
-        <div className="project-archive-head">
-          <p className="section-eyebrow">all projects</p>
-          <h1>Project archive.</h1>
-          <p>Featured and regular projects are collected here. Featured items are marked directly on the card.</p>
+        <div className="mb-6">
+          <p className="m-0 mb-[0.75rem] text-primary text-[0.8rem] font-semibold tracking-[0.06em] uppercase">all projects</p>
+          <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">Project archive.</h1>
+          <p className="mt-2 text-muted-foreground">Featured and regular projects are collected here. Featured items are marked directly on the card.</p>
         </div>
 
         <Projects projects={portfolioProjects} showFeaturedChip={true} />

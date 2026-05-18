@@ -1,7 +1,7 @@
 ---
 title: Dicoding Flutter Developer Expert
 issuer: Dicoding Indonesia
-issued: 9 Mei 2026
+issued: 9 May 2026
 type: Course Completion Certificate
 featured: true
 ---

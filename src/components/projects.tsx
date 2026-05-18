@@ -20,54 +20,64 @@ const appTypeLabel = {
   "rest-api": "REST API"
 } as const;
 
+const typeChipStyles: Record<string, string> = {
+  personal: "text-primary bg-primary/10 border-primary/20",
+  work: "text-warning bg-warning/15",
+};
+
 export function Projects({ title, description, showFeaturedChip = false, projects }: ProjectsProps) {
   return (
-    <div className="projects-shell">
+    <div className="grid gap-6">
       {(title || description) && (
-        <div className="projects-group-head">
+        <div className="grid gap-[0.45rem]">
           {title && <h3>{title}</h3>}
           {description && <p>{description}</p>}
         </div>
       )}
-      <div className="project-list bento-grid" aria-label="Projects">
-        {projects.map((project, index) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Projects">
+        {projects.map((project) => {
           const isFeatured = project.featured;
-          const spanClass = isFeatured ? 'bento-span-2 bento-row-2' : '';
           return (
-            <Link
-              key={project.id}
-              className={`project-card bento-item reveal reveal-delay-${Math.min(index + 1, 6)} ${spanClass}`}
+          <Link
+            key={project.id}
+            className="block text-left bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
               href={`/projects/${project.id}`}
             >
-              <div className="project-card-meta">
-                {showFeaturedChip && isFeatured && <span className="project-featured-chip">Featured</span>}
-                <span className={`project-type-chip project-type-chip-${project.projectType}`}>
+              <div className="flex flex-wrap gap-[0.5rem] mb-4">
+                {showFeaturedChip && isFeatured && (
+                  <span className="inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-warning bg-warning/15 text-[0.72rem] font-semibold">
+                    Featured
+                  </span>
+                )}
+                <span
+                  className={`inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-[0.72rem] font-semibold ${typeChipStyles[project.projectType] || ""}`}
+                >
                   {projectTypeLabel[project.projectType]}
                 </span>
-                <span className="project-type-chip project-app-chip">
+                <span className="inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-[0.72rem] font-semibold text-success bg-success/10 border-success/20">
                   {appTypeLabel[project.appType]}
                 </span>
               </div>
-              <span className="project-period project-card-period">{project.periodShort}</span>
-              <div className="project-card-title-row">
-                <div className="project-card-brand">
+              <span className="m-0 text-primary text-[0.8rem] font-semibold tracking-[0.04em] inline-flex mb-[0.7rem]">{project.periodShort}</span>
+              <div className="flex items-center gap-[0.75rem]">
+                <div className="flex items-center gap-[0.75rem] min-w-0">
                   {project.logo ? (
                     <Image
-                      className="project-card-logo"
+                      className="w-12 h-12 object-cover p-[0.35rem] flex-shrink-0 border border-border rounded-2xl bg-muted/10"
                       src={project.logo.src}
                       alt={project.logo.alt}
                       width={project.logo.width || 48}
                       height={project.logo.height || 48}
                     />
                   ) : (
-                    <div className="project-card-logo project-card-logo-fallback" aria-hidden="true">
+                    <div className="w-12 h-12 grid place-items-center flex-shrink-0 border border-border rounded-2xl bg-muted/10 text-primary text-[1rem] font-bold" aria-hidden="true">
                       {project.title.slice(0, 1)}
                     </div>
                   )}
-                  <h3>{project.title}</h3>
+                  <h3 className="m-0 text-[1.15rem] leading-[1.2] font-semibold">{project.title}</h3>
                 </div>
               </div>
-              <p>{project.summary}</p>
+              <p className="mt-[0.85rem] m-0 line-clamp-4">{project.summary}</p>
             </Link>
           );
         })}

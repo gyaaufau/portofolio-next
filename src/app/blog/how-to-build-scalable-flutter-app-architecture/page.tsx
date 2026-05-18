@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/navbar";
 import { absoluteUrl, siteConfig, websiteSchema } from "@/data/seo";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -75,36 +74,34 @@ export const metadata: Metadata = {
 
 export default function BlogArticlePage() {
   return (
-    <main className="page-shell">
-      <Navbar />
-
-      <section className="project-page-top panel">
-        <Link className="back-link" href="/blog">back / blog</Link>
+    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
+      <section className="mt-4 p-5 rounded-xl bg-card border border-border shadow-sm">
+        <Link className="text-primary text-[0.82rem] font-semibold lowercase" href="/blog">back / blog</Link>
       </section>
 
-      <article className="blog-article panel">
-        <nav className="breadcrumb" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
+      <article className="grid gap-6 p-5 rounded-xl bg-card border border-border shadow-sm">
+        <nav className="flex flex-wrap gap-3 items-center text-muted-foreground text-[0.82rem] font-medium" aria-label="Breadcrumb">
+          <Link className="text-primary font-semibold" href="/">Home</Link>
           <span>/</span>
-          <Link href="/blog">Blog</Link>
+          <Link className="text-primary font-semibold" href="/blog">Blog</Link>
           <span>/</span>
           <span>{articleTitle}</span>
         </nav>
 
-        <header className="blog-article-head">
-          <p className="section-eyebrow">Flutter Architecture</p>
+        <header className="grid gap-[0.8rem]">
+          <p className="m-0 mb-[0.75rem] text-primary text-[0.8rem] font-semibold tracking-[0.06em] uppercase">Flutter Architecture</p>
           <h1>{articleTitle}</h1>
-          <p className="blog-article-lead">
+          <p className="text-[1.1rem] text-foreground leading-[1.7]">
             The short answer: a scalable Flutter app needs clear feature boundaries, predictable state management,
             modular dependency injection, and a delivery workflow that keeps performance and refactoring under control.
           </p>
-          <div className="blog-meta">
+          <div className="flex flex-wrap gap-3 items-center text-muted-foreground text-[0.82rem] font-medium">
             <time dateTime={publishedTime}>April 29, 2026</time>
             <span>8 min read</span>
           </div>
         </header>
 
-        <section className="answer-box panel">
+        <section className="p-5 rounded-xl bg-card border border-border shadow-sm">
           <h2>Direct answer</h2>
           <p>
             If you want a Flutter app to stay maintainable after version 1, organize it by feature, keep business rules
@@ -113,7 +110,7 @@ export default function BlogArticlePage() {
           </p>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>1. Start with feature-first modules</h2>
           <p>
             Avoid a giant app where screens, blocs, repositories, and models from unrelated features all live in the
@@ -126,20 +123,20 @@ export default function BlogArticlePage() {
           </p>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>2. Keep widgets thin and state predictable</h2>
           <p>
             Widgets should render UI and dispatch user intent. They should not own heavy orchestration logic, networking
             decisions, or data transformation pipelines. That logic belongs in state classes, use cases, or services.
           </p>
-          <ul className="detail-points">
+          <ul className="list-disc pl-5 space-y-2 text-foreground leading-relaxed">
             <li>Use one clear state owner per screen or flow.</li>
             <li>Prefer explicit loading, success, empty, and error states.</li>
             <li>Avoid hidden side effects in `build()` and large widget constructors.</li>
           </ul>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>3. Put APIs, cache, and storage behind stable interfaces</h2>
           <p>
             Repositories are valuable when they simplify the rest of the app. They should hide request formatting,
@@ -152,7 +149,7 @@ export default function BlogArticlePage() {
           </p>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>4. Standardize dependency injection and app configuration</h2>
           <p>
             Teams lose time when dependency setup is inconsistent. Use a single pattern for registering services,
@@ -164,20 +161,20 @@ export default function BlogArticlePage() {
           </p>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>5. Treat performance as part of architecture</h2>
           <p>
             Scalability is not only about folder structure. It also means the app still feels fast as features, data, and
             interactions grow. Watch rebuild scope, image sizing, network waterfalls, and expensive startup work.
           </p>
-          <ul className="detail-points">
+          <ul className="list-disc pl-5 space-y-2 text-foreground leading-relaxed">
             <li>Measure startup and navigation hotspots early.</li>
             <li>Use pagination and local caching where data volume grows.</li>
             <li>Keep image dimensions explicit and avoid layout shift.</li>
           </ul>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>6. Document the rules that future contributors must follow</h2>
           <p>
             Even strong architecture fails when the team cannot tell where new code belongs. Write short conventions for
@@ -189,11 +186,11 @@ export default function BlogArticlePage() {
           </p>
         </section>
 
-        <section className="blog-article-section">
+        <section className="grid gap-[0.9rem]">
           <h2>FAQ</h2>
-          <div className="faq-list">
+          <div className="grid gap-4">
             {articleFaqs.map((item, idx) => (
-              <article key={idx} className="panel faq-card">
+              <article key={idx} className="p-5 rounded-xl bg-card border border-border shadow-sm">
                 <h3>{item.question}</h3>
                 <p>{item.answer}</p>
               </article>
