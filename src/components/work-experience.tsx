@@ -55,7 +55,7 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="text-xs font-medium border border-border rounded-full px-3 py-1 bg-card text-muted-foreground">
+                    <span className="text-xs font-medium rounded-full px-3 py-1 bg-primary text-primary-foreground">
                       {experience.role}
                     </span>
                     <span className="text-xs font-medium border border-border rounded-full px-3 py-1 bg-card text-muted-foreground">
@@ -70,7 +70,7 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
                   <ul className="mt-4 space-y-2">
                     {experience.highlights.map((highlight, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground mt-2 shrink-0" />
                         <span>{highlight}</span>
                       </li>
                     ))}

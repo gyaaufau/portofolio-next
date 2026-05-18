@@ -21,7 +21,7 @@ const appTypeLabel = {
 } as const;
 
 const typeChipStyles: Record<string, string> = {
-  personal: "text-primary bg-primary/10 border-primary/20",
+  personal: "text-primary bg-primary/10",
   work: "text-warning bg-warning/15",
 };
 
@@ -40,45 +40,43 @@ export function Projects({ title, description, showFeaturedChip = false, project
           return (
           <Link
             key={project.id}
-            className="block text-left bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
-              href={`/projects/${project.id}`}
-            >
-              <div className="flex flex-wrap gap-[0.5rem] mb-4">
-                {showFeaturedChip && isFeatured && (
-                  <span className="inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-warning bg-warning/15 text-[0.72rem] font-semibold">
-                    Featured
-                  </span>
-                )}
-                <span
-                  className={`inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-[0.72rem] font-semibold ${typeChipStyles[project.projectType] || ""}`}
-                >
-                  {projectTypeLabel[project.projectType]}
+            className="block bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
+            href={`/projects/${project.id}`}
+          >
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              {showFeaturedChip && isFeatured && (
+                <span className="rounded-full px-2.5 py-1 text-xs font-semibold text-primary bg-primary/10">
+                  Featured
                 </span>
-                <span className="inline-flex items-center min-h-[1.8rem] border border-border rounded-full px-[0.65rem] py-[0.3rem] text-[0.72rem] font-semibold text-success bg-success/10 border-success/20">
-                  {appTypeLabel[project.appType]}
-                </span>
-              </div>
-              <span className="m-0 text-primary text-[0.8rem] font-semibold tracking-[0.04em] inline-flex mb-[0.7rem]">{project.periodShort}</span>
-              <div className="flex items-center gap-[0.75rem]">
-                <div className="flex items-center gap-[0.75rem] min-w-0">
-                  {project.logo ? (
-                    <Image
-                      className="w-12 h-12 object-cover p-[0.35rem] flex-shrink-0 border border-border rounded-2xl bg-muted/10"
-                      src={project.logo.src}
-                      alt={project.logo.alt}
-                      width={project.logo.width || 48}
-                      height={project.logo.height || 48}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 grid place-items-center flex-shrink-0 border border-border rounded-2xl bg-muted/10 text-primary text-[1rem] font-bold" aria-hidden="true">
-                      {project.title.slice(0, 1)}
-                    </div>
-                  )}
-                  <h3 className="m-0 text-[1.15rem] leading-[1.2] font-semibold">{project.title}</h3>
+              )}
+              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${typeChipStyles[project.projectType] || ""}`}>
+                {projectTypeLabel[project.projectType]}
+              </span>
+              <span className="rounded-full px-2.5 py-1 text-xs font-semibold text-success bg-success/10">
+                {appTypeLabel[project.appType]}
+              </span>
+              <span className="ml-auto text-xs text-muted-foreground">{project.periodShort}</span>
+            </div>
+
+            <div className="flex items-center gap-3 mb-3">
+              {project.logo ? (
+                <Image
+                  className="w-14 h-14 object-cover p-2 shrink-0 border border-border rounded-2xl bg-muted/10"
+                  src={project.logo.src}
+                  alt={project.logo.alt}
+                  width={project.logo.width || 56}
+                  height={project.logo.height || 56}
+                />
+              ) : (
+                <div className="w-14 h-14 grid place-items-center shrink-0 border border-border rounded-2xl bg-muted/10 text-primary font-bold text-base" aria-hidden="true">
+                  {project.title.slice(0, 1)}
                 </div>
-              </div>
-              <p className="mt-[0.85rem] m-0 line-clamp-4">{project.summary}</p>
-            </Link>
+              )}
+              <h3 className="text-lg font-semibold leading-snug">{project.title}</h3>
+            </div>
+
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{project.highlight}</p>
+          </Link>
           );
         })}
       </div>
