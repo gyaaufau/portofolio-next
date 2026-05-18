@@ -40,7 +40,7 @@ export function Projects({ title, description, showFeaturedChip = false, project
           return (
           <Link
             key={project.id}
-            className="block bg-card border border-border rounded-3xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
+            className="block bg-card border border-border rounded-2xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
             href={`/projects/${project.id}`}
           >
             <div className="flex flex-wrap items-center gap-2 mb-4">

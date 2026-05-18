@@ -22,6 +22,10 @@ const navItems: NavItem[] = [
   { label: "Contact", href: "/#contact", sectionId: "contact", icon: Mail },
 ];
 
+const mobileNavItems: NavItem[] = navItems.filter(
+  (item) => item.label !== "Contact"
+);
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
@@ -130,7 +134,7 @@ export function Navbar() {
             scrolled ? "backdrop-blur-xl shadow-md" : ""
           )}
         >
-          {navItems.map((item) => {
+          {mobileNavItems.map((item) => {
             const active = isActive(item);
             const Icon = item.icon;
             return (

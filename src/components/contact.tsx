@@ -76,16 +76,16 @@ export function Contact({ email, whatsapp, github, linkedin, playConsole, cv }: 
       {primaryAction && (
         <Link
           href={primaryAction.href}
-          className="rounded-3xl bg-primary text-primary-foreground p-6 md:row-span-2 flex flex-col justify-between transition-all hover:brightness-110 group"
+          className="rounded-2xl bg-primary text-primary-foreground p-5 md:p-6 md:row-span-2 flex flex-col justify-between transition-all hover:brightness-110 group"
         >
           <div>
-            <div className="flex items-center justify-center size-12 rounded-full bg-primary-foreground/15 mb-4">
-              <Mail className="size-6" />
+            <div className="flex items-center justify-center size-10 md:size-12 rounded-full bg-primary-foreground/15 mb-3 md:mb-4">
+              <Mail className="size-5 md:size-6" />
             </div>
-            <p className="text-2xl font-bold break-all">{primaryAction.value}</p>
-            <p className="text-sm text-primary-foreground/70 mt-2">{primaryAction.note}</p>
+            <p className="text-xl md:text-2xl font-bold break-all">{primaryAction.value}</p>
+            <p className="text-sm text-primary-foreground/70 mt-1 md:mt-2">{primaryAction.note}</p>
           </div>
-          <ExternalLink className="size-5 ml-auto mt-6 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ExternalLink className="size-5 ml-auto mt-4 md:mt-6 opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       )}
 
@@ -98,9 +98,9 @@ export function Contact({ email, whatsapp, github, linkedin, playConsole, cv }: 
             href={action.href}
             target={isExternalLink(action.href) ? "_blank" : undefined}
             rel={isExternalLink(action.href) ? "noreferrer" : undefined}
-            className="rounded-3xl bg-card border border-border p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
+            className="rounded-2xl bg-card border border-border p-4 md:p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
           >
-            <div className="flex items-center justify-center size-10 rounded-xl bg-secondary text-muted shrink-0 mt-0.5">
+            <div className="flex items-center justify-center size-9 md:size-10 rounded-lg bg-secondary text-muted shrink-0 mt-0.5">
               <Icon className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
@@ -122,9 +122,9 @@ export function Contact({ email, whatsapp, github, linkedin, playConsole, cv }: 
             href={cvAction.href}
             target="_blank"
             rel="noreferrer"
-            className="md:col-span-2 rounded-3xl bg-card border border-border p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
+            className="md:col-span-2 rounded-2xl bg-card border border-border p-4 md:p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
           >
-            <div className="flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0 mt-0.5">
+            <div className="flex items-center justify-center size-9 md:size-10 rounded-lg bg-primary/10 text-primary shrink-0 mt-0.5">
               <Icon className="size-5" />
             </div>
             <div className="min-w-0 flex-1">

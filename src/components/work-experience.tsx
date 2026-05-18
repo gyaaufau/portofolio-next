@@ -10,14 +10,14 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
   );
 
   return (
-    <div className="flex flex-col pl-6">
+    <div className="flex flex-col pl-2 md:pl-6">
       {displayExperiences.map((experience, index) => {
         const isFirst = index === 0;
         const isLast = index === displayExperiences.length - 1;
 
         return (
           <div key={experience.company}>
-            <div className="flex gap-4 md:gap-10">
+            <div className="flex gap-3 md:gap-10">
               {/* Timeline: Line + Dot */}
               <div className="flex flex-col items-center w-6 relative self-stretch">
                 {/* Line from top to dot */}
@@ -40,16 +40,14 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
 
               {/* Card */}
               <article
-                className="flex-1 p-5 md:p-6 rounded-3xl bg-card border border-border shadow-sm hover:-translate-y-0.5 hover:border-muted hover:shadow-lg transition-all mb-6"
+                className="flex-1 p-4 md:p-6 rounded-2xl bg-card border border-border shadow-sm hover:-translate-y-0.5 hover:border-muted hover:shadow-lg transition-all mb-4 md:mb-6"
               >
                 <div className="min-w-0">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="m-0 text-lg font-semibold leading-tight text-foreground">
-                        {experience.company}
-                      </h3>
-                    </div>
-                    <span className="text-sm font-medium text-primary text-right shrink-0">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-4">
+                    <h3 className="m-0 text-base md:text-lg font-semibold leading-tight text-foreground">
+                      {experience.company}
+                    </h3>
+                    <span className="text-xs md:text-sm font-medium text-primary md:text-right shrink-0">
                       {experience.period}
                     </span>
                   </div>
@@ -63,11 +61,11 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-muted-foreground leading-relaxed">
+                  <p className="mt-2 md:mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
                     {experience.summary}
                   </p>
 
-                  <ul className="mt-4 space-y-2">
+                  <ul className="mt-3 md:mt-4 space-y-1.5 md:space-y-2">
                     {experience.highlights.map((highlight, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                         <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground mt-2 shrink-0" />

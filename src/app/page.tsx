@@ -34,12 +34,12 @@ export default function Home() {
         {featuredProjects.length > 0 && (
           <Projects projects={featuredProjects} />
         )}
-        <div className="mt-6 rounded-3xl p-6 bg-card border border-border flex items-center justify-between gap-4">
+        <div className="mt-4 md:mt-6 rounded-2xl p-4 md:p-6 bg-card border border-border flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="text-lg font-semibold text-foreground">Other Projects</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Full archive of featured and regular work.</p>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">Other Projects</h3>
+            <p className="mt-0.5 md:mt-1 text-sm text-muted-foreground">Full archive of featured and regular work.</p>
           </div>
-          <Link className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/projects">
+          <Link className="inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/projects">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -77,12 +77,12 @@ export default function Home() {
         {featuredCertificates.length > 0 && (
           <Certificates certificates={featuredCertificates} />
         )}
-        <div className="mt-6 rounded-3xl p-6 bg-card border border-border flex items-center justify-between gap-4">
+        <div className="mt-4 md:mt-6 rounded-2xl p-4 md:p-6 bg-card border border-border flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="text-lg font-semibold text-foreground">All Certificates</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Full archive with pinned and regular certificates.</p>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">All Certificates</h3>
+            <p className="mt-0.5 md:mt-1 text-sm text-muted-foreground">Full archive with pinned and regular certificates.</p>
           </div>
-          <Link className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/certificates">
+          <Link className="inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/certificates">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
