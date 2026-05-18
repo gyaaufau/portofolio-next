@@ -17,7 +17,7 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
 
         return (
           <div key={experience.company}>
-            <div className="flex gap-10">
+            <div className="flex gap-4 md:gap-10">
               {/* Timeline: Line + Dot */}
               <div className="flex flex-col items-center w-6 relative self-stretch">
                 {/* Line from top to dot */}
@@ -40,7 +40,7 @@ export function WorkExperience({ experiences }: WorkExperienceProps) {
 
               {/* Card */}
               <article
-                className="flex-1 p-6 rounded-3xl bg-card border border-border shadow-sm hover:-translate-y-0.5 hover:border-muted hover:shadow-lg transition-all mb-6"
+                className="flex-1 p-5 md:p-6 rounded-3xl bg-card border border-border shadow-sm hover:-translate-y-0.5 hover:border-muted hover:shadow-lg transition-all mb-6"
               >
                 <div className="min-w-0">
                   <div className="flex items-start justify-between gap-4">
