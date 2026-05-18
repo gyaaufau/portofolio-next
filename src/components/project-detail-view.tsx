@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ProjectItem } from "@/data/portfolio";
@@ -24,7 +25,11 @@ const typeChipStyles: Record<string, string> = {
 
 export function ProjectDetailView({ project }: ProjectDetailViewProps) {
   return (
-    <article className="mt-4 p-5 rounded-xl bg-card border border-border shadow-sm">
+    <article className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
+      <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/projects">
+        <ChevronLeft className="w-3.5 h-3.5" /> back / projects
+      </Link>
+
       <div className="flex justify-between gap-5 items-start">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-[0.55rem] mt-[0.6rem] mb-[0.9rem]">

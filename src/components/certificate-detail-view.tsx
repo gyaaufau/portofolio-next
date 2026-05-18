@@ -1,4 +1,6 @@
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type { CertificateItem } from "@/data/portfolio";
 
 interface CertificateDetailViewProps {
@@ -8,6 +10,10 @@ interface CertificateDetailViewProps {
 export function CertificateDetailView({ certificate }: CertificateDetailViewProps) {
   return (
     <article className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
+      <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/certificates">
+        <ChevronLeft className="w-3.5 h-3.5" /> back / certificates
+      </Link>
+
       <div className="grid gap-3">
         <div className="flex flex-wrap items-center gap-2 mt-1 mb-3">
           <span className="inline-flex items-center h-7 border border-border rounded-full px-2.5 py-1 text-xs font-semibold text-success bg-secondary">

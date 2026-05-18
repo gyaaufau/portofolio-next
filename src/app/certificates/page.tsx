@@ -27,8 +27,8 @@ export default function CertificatesPage() {
   return (
     <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
       <section className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
-        <Link className="inline-flex items-center gap-1.5 text-primary text-[0.82rem] font-semibold lowercase mb-6" href="/">
-          <ChevronLeft className="w-4 h-4" /> back / home
+        <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/">
+          <ChevronLeft className="w-3.5 h-3.5" /> back / home
         </Link>
 
         <div className="mb-6">

@@ -71,64 +71,61 @@ export function Contact({ email, whatsapp, github, linkedin, playConsole, cv }: 
   const secondaryActions = actions.filter((a) => !a.primary);
 
   return (
-    <div className="rounded-3xl bg-card border border-border shadow-sm overflow-hidden">
-      {/* Primary: Email */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Email — teal hero block, taller on desktop */}
       {primaryAction && (
         <Link
           href={primaryAction.href}
-          target={primaryAction.href.startsWith("mailto:") ? undefined : "_blank"}
-          rel={primaryAction.href.startsWith("mailto:") ? undefined : "noreferrer"}
-          className="flex items-start gap-4 p-5 transition-colors hover:bg-secondary group"
+          className="rounded-3xl bg-primary text-primary-foreground p-6 md:row-span-2 flex flex-col justify-between transition-all hover:brightness-110 group"
         >
-          <div className="flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0 mt-0.5">
-            <Mail className="size-5" />
+          <div>
+            <div className="flex items-center justify-center size-12 rounded-full bg-primary-foreground/15 mb-4">
+              <Mail className="size-6" />
+            </div>
+            <p className="text-2xl font-bold break-all">{primaryAction.value}</p>
+            <p className="text-sm text-primary-foreground/70 mt-2">{primaryAction.note}</p>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-foreground">{primaryAction.value}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{primaryAction.note}</p>
-          </div>
-          <ExternalLink className="size-4 text-muted shrink-0 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <ExternalLink className="size-5 ml-auto mt-6 opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       )}
 
-      {/* Secondary: 2-col grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2">
-        {secondaryActions.slice(0, 4).map((action) => {
-          const Icon = iconMap[action.label] || ExternalLink;
-          return (
-            <Link
-              key={action.label}
-              href={action.href}
-              target={isExternalLink(action.href) ? "_blank" : undefined}
-              rel={isExternalLink(action.href) ? "noreferrer" : undefined}
-              className="flex items-start gap-4 p-5 transition-colors hover:bg-secondary group border-t sm:border-t border-border [&:nth-child(odd)]:sm:border-r"
-            >
-              <div className="flex items-center justify-center size-10 rounded-xl bg-secondary text-muted shrink-0 mt-0.5">
-                <Icon className="size-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-foreground">{action.label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{action.note}</p>
-              </div>
-              <ExternalLink className="size-4 text-muted shrink-0 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </Link>
-          );
-        })}
-      </div>
+      {/* Secondary items: WhatsApp, GitHub, LinkedIn, Play Store */}
+      {secondaryActions.slice(0, 4).map((action) => {
+        const Icon = iconMap[action.label] || ExternalLink;
+        return (
+          <Link
+            key={action.label}
+            href={action.href}
+            target={isExternalLink(action.href) ? "_blank" : undefined}
+            rel={isExternalLink(action.href) ? "noreferrer" : undefined}
+            className="rounded-3xl bg-card border border-border p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
+          >
+            <div className="flex items-center justify-center size-10 rounded-xl bg-secondary text-muted shrink-0 mt-0.5">
+              <Icon className="size-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-foreground">{action.label}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{action.note}</p>
+            </div>
+            <ExternalLink className="size-4 text-muted shrink-0 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+        );
+      })}
 
-      {/* CV: full width */}
+      {/* CV — full width */}
       {(() => {
         const cvAction = actions.find((a) => a.label === "CV");
         if (!cvAction) return null;
+        const Icon = iconMap[cvAction.label] || ExternalLink;
         return (
           <Link
             href={cvAction.href}
             target="_blank"
             rel="noreferrer"
-            className="flex items-start gap-4 p-5 transition-colors hover:bg-secondary group border-t border-border"
+            className="md:col-span-2 rounded-3xl bg-card border border-border p-5 flex items-start gap-4 transition-all hover:bg-secondary group"
           >
             <div className="flex items-center justify-center size-10 rounded-xl bg-primary/10 text-primary shrink-0 mt-0.5">
-              <FileText className="size-5" />
+              <Icon className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-foreground">{cvAction.value}</p>

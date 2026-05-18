@@ -1,4 +1,5 @@
 import { absoluteUrl, siteConfig, websiteSchema } from "@/data/seo";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -30,11 +31,10 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
-      <section className="mt-4 p-5 rounded-xl bg-card border border-border shadow-sm">
-        <Link className="text-primary text-[0.82rem] font-semibold lowercase" href="/">back / home</Link>
-      </section>
-
-      <section className="grid gap-6 p-5 rounded-xl bg-card border border-border shadow-sm">
+      <section className="grid gap-6 p-6 rounded-3xl bg-card border border-border shadow-sm">
+        <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit" href="/">
+          <ChevronLeft className="w-3.5 h-3.5" /> back / home
+        </Link>
         <div className="grid gap-[0.8rem]">
           <p className="m-0 mb-[0.75rem] text-primary text-[0.8rem] font-semibold tracking-[0.06em] uppercase">blog</p>
           <h1>Technical writing from Gialoop.</h1>
