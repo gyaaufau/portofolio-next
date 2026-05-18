@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <ScrollReveal />
+        <Footer />
       </body>
     </html>
   );
