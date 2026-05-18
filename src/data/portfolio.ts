@@ -359,9 +359,9 @@ const contactData = {
 
 const parsedAbout = parseFrontmatter(aboutSource);
 const aboutParagraphs = extractAboutSummary(parsedAbout.body);
-const aboutSkills = extractAboutSectionBullets(parsedAbout.body, "Skills");
-const aboutTech = extractAboutSectionBullets(parsedAbout.body, "Tech");
-const aboutSoftSkills = extractAboutSectionBullets(parsedAbout.body, "Soft Skill");
+const aboutSkills = extractAboutSectionBullets(parsedAbout.body, "Mobile Development");
+const aboutTech = extractAboutSectionBullets(parsedAbout.body, "Tools & Integration");
+const aboutSoftSkills = extractAboutSectionBullets(parsedAbout.body, "Soft Skills");
 const aboutData = {
   name: String(parsedAbout.metadata.name ?? "Argya Aulia Fauzandika"),
   role: String(parsedAbout.metadata.role ?? "Mobile Developer (Flutter)"),

@@ -7,27 +7,33 @@ openToOpportunities: true
 
 Mobile Developer with 1+ year of professional experience, building mobile applications using Flutter since 2021. Experienced in developing scalable, production-ready apps using clean architecture, with a strong focus on performance and user experience. Alumnus of Dicoding’s Flutter Expert class.
 
-## Skills
+## Mobile Development
 
-- State Management (Bloc / Cubit)
-- Clean Architecture Implementation
-- Dependency Injection (get_it)
-- REST API Integration
-- Flavor Configuration (Dev, Staging, Production)
-- AI Agent Orchestration
-- Modular App Architecture (melos)
-- Backend Integration (Firebase, Supabase, Appwrite)
-- Translating Figma Designs into Pixel-Perfect UI
-- Debugging & Performance Optimization
-- App Deployment & Publishing (Google Play Store)
+- Flutter
+- Dart
+- BLoC/Cubit
+- Clean Architecture
+- Melos
+- Dependency Injection
+- Performance
+- Security
+- Play store publishing
 
-## Tech
+## Tools & Integration
 
-- Flutter (Dart)
-- AI Agents / LLM
-- Firebase, Supabase, Appwrite
+- Firebase
+- Supabase
+- Appwrite
+- REST API
+- Git
+- Google ML Kit
+- Revenue Cat
+- CI/CD Codemagic
+- Figma
+- Postman
+- Flutter Devtool
 
-## Soft Skill
+## Soft Skills
 
 - Adaptability
 - Strong ownership and independent work
