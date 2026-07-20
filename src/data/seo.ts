@@ -34,7 +34,7 @@ export const homepageFaqs = [
   {
     question: "Is this portfolio rendered for search engines?",
     answer:
-      "Yes. The website is built with Astro and ships HTML at request time, so the main content is visible to Google and other crawlers without relying on client-side rendering."
+      "Yes. The website is built with Next.js and renders its main portfolio content on the server, so search engines can read it without relying on client-side rendering."
   }
 ] as const;
 
@@ -51,12 +51,7 @@ export const websiteSchema = {
     "@type": "Person",
     name: siteConfig.personName
   },
-  inLanguage: "en",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${siteConfig.siteUrl}/blog/`,
-    "query-input": "required name=search_term_string"
-  }
+  inLanguage: "en"
 };
 
 export const personSchema = {

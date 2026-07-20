@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gialoop portfolio
 
-## Getting Started
+A database-backed Next.js portfolio for Argya Aulia Fauzandika. The public site uses a restrained cozy-pixel visual system, while the admin area manages portfolio content and the global accent color.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router and React 19
+- TypeScript and Tailwind CSS 4
+- PostgreSQL through Prisma 7
+- Signed admin sessions with `jose`
+- Phaser 4.1 platform-fighter hero with generated pixel atlases
+- Self-hosted Geist and Press Start 2P fonts
+
+## Local setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create `.env` with:
+
+```dotenv
+DATABASE_URL="postgresql://..."
+ADMIN_PASSWORD="choose-a-strong-password"
+ADMIN_SESSION_SECRET="use-at-least-32-random-characters"
+```
+
+Generate the Prisma client, apply migrations, and seed a new database:
+
+```bash
+npx prisma generate
+npx prisma migrate deploy
+npx prisma db seed
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The public site is available at `http://localhost:3000`. The admin login is at `http://localhost:3000/admin/login`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Admin and appearance
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Admin sessions use a signed, HTTP-only cookie that expires after seven days. Protected pages and every mutating Server Action verify the session.
 
-## Learn More
+The Appearance screen offers four contrast-tested cozy accent presets and a custom hex picker. The selected accent is stored in the `SiteSettings` singleton and becomes the single accent token across light and dark modes.
 
-To learn more about Next.js, take a look at the following resources:
+## Content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Portfolio records live in PostgreSQL. Images, app screenshots, certificate artwork, the CV, and brand assets live under `public/data`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Legacy `/projects` URLs permanently redirect to `/apps`, including detail slugs.
 
-## Deploy on Vercel
+## Playable hero
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The homepage fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/FIGHTGAME_Assets/generated` so deployments do not process the source art.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Regenerate the derived atlases after changing game art:
+
+```bash
+npm run game:atlas
+```
+
+The CSS idle preview loads before Phaser, then the complete engine is imported only as the hero approaches the viewport. Desktop controls are shown below the arena; screens below 768px receive a fullscreen arena and multi-touch controls. Sound stays muted until the visitor enables it.
+
+## Verification
+
+```bash
+npm test
+npm run lint
+npm run build
+npx prisma validate
+```
+
+The production build uses local font files and does not need to download Google Fonts.

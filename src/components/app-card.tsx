@@ -1,42 +1,32 @@
+import Image from "next/image";
 import Link from "next/link";
-import { StoreBadge } from "./store-badge";
+import { ArrowUpRight } from "lucide-react";
 import type { AppItem } from "@/data/types";
 
-type AppCardProps = {
-  app: AppItem;
-};
-
-export function AppCard({ app }: AppCardProps) {
+export function AppCard({ app }: { app: AppItem }) {
+  const preview = app.screenshots[0];
   return (
-    <Link
-      href={`/apps/${app.slug}`}
-      className="group flex gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/30 transition-all duration-200 hover:shadow-sm active:scale-[0.99]"
-    >
-      <img
-        src={app.appIconSrc}
-        alt={app.appIconAlt}
-        width={64}
-        height={64}
-        className="rounded-xl size-16 shrink-0 object-cover border border-border"
-      />
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-              {app.title}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">
-              {app.tagline}
-            </p>
+    <Link href={`/apps/${app.slug}`} className="group grid overflow-hidden border-b border-border py-6 transition-colors hover:bg-primary/[0.035] md:grid-cols-[8rem_1fr_14rem] md:gap-6 md:px-4">
+      <div className="flex items-start gap-4">
+        <Image src={app.appIconSrc} alt={app.appIconAlt} width={88} height={88} className="size-20 rounded-[6px] border border-border object-cover [image-rendering:auto] md:size-24" />
+      </div>
+      <div className="mt-4 min-w-0 md:mt-0">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xl font-semibold tracking-[-0.025em] group-hover:text-primary md:text-2xl">{app.title}</h3>
+          {app.featured && <span className="badge-pixel text-primary">Featured</span>}
+        </div>
+        <p className="mt-2 max-w-[58ch] leading-6 text-muted-foreground">{app.tagline}</p>
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-muted-foreground">
+          <span>{app.appType}</span><span>{app.workType}</span><span>{app.periodShort}</span>
+        </div>
+      </div>
+      <div className="mt-5 flex items-end justify-between gap-4 md:mt-0 md:justify-end">
+        {preview ? (
+          <div className="relative hidden h-28 w-24 overflow-hidden rounded-[4px] border border-border bg-secondary md:block">
+            <Image src={preview.src} alt={preview.alt} fill sizes="96px" className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]" />
           </div>
-          {app.featured && (
-            <span className="badge-pixel text-primary shrink-0">Featured</span>
-          )}
-        </div>
-        <div className="flex gap-2 mt-2">
-          <StoreBadge type={app.appType} variant="app" />
-          <StoreBadge type={app.workType} variant="work" />
-        </div>
+        ) : null}
+        <ArrowUpRight className="size-5 text-muted-foreground transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-primary" aria-hidden="true" />
       </div>
     </Link>
   );

@@ -1,80 +1,22 @@
-import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { BackLink } from "./back-link";
 import type { CertificateItem } from "@/data/types";
 
-interface CertificateDetailViewProps {
-  certificate: CertificateItem;
-}
-
-export function CertificateDetailView({ certificate }: CertificateDetailViewProps) {
+export function CertificateDetailView({ certificate }: { certificate: CertificateItem }) {
   return (
-    <article className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
-      <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/certificates">
-        <ChevronLeft className="w-3.5 h-3.5" /> back / certificates
-      </Link>
-
-      <div className="grid gap-3">
-        <div className="flex flex-wrap items-center gap-2 mt-1 mb-3">
-          <span className="inline-flex items-center h-7 border border-border rounded-full px-2.5 py-1 text-xs font-semibold text-success bg-secondary">
-            {certificate.type}
-          </span>
-          <span className="inline-flex items-center text-sm font-semibold text-primary">
-            {certificate.issued}
-          </span>
-        </div>
-
-        <h1 className="text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">
-          {certificate.title}
-        </h1>
-        <p className="text-primary text-sm font-semibold">{certificate.issuer}</p>
-      </div>
-
-      <p className="mt-4 text-muted-foreground leading-relaxed">{certificate.summary}</p>
-
-      {certificate.image && (
-        <div className="mt-4">
-          <Image
-            className="w-full h-auto max-h-[600px] border border-border rounded-lg bg-muted/5 object-contain"
-            src={certificate.image.src}
-            alt={certificate.image.alt}
-            width={certificate.image.width}
-            height={certificate.image.height}
-          />
-        </div>
-      )}
-
-      <div className="grid gap-6 mt-6 max-w-[65ch]">
-        <section className="border-t border-border pt-5">
-          <h2 className="text-foreground text-base font-semibold">Issuer</h2>
-          <div className="mt-3">
-            <ul className="pl-5">
-              {certificate.issuerNotes.map((note, idx) => (
-                <li key={idx} className="mt-1.5 text-muted-foreground">{note}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {certificate.details.length > 0 && (
-          <section className="border-t border-border pt-5">
-            <h2 className="text-foreground text-base font-semibold">What This Certificate Represents</h2>
-            <div className="mt-3">
-              <ul className="pl-5">
-                {certificate.details.map((detail, idx) => (
-                  <li key={idx} className="mt-1.5 text-muted-foreground">{detail}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
-
-        <section className="border-t border-border pt-5">
-          <h2 className="text-foreground text-base font-semibold">Relevance</h2>
-          <div className="mt-3">
-            <p>{certificate.relevance}</p>
-          </div>
-        </section>
+    <article>
+      <BackLink href="/certificates" label="All certificates" />
+      <header className="max-w-4xl py-12 md:py-16">
+        <div className="flex flex-wrap gap-4 text-pixel text-[8px] text-primary"><span>{certificate.type}</span><span>{certificate.issued}</span></div>
+        <h1 className="mt-6 text-[clamp(3rem,7vw,6.4rem)] font-semibold leading-[0.92] tracking-[-0.06em]">{certificate.title}</h1>
+        <p className="mt-5 text-lg font-semibold text-primary">{certificate.issuer}</p>
+        <p className="mt-5 max-w-[66ch] text-lg leading-8 text-muted-foreground">{certificate.summary}</p>
+      </header>
+      {certificate.image && <div className="pixel-frame bg-card p-3"><Image src={certificate.image.src} alt={certificate.image.alt} width={certificate.image.width} height={certificate.image.height} className="mx-auto max-h-[720px] w-full rounded-[4px] object-contain" priority /></div>}
+      <div className="grid gap-10 py-14 md:grid-cols-2 md:py-20">
+        <section><h2 className="text-2xl font-semibold tracking-[-0.035em]">About the issuer</h2><div className="mt-5 space-y-3">{certificate.issuerNotes.map((note) => <p key={note} className="border-l-2 border-primary/60 pl-4 leading-7 text-muted-foreground">{note}</p>)}</div></section>
+        <section><h2 className="text-2xl font-semibold tracking-[-0.035em]">What it represents</h2><div className="mt-5 space-y-3">{certificate.details.map((detail) => <p key={detail} className="border-l-2 border-border pl-4 leading-7 text-muted-foreground">{detail}</p>)}</div></section>
+        <section className="pixel-frame pixel-grid bg-card p-6 md:col-span-2 md:p-8"><h2 className="text-2xl font-semibold tracking-[-0.035em]">Why it matters</h2><p className="mt-4 max-w-[68ch] text-lg leading-8 text-muted-foreground">{certificate.relevance}</p></section>
       </div>
     </article>
   );

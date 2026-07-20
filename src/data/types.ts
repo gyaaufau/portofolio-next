@@ -140,3 +140,9 @@ export type Contact = {
   playConsole: string;
   cv: string;
 };
+
+export type SiteSettings = {
+  id: string;
+  accentPreset: string;
+  accentColor: string;
+};

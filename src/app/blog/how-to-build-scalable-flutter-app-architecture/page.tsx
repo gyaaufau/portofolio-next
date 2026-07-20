@@ -1,4 +1,4 @@
-import { absoluteUrl, siteConfig, websiteSchema } from "@/data/seo";
+import { absoluteUrl, siteConfig } from "@/data/seo";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
 
 export default function BlogArticlePage() {
   return (
-    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
-      <article className="grid gap-6 p-6 rounded-3xl bg-card border border-border shadow-sm">
-        <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit" href="/blog">
+    <main id="main-content" className="mx-auto w-full max-w-[900px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+      <article className="prose-pixel grid gap-8">
+        <Link className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-primary" href="/blog">
           <ChevronLeft className="w-3.5 h-3.5" /> back / blog
         </Link>
         <nav className="flex flex-wrap gap-3 items-center text-muted-foreground text-[0.82rem] font-medium" aria-label="Breadcrumb">
@@ -88,9 +88,9 @@ export default function BlogArticlePage() {
           <span>{articleTitle}</span>
         </nav>
 
-        <header className="grid gap-[0.8rem]">
-          <p className="m-0 mb-[0.75rem] text-primary text-[0.8rem] font-semibold tracking-[0.06em] uppercase">Flutter Architecture</p>
-          <h1>{articleTitle}</h1>
+        <header className="grid gap-4 py-8 md:py-12">
+          <p className="text-pixel text-[9px] text-primary">FLUTTER ARCHITECTURE</p>
+          <h1 className="text-[clamp(3rem,7vw,6rem)] font-semibold leading-[0.92] tracking-[-0.06em]">{articleTitle}</h1>
           <p className="text-[1.1rem] text-foreground leading-[1.7]">
             The short answer: a scalable Flutter app needs clear feature boundaries, predictable state management,
             modular dependency injection, and a delivery workflow that keeps performance and refactoring under control.
@@ -101,7 +101,7 @@ export default function BlogArticlePage() {
           </div>
         </header>
 
-        <section className="p-5 rounded-xl bg-card border border-border shadow-sm">
+        <section className="pixel-frame pixel-grid bg-card p-6 md:p-8">
           <h2>Direct answer</h2>
           <p>
             If you want a Flutter app to stay maintainable after version 1, organize it by feature, keep business rules
@@ -181,7 +181,7 @@ export default function BlogArticlePage() {
             feature structure, state ownership, naming, async error handling, and release flow.
           </p>
           <p>
-            This is also where a public portfolio helps: your <Link href="/projects">project archive</Link> can show how those
+            This is also where a public portfolio helps: your <Link href="/apps">app archive</Link> can show how those
             rules appear in real work, while the main <Link href="/">homepage</Link> explains the engineering value you bring.
           </p>
         </section>
@@ -190,7 +190,7 @@ export default function BlogArticlePage() {
           <h2>FAQ</h2>
           <div className="grid gap-4">
             {articleFaqs.map((item, idx) => (
-              <article key={idx} className="p-5 rounded-xl bg-card border border-border shadow-sm">
+              <article key={idx} className="border-l-2 border-primary/60 pl-5">
                 <h3>{item.question}</h3>
                 <p>{item.answer}</p>
               </article>

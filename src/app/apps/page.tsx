@@ -1,57 +1,25 @@
+import type { Metadata } from "next";
 import { AppCard } from "@/components/app-card";
+import { BackLink } from "@/components/back-link";
 import { getApps } from "@/data/db";
 import { absoluteUrl, siteConfig } from "@/data/seo";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import type { Metadata } from "next";
 
-const collectionSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Apps by Gialoop",
-  url: absoluteUrl("/apps"),
-  description: "App catalog featuring Flutter apps, web applications, and backend services by Gialoop.",
-  isPartOf: {
-    "@type": "WebSite",
-    name: siteConfig.siteName,
-    url: siteConfig.siteUrl
-  }
-};
-
-export const metadata: Metadata = {
-  title: "App Catalog | Gialoop",
-  description: "App catalog featuring Flutter apps, web applications, and backend services by Gialoop.",
-};
+const collectionSchema = { "@context": "https://schema.org", "@type": "CollectionPage", name: "Apps by Gialoop", url: absoluteUrl("/apps"), description: "Flutter app catalog by Gialoop.", isPartOf: { "@type": "WebSite", name: siteConfig.siteName, url: siteConfig.siteUrl } };
+export const metadata: Metadata = { title: "App Catalog | Gialoop", description: "Flutter apps, internal tools, and independent products built by Gialoop." };
+export const dynamic = "force-dynamic";
 
 export default async function AppsPage() {
   const apps = await getApps();
-
   return (
-    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
-      <section className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
-        <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/">
-          <ChevronLeft className="w-3.5 h-3.5" /> back / home
-        </Link>
-
-        <div className="mb-6">
-          <p className="m-0 mb-[0.75rem] text-primary text-pixel text-[10px] font-semibold tracking-[0.06em] uppercase">all apps</p>
-          <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">App catalog.</h1>
-          <p className="mt-2 text-muted-foreground">Featured and regular apps are collected here. Featured items are marked directly on the card.</p>
-        </div>
-
-        <div className="space-y-3">
-          {apps.map((app) => (
-            <AppCard key={app.id} app={app} />
-          ))}
-        </div>
-      </section>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(collectionSchema),
-        }}
-      />
+    <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+      <BackLink href="/" label="Home" />
+      <header className="max-w-3xl py-14 md:py-20">
+        <p className="text-pixel text-[9px] text-primary">APP LIBRARY</p>
+        <h1 className="mt-5 text-[clamp(3.4rem,8vw,7rem)] font-semibold leading-[0.9] tracking-[-0.065em]">Things I&apos;ve shipped.</h1>
+        <p className="mt-6 max-w-[58ch] text-lg leading-8 text-muted-foreground">A browsable catalog of mobile products, internal tools, and experiments with the engineering story intact.</p>
+      </header>
+      {apps.length ? <div className="border-t border-border">{apps.map((app) => <AppCard key={app.id} app={app} />)}</div> : <div className="pixel-frame bg-card p-8 text-muted-foreground">No apps have been published here yet.</div>}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
     </main>
   );
 }

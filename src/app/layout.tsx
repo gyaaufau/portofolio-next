@@ -1,18 +1,15 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import "@fontsource/press-start-2p/latin.css";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { PublicChrome } from "@/components/public-chrome";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
+import { getSiteSettings } from "@/data/db";
+import { readableForeground } from "@/lib/theme";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.siteUrl),
   title: siteConfig.title,
   description: siteConfig.description,
   authors: [{ name: siteConfig.personName }],
@@ -23,12 +20,7 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.siteName,
-    images: [{
-      url: "/data/brand/og-image.png",
-      width: 1731,
-      height: 909,
-      alt: "Gialoop portfolio preview image",
-    }],
+    images: [{ url: "/data/brand/og-image.png", width: 1731, height: 909, alt: "Gialoop portfolio preview image" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -36,37 +28,24 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: ["/data/brand/og-image.png"],
   },
-  icons: {
-    icon: "/data/brand/logo-loop.svg",
-  },
+  icons: { icon: "/data/brand/logo-loop.svg" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const settings = await getSiteSettings();
+  const themeStyle = {
+    "--site-accent": settings.accentColor,
+    "--site-accent-foreground": readableForeground(settings.accentColor),
+  } as CSSProperties;
+
   return (
-    <html lang="en">
+    <html lang="en" className={GeistSans.variable} style={themeStyle} data-scroll-behavior="smooth">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personSchema),
-          }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
-      <body className={`${plusJakartaSans.variable} antialiased`}>
-        <Navbar />
-        {children}
-        <ScrollReveal />
-        <Footer />
+      <body>
+        <PublicChrome>{children}</PublicChrome>
       </body>
     </html>
   );

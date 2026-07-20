@@ -1,53 +1,25 @@
+import type { Metadata } from "next";
+import { BackLink } from "@/components/back-link";
 import { Certificates } from "@/components/certificates";
 import { getCertificates } from "@/data/db";
 import { absoluteUrl, siteConfig } from "@/data/seo";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import type { Metadata } from "next";
 
-const collectionSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Certificates | Gialoop",
-  url: absoluteUrl("/certificates"),
-  description: "Certificate archive for Argya Aulia Fauzandika, including Flutter training and developer conference credentials.",
-  isPartOf: {
-    "@type": "WebSite",
-    name: siteConfig.siteName,
-    url: siteConfig.siteUrl
-  }
-};
-
-export const metadata: Metadata = {
-  title: "Certificates | Gialoop",
-  description: "Certificate archive covering Flutter training, developer conferences, and professional learning milestones.",
-};
+const collectionSchema = { "@context": "https://schema.org", "@type": "CollectionPage", name: "Certificates | Gialoop", url: absoluteUrl("/certificates"), description: "Professional learning milestones for Argya Aulia Fauzandika.", isPartOf: { "@type": "WebSite", name: siteConfig.siteName, url: siteConfig.siteUrl } };
+export const metadata: Metadata = { title: "Certificates | Gialoop", description: "Flutter training, developer conferences, and professional learning milestones." };
+export const dynamic = "force-dynamic";
 
 export default async function CertificatesPage() {
   const certificates = await getCertificates();
-
   return (
-    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
-      <section className="mt-4 p-6 rounded-3xl bg-card border border-border shadow-sm">
-        <Link className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-primary hover:border-primary transition-colors w-fit mb-6" href="/">
-          <ChevronLeft className="w-3.5 h-3.5" /> back / home
-        </Link>
-
-        <div className="mb-6">
-          <p className="m-0 mb-[0.75rem] text-primary text-pixel text-[10px] font-semibold tracking-[0.06em] uppercase">all certificates</p>
-          <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">Certificate archive.</h1>
-          <p className="mt-2 text-muted-foreground">Featured and regular certificates are collected here. Featured items are marked directly on the card.</p>
-        </div>
-
-        <Certificates certificates={certificates} showFeaturedChip={true} />
-      </section>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(collectionSchema),
-        }}
-      />
+    <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+      <BackLink href="/" label="Home" />
+      <header className="max-w-3xl py-14 md:py-20">
+        <p className="text-pixel text-[9px] text-primary">ACHIEVEMENT ROOM</p>
+        <h1 className="mt-5 text-[clamp(3.4rem,8vw,7rem)] font-semibold leading-[0.9] tracking-[-0.065em]">Proof of practice.</h1>
+        <p className="mt-6 max-w-[58ch] text-lg leading-8 text-muted-foreground">Training, conferences, and focused study that strengthened the way I build mobile products.</p>
+      </header>
+      <Certificates certificates={certificates} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
     </main>
   );
 }

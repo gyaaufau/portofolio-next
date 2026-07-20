@@ -3,33 +3,35 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import {
+  ADMIN_COOKIE,
+  adminCookieOptions,
+  createSessionToken,
+  passwordMatches,
+  requireAdmin,
+} from "@/lib/auth";
+import { resolveAccent } from "@/lib/theme";
 
 export async function login(password: string) {
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (password !== adminPassword) {
-    return { error: "Invalid password" };
+  try {
+    if (!passwordMatches(password)) return { error: "Invalid password" };
+    const cookieStore = await cookies();
+    cookieStore.set(ADMIN_COOKIE, await createSessionToken(), adminCookieOptions);
+    return { success: true };
+  } catch {
+    return { error: "Admin authentication is not configured." };
   }
-
-  const cookieStore = await cookies();
-  cookieStore.set("admin_session", "authenticated", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: "/",
-  });
-
-  return { success: true };
 }
 
 export async function logout() {
   const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
+  cookieStore.delete(ADMIN_COOKIE);
   return { success: true };
 }
 
 // Apps
 export async function createApp(formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
   const slug = String(data.slug || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
@@ -68,6 +70,7 @@ export async function createApp(formData: FormData) {
 }
 
 export async function updateApp(id: string, formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
 
   await prisma.app.update({
@@ -105,6 +108,7 @@ export async function updateApp(id: string, formData: FormData) {
 }
 
 export async function deleteApp(id: string) {
+  await requireAdmin();
   await prisma.app.delete({ where: { id } });
   revalidatePath("/admin/apps");
   revalidatePath("/apps");
@@ -112,6 +116,7 @@ export async function deleteApp(id: string) {
 }
 
 export async function toggleAppFeatured(id: string) {
+  await requireAdmin();
   const app = await prisma.app.findUnique({ where: { id } });
   if (app) {
     await prisma.app.update({ where: { id }, data: { featured: !app.featured } });
@@ -123,6 +128,7 @@ export async function toggleAppFeatured(id: string) {
 
 // Certificates
 export async function createCertificate(formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
   const id = String(data.id || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
@@ -150,6 +156,7 @@ export async function createCertificate(formData: FormData) {
 }
 
 export async function updateCertificate(id: string, formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
 
   await prisma.certificate.update({
@@ -177,6 +184,7 @@ export async function updateCertificate(id: string, formData: FormData) {
 }
 
 export async function deleteCertificate(id: string) {
+  await requireAdmin();
   await prisma.certificate.delete({ where: { id } });
   revalidatePath("/admin/certificates");
   revalidatePath("/certificates");
@@ -184,6 +192,7 @@ export async function deleteCertificate(id: string) {
 
 // Work Experience
 export async function createWorkExperience(formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
 
   await prisma.workExperience.create({
@@ -205,6 +214,7 @@ export async function createWorkExperience(formData: FormData) {
 }
 
 export async function updateWorkExperience(id: string, formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
 
   await prisma.workExperience.update({
@@ -227,6 +237,7 @@ export async function updateWorkExperience(id: string, formData: FormData) {
 }
 
 export async function deleteWorkExperience(id: string) {
+  await requireAdmin();
   await prisma.workExperience.delete({ where: { id } });
   revalidatePath("/admin/work-experience");
   revalidatePath("/");
@@ -234,6 +245,7 @@ export async function deleteWorkExperience(id: string) {
 
 // Profile
 export async function updateProfile(formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
   const existing = await prisma.profile.findFirst();
 
@@ -261,6 +273,7 @@ export async function updateProfile(formData: FormData) {
 
 // Contact
 export async function updateContact(formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
   const existing = await prisma.contact.findFirst();
 
@@ -286,6 +299,7 @@ export async function updateContact(formData: FormData) {
 
 // Skills
 export async function updateSkillCategory(id: string, formData: FormData) {
+  await requireAdmin();
   const data = Object.fromEntries(formData);
 
   await prisma.skillCategory.update({
@@ -297,4 +311,32 @@ export async function updateSkillCategory(id: string, formData: FormData) {
 
   revalidatePath("/admin/skills");
   revalidatePath("/");
+}
+
+export type AppearanceState = { error?: string; success?: string } | null;
+
+export async function updateSiteSettings(
+  _previousState: AppearanceState,
+  formData: FormData
+): Promise<AppearanceState> {
+  await requireAdmin();
+  const result = resolveAccent(formData.get("accentPreset"), formData.get("accentColor"));
+  if ("error" in result) return { error: result.error };
+
+  await prisma.siteSettings.upsert({
+    where: { id: "site" },
+    create: {
+      id: "site",
+      accentPreset: result.preset,
+      accentColor: result.color,
+    },
+    update: {
+      accentPreset: result.preset,
+      accentColor: result.color,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/appearance");
+  return { success: "Accent updated." };
 }

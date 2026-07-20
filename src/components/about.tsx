@@ -1,74 +1,36 @@
-import { Smartphone, Puzzle, HeartHandshake } from "lucide-react";
+import Image from "next/image";
 
 interface AboutProps {
   paragraphs: string[];
   skills?: string[];
   tech?: string[];
   softSkills?: string[];
+  photo: { src: string; alt: string; width: number; height: number };
 }
 
-export function About({ paragraphs, skills = [], tech = [], softSkills = [] }: AboutProps) {
+function ItemGroup({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full">
-      {/* Paragraph — full width with teal accent bar */}
-      {paragraphs.map((paragraph, index) => (
-        <div key={index} className="md:col-span-2 bg-card border border-border rounded-2xl p-4 md:p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg">
-          <div className="border-l-2 border-primary pl-4 md:pl-5">
-            <p className="text-foreground leading-relaxed text-sm md:text-base">
-              {paragraph}
-            </p>
-          </div>
-        </div>
-      ))}
-
-      {/* Mobile Development — left column, taller on desktop */}
-      <div className="md:row-span-2 bg-card border border-border rounded-2xl p-4 md:p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg">
-        <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-5">
-          <div className="flex items-center justify-center size-9 rounded-xl bg-secondary text-muted-foreground shrink-0">
-            <Smartphone className="size-4" />
-          </div>
-            <p className="text-muted-foreground text-[0.7rem] md:text-[0.8rem] font-semibold tracking-[0.06em] uppercase">Mobile Development</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((item, idx) => (
-            <span key={idx} className="rounded-full border border-border bg-secondary px-3 py-1 text-xs text-muted-foreground">
-              {item}
-            </span>
-          ))}
-        </div>
+    <div>
+      <h3 className="text-pixel text-[9px] text-primary">{title}</h3>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {items.map((item) => <span key={item} className="rounded-[4px] border border-border bg-secondary px-3 py-2 text-xs font-medium text-muted-foreground">{item}</span>)}
       </div>
+    </div>
+  );
+}
 
-      {/* Tools & Integration — top right on desktop */}
-      <div className="bg-card border border-border rounded-2xl p-4 md:p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg">
-        <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-5">
-          <div className="flex items-center justify-center size-9 rounded-xl bg-primary/10 text-primary shrink-0">
-            <Puzzle className="size-4" />
-          </div>
-          <p className="text-muted-foreground text-[0.7rem] md:text-[0.8rem] font-semibold tracking-[0.06em] uppercase">Tools & Integration</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {tech.map((item, idx) => (
-            <span key={idx} className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs text-primary font-semibold">
-              {item}
-            </span>
-          ))}
-        </div>
+export function About({ paragraphs, skills = [], tech = [], softSkills = [], photo }: AboutProps) {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr]">
+      <div className="pixel-frame relative min-h-[360px] overflow-hidden bg-card">
+        <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
       </div>
-
-      {/* Soft Skills — bottom right on desktop */}
-      <div className="bg-card border border-border rounded-2xl p-4 md:p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg">
-        <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-5">
-          <div className="flex items-center justify-center size-9 rounded-xl bg-secondary text-muted-foreground shrink-0">
-            <HeartHandshake className="size-4" />
-          </div>
-          <p className="text-muted-foreground text-[0.7rem] md:text-[0.8rem] font-semibold tracking-[0.06em] uppercase">Soft Skills</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {softSkills.map((item, idx) => (
-            <span key={idx} className="rounded-full border border-border bg-secondary px-3 py-1 text-xs text-muted-foreground">
-              {item}
-            </span>
-          ))}
+      <div className="pixel-frame pixel-grid bg-card p-6 md:p-8">
+        {paragraphs.map((paragraph) => <p key={paragraph} className="max-w-[62ch] text-lg leading-8">{paragraph}</p>)}
+        <div className="mt-9 grid gap-8 md:grid-cols-2">
+          <ItemGroup title="CORE KIT" items={skills} />
+          <ItemGroup title="TOOLS" items={tech} />
+          <div className="md:col-span-2"><ItemGroup title="PARTY SKILLS" items={softSkills} /></div>
         </div>
       </div>
     </div>

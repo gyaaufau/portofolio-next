@@ -19,6 +19,15 @@ async function main() {
   await prisma.heroLink.deleteMany();
   await prisma.contact.deleteMany();
   await prisma.profile.deleteMany();
+  await prisma.siteSettings.deleteMany();
+
+  await prisma.siteSettings.create({
+    data: {
+      id: "site",
+      accentPreset: "moss",
+      accentColor: "#4F7A68",
+    },
+  });
 
   // Profile
   await prisma.profile.create({

@@ -132,3 +132,11 @@ model SkillCategory {
   name  String   @unique
   items String[]
 }
+
+model SiteSettings {
+  id           String   @id @default("site")
+  accentPreset String   @default("moss")
+  accentColor  String   @default("#4F7A68")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

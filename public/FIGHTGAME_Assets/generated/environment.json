@@ -1,0 +1,831 @@
+{
+  "frames": {
+    "POSTPRO/lineardodge.png": {
+      "frame": {
+        "x": 2,
+        "y": 2,
+        "w": 300,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "POSTPRO/overlay.png": {
+      "frame": {
+        "x": 304,
+        "y": 2,
+        "w": 300,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "POSTPRO/vignette.png": {
+      "frame": {
+        "x": 606,
+        "y": 2,
+        "w": 300,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk6.png": {
+      "frame": {
+        "x": 908,
+        "y": 2,
+        "w": 78,
+        "h": 164
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 78,
+        "h": 164
+      },
+      "sourceSize": {
+        "w": 78,
+        "h": 164
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk8.png": {
+      "frame": {
+        "x": 2,
+        "y": 204,
+        "w": 78,
+        "h": 164
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 78,
+        "h": 164
+      },
+      "sourceSize": {
+        "w": 78,
+        "h": 164
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/trunk1.png": {
+      "frame": {
+        "x": 82,
+        "y": 204,
+        "w": 14,
+        "h": 122
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 14,
+        "h": 122
+      },
+      "sourceSize": {
+        "w": 14,
+        "h": 122
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/trunk4.png": {
+      "frame": {
+        "x": 98,
+        "y": 204,
+        "w": 9,
+        "h": 122
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 122
+      },
+      "sourceSize": {
+        "w": 9,
+        "h": 122
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk4.png": {
+      "frame": {
+        "x": 109,
+        "y": 204,
+        "w": 54,
+        "h": 114
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 54,
+        "h": 114
+      },
+      "sourceSize": {
+        "w": 54,
+        "h": 114
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk5.png": {
+      "frame": {
+        "x": 165,
+        "y": 204,
+        "w": 28,
+        "h": 114
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 28,
+        "h": 114
+      },
+      "sourceSize": {
+        "w": 28,
+        "h": 114
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk7.png": {
+      "frame": {
+        "x": 195,
+        "y": 204,
+        "w": 28,
+        "h": 114
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 28,
+        "h": 114
+      },
+      "sourceSize": {
+        "w": 28,
+        "h": 114
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk2.png": {
+      "frame": {
+        "x": 225,
+        "y": 204,
+        "w": 39,
+        "h": 83
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 39,
+        "h": 83
+      },
+      "sourceSize": {
+        "w": 39,
+        "h": 83
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk3.png": {
+      "frame": {
+        "x": 266,
+        "y": 204,
+        "w": 19,
+        "h": 79
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 79
+      },
+      "sourceSize": {
+        "w": 19,
+        "h": 79
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_leaves2.png": {
+      "frame": {
+        "x": 287,
+        "y": 204,
+        "w": 70,
+        "h": 59
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 59
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 59
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_leaves3.png": {
+      "frame": {
+        "x": 359,
+        "y": 204,
+        "w": 70,
+        "h": 59
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 59
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 59
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_trunk1.png": {
+      "frame": {
+        "x": 431,
+        "y": 204,
+        "w": 14,
+        "h": 58
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 14,
+        "h": 58
+      },
+      "sourceSize": {
+        "w": 14,
+        "h": 58
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_leaves1.png": {
+      "frame": {
+        "x": 447,
+        "y": 204,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_leaves4.png": {
+      "frame": {
+        "x": 497,
+        "y": 204,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/tree_leaves5.png": {
+      "frame": {
+        "x": 547,
+        "y": 204,
+        "w": 70,
+        "h": 45
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 70,
+        "h": 45
+      },
+      "sourceSize": {
+        "w": 70,
+        "h": 45
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/trunk3.png": {
+      "frame": {
+        "x": 619,
+        "y": 204,
+        "w": 9,
+        "h": 41
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 41
+      },
+      "sourceSize": {
+        "w": 9,
+        "h": 41
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/trunk2.png": {
+      "frame": {
+        "x": 630,
+        "y": 204,
+        "w": 9,
+        "h": 25
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 25
+      },
+      "sourceSize": {
+        "w": 9,
+        "h": 25
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana6.png": {
+      "frame": {
+        "x": 641,
+        "y": 204,
+        "w": 3,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 3,
+        "h": 24
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana2.png": {
+      "frame": {
+        "x": 646,
+        "y": 204,
+        "w": 7,
+        "h": 19
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 7,
+        "h": 19
+      },
+      "sourceSize": {
+        "w": 7,
+        "h": 19
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana1.png": {
+      "frame": {
+        "x": 655,
+        "y": 204,
+        "w": 38,
+        "h": 18
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 38,
+        "h": 18
+      },
+      "sourceSize": {
+        "w": 38,
+        "h": 18
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana4.png": {
+      "frame": {
+        "x": 695,
+        "y": 204,
+        "w": 19,
+        "h": 15
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 15
+      },
+      "sourceSize": {
+        "w": 19,
+        "h": 15
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana3.png": {
+      "frame": {
+        "x": 716,
+        "y": 204,
+        "w": 25,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 25,
+        "h": 13
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/liana5.png": {
+      "frame": {
+        "x": 743,
+        "y": 204,
+        "w": 9,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 9,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 9,
+        "h": 13
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/flower1.png": {
+      "frame": {
+        "x": 754,
+        "y": 204,
+        "w": 19,
+        "h": 9
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 19,
+        "h": 9
+      },
+      "sourceSize": {
+        "w": 19,
+        "h": 9
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/platform.png": {
+      "frame": {
+        "x": 775,
+        "y": 204,
+        "w": 130,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 130,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 130,
+        "h": 8
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Level Design/platform_edge.png": {
+      "frame": {
+        "x": 907,
+        "y": 204,
+        "w": 25,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 25,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 25,
+        "h": 8
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/grass1.png": {
+      "frame": {
+        "x": 934,
+        "y": 204,
+        "w": 21,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 21,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 4
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/grass2.png": {
+      "frame": {
+        "x": 957,
+        "y": 204,
+        "w": 21,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 21,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 4
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Props/flower2.png": {
+      "frame": {
+        "x": 980,
+        "y": 204,
+        "w": 8,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 8,
+        "h": 4
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/background_color.png": {
+      "frame": {
+        "x": 990,
+        "y": 204,
+        "w": 1,
+        "h": 1
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "sourceSize": {
+        "w": 1,
+        "h": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ENVIRO/Background/fog_color.png": {
+      "frame": {
+        "x": 993,
+        "y": 204,
+        "w": 1,
+        "h": 1
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "sourceSize": {
+        "w": 1,
+        "h": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    }
+  },
+  "meta": {
+    "app": "gialoop-fightgame-atlas",
+    "version": "1.0",
+    "image": "environment.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 996,
+      "h": 370
+    },
+    "scale": "1"
+  }
+}

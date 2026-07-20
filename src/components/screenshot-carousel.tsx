@@ -1,69 +1,20 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AppScreenshot } from "@/data/types";
 
-type ScreenshotCarouselProps = {
-  screenshots: AppScreenshot[];
-  appTitle: string;
-};
-
-export function ScreenshotCarousel({ screenshots, appTitle }: ScreenshotCarouselProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  if (screenshots.length === 0) return null;
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const amount = 300;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
-    });
-  };
-
+export function ScreenshotCarousel({ screenshots, appTitle }: { screenshots: AppScreenshot[]; appTitle: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  if (!screenshots.length) return <div className="pixel-frame bg-card p-8 text-muted-foreground">Screenshots for {appTitle} are coming soon.</div>;
+  const scroll = (left: boolean) => ref.current?.scrollBy({ left: left ? -360 : 360, behavior: "smooth" });
   return (
-    <div className="relative group">
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide"
-        style={{ scrollbarWidth: "none" }}
-      >
-        {screenshots.map((s) => (
-          <div
-            key={s.id}
-            className="snap-center shrink-0 first:pl-0 last:pr-0"
-          >
-            <img
-              src={s.src}
-              alt={s.alt}
-              width={s.width}
-              height={s.height}
-              className="rounded-xl h-64 w-auto object-cover border border-border"
-            />
-          </div>
-        ))}
+    <section className="pixel-frame relative overflow-hidden bg-card p-3 md:p-5" aria-label={`${appTitle} screenshots`}>
+      <div ref={ref} className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none]">
+        {screenshots.map((shot) => <div key={shot.id} className="relative h-[29rem] w-auto shrink-0 snap-center overflow-hidden rounded-[4px] border border-border bg-secondary" style={{ aspectRatio: `${shot.width}/${shot.height}` }}><Image src={shot.src} alt={shot.alt} fill sizes="(max-width: 768px) 70vw, 320px" className="object-cover" /></div>)}
       </div>
-
-      {screenshots.length > 2 && (
-        <>
-          <button
-            onClick={() => scroll("left")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 size-8 rounded-full bg-card/80 border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 size-8 rounded-full bg-card/80 border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="size-4" />
-          </button>
-        </>
-      )}
-    </div>
+      {screenshots.length > 1 && <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => scroll(true)} className="pixel-button min-h-0 bg-background p-2.5" aria-label="Previous screenshots"><ChevronLeft className="size-4" /></button><button type="button" onClick={() => scroll(false)} className="pixel-button min-h-0 bg-background p-2.5" aria-label="Next screenshots"><ChevronRight className="size-4" /></button></div>}
+    </section>
   );
 }

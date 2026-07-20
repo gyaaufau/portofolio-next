@@ -1,0 +1,183 @@
+{
+  "frames": {
+    "ITEMs/bonus3.png": {
+      "frame": {
+        "x": 2,
+        "y": 2,
+        "w": 15,
+        "h": 15
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 15
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 15
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/caisse_metal.png": {
+      "frame": {
+        "x": 19,
+        "y": 2,
+        "w": 15,
+        "h": 15
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 15
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 15
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/caisse.png": {
+      "frame": {
+        "x": 36,
+        "y": 2,
+        "w": 15,
+        "h": 15
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 15
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 15
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/bonus1.png": {
+      "frame": {
+        "x": 53,
+        "y": 2,
+        "w": 15,
+        "h": 14
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 14
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/bonus2.png": {
+      "frame": {
+        "x": 70,
+        "y": 2,
+        "w": 12,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 12,
+        "h": 13
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/chest.png": {
+      "frame": {
+        "x": 84,
+        "y": 2,
+        "w": 15,
+        "h": 12
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 15,
+        "h": 12
+      },
+      "sourceSize": {
+        "w": 15,
+        "h": 12
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    },
+    "ITEMs/coin.png": {
+      "frame": {
+        "x": 101,
+        "y": 2,
+        "w": 7,
+        "h": 7
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 7,
+        "h": 7
+      },
+      "sourceSize": {
+        "w": 7,
+        "h": 7
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 1
+      }
+    }
+  },
+  "meta": {
+    "app": "gialoop-fightgame-atlas",
+    "version": "1.0",
+    "image": "items.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 110,
+      "h": 19
+    },
+    "scale": "1"
+  }
+}

@@ -1,6 +1,6 @@
 import { CertificateDetailView } from "@/components/certificate-detail-view";
 import { getCertificateBySlug } from "@/data/db";
-import { absoluteUrl, siteConfig } from "@/data/seo";
+import { absoluteUrl } from "@/data/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${certificate.title} | Gialoop`,
       description: certificate.summary,
       url: absoluteUrl(`/certificates/${slug}`),
+      images: certificate.image ? [{ url: certificate.image.src, alt: certificate.image.alt }] : undefined,
     },
   };
 }
@@ -52,7 +53,7 @@ export default async function CertificatePage({ params }: Props) {
   };
 
   return (
-    <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
+    <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
       <CertificateDetailView certificate={certificate} />
 
       <script

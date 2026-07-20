@@ -1,84 +1,32 @@
 import type { WorkExperienceItem } from "@/data/types";
 
-interface WorkExperienceProps {
-  experiences: WorkExperienceItem[];
-}
-
-export function WorkExperience({ experiences }: WorkExperienceProps) {
-  const displayExperiences = [...experiences].sort((left, right) =>
-    right.sortOrder - left.sortOrder
-  );
+export function WorkExperience({ experiences }: { experiences: WorkExperienceItem[] }) {
+  const items = [...experiences].sort((left, right) => right.sortOrder - left.sortOrder);
+  if (!items.length) return <p className="pixel-frame bg-card p-6 text-muted-foreground">No work history has been added yet.</p>;
 
   return (
-    <div className="flex flex-col pl-2 md:pl-6">
-      {displayExperiences.map((experience, index) => {
-        const isFirst = index === 0;
-        const isLast = index === displayExperiences.length - 1;
-
-        return (
-          <div key={experience.company}>
-            <div className="flex gap-3 md:gap-10">
-              {/* Timeline: Line + Dot */}
-              <div className="flex flex-col items-center w-6 relative self-stretch">
-                {/* Line from top to dot */}
-                {isFirst ? (
-                  <div className="w-0.5 bg-transparent flex-1"></div>
-                ) : (
-                  <div className="w-0.5 bg-[#E7E5E4] flex-1"></div>
-                )}
-
-                {/* Dot - same style for all */}
-                <div className="w-3 h-3 rounded-full bg-primary border-card shadow-[0_0_0_2px_var(--primary)] z-10 shrink-0 my-1"></div>
-
-                {/* Line from dot to bottom */}
-                {isLast ? (
-                  <div className="w-0.5 bg-transparent flex-1"></div>
-                ) : (
-                  <div className="w-0.5 bg-[#E7E5E4] flex-1"></div>
-                )}
-              </div>
-
-              {/* Card */}
-              <article
-                className="flex-1 p-4 md:p-6 rounded-2xl bg-card border border-border shadow-sm hover:-translate-y-0.5 hover:border-muted hover:shadow-lg transition-all mb-4 md:mb-6"
-              >
-                <div className="min-w-0">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-4">
-                    <h3 className="m-0 text-base md:text-lg font-semibold leading-tight text-foreground">
-                      {experience.company}
-                    </h3>
-                    <span className="text-xs md:text-sm font-medium text-primary md:text-right shrink-0">
-                      {experience.period}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="text-xs font-medium rounded-full px-3 py-1 bg-primary text-primary-foreground">
-                      {experience.role}
-                    </span>
-                    <span className="text-xs font-medium border border-border rounded-full px-3 py-1 bg-card text-muted-foreground">
-                      {experience.location}
-                    </span>
-                  </div>
-
-                  <p className="mt-2 md:mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
-                    {experience.summary}
-                  </p>
-
-                  <ul className="mt-3 md:mt-4 space-y-1.5 md:space-y-2">
-                    {experience.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground mt-2 shrink-0" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
+    <div className="relative border-l border-border pl-5 md:pl-8">
+      {items.map((experience) => (
+        <article key={experience.id} className="relative pb-10 last:pb-0">
+          <span className="absolute -left-[1.72rem] top-1.5 size-3 bg-primary shadow-[2px_2px_0_var(--pixel-shadow)] md:-left-[2.36rem]" aria-hidden="true" />
+          <div className="grid gap-3 md:grid-cols-[12rem_1fr] md:gap-8">
+            <div>
+              <p className="text-pixel text-[8px] text-primary">{experience.period}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{experience.location}</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold tracking-[-0.025em]">{experience.role}</h3>
+              <p className="mt-1 font-medium text-muted-foreground">{experience.company}</p>
+              <p className="mt-4 max-w-[66ch] leading-7 text-muted-foreground">{experience.summary}</p>
+              {experience.highlights.length > 0 && (
+                <ul className="mt-4 grid gap-2 md:grid-cols-2">
+                  {experience.highlights.map((highlight) => <li key={highlight} className="border-l-2 border-primary/50 pl-3 text-sm leading-6 text-muted-foreground">{highlight}</li>)}
+                </ul>
+              )}
             </div>
           </div>
-        );
-      })}
+        </article>
+      ))}
     </div>
   );
 }

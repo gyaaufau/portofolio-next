@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type {
   AppItem,
-  AppScreenshot,
   CertificateItem,
   WorkExperienceItem,
   HeroLink,
@@ -13,7 +12,9 @@ import type {
   AppType,
   WorkType,
   ProjectSection,
+  SiteSettings,
 } from "./types";
+import { DEFAULT_ACCENT } from "@/lib/theme";
 
 function normalizeAppType(value: string): AppType {
   const v = value.toLowerCase();
@@ -247,13 +248,21 @@ export async function getWorkExperiences(): Promise<WorkExperienceItem[]> {
   return rows.map(mapWorkExperience);
 }
 
+export async function getSiteSettings(): Promise<SiteSettings> {
+  try {
+    const settings = await prisma.siteSettings.findUnique({ where: { id: "site" } });
+    return settings ?? { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
+  } catch {
+    return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
+  }
+}
+
 export async function getPortfolio() {
-  const [profile, contact, heroLinks, directoryLinks, skills, apps, certificates, experiences] =
+  const [profile, contact, heroLinks, skills, apps, certificates, experiences] =
     await Promise.all([
       getProfile(),
       getContact(),
       getHeroLinks(),
-      getDirectoryLinks(),
       getSkillCategories(),
       getFeaturedApps(),
       getFeaturedCertificates(),
@@ -288,12 +297,7 @@ export async function getPortfolio() {
         note: l.note,
       })
     ),
-    directoryLinks: directoryLinks.map((l) => ({
-      title: l.title,
-      value: l.value,
-      href: l.href,
-      caption: l.caption,
-    })),
+    contact,
     projects: apps,
     certificates,
     workExperiences: experiences,
