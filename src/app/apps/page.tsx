@@ -1,5 +1,5 @@
-import { Certificates } from "@/components/certificates";
-import { getCertificates } from "@/data/db";
+import { AppCard } from "@/components/app-card";
+import { getApps } from "@/data/db";
 import { absoluteUrl, siteConfig } from "@/data/seo";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -8,9 +8,9 @@ import type { Metadata } from "next";
 const collectionSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Certificates | Gialoop",
-  url: absoluteUrl("/certificates"),
-  description: "Certificate archive for Argya Aulia Fauzandika, including Flutter training and developer conference credentials.",
+  name: "Apps by Gialoop",
+  url: absoluteUrl("/apps"),
+  description: "App catalog featuring Flutter apps, web applications, and backend services by Gialoop.",
   isPartOf: {
     "@type": "WebSite",
     name: siteConfig.siteName,
@@ -19,12 +19,12 @@ const collectionSchema = {
 };
 
 export const metadata: Metadata = {
-  title: "Certificates | Gialoop",
-  description: "Certificate archive covering Flutter training, developer conferences, and professional learning milestones.",
+  title: "App Catalog | Gialoop",
+  description: "App catalog featuring Flutter apps, web applications, and backend services by Gialoop.",
 };
 
-export default async function CertificatesPage() {
-  const certificates = await getCertificates();
+export default async function AppsPage() {
+  const apps = await getApps();
 
   return (
     <main className="relative w-full max-w-[1280px] mx-auto px-6 pt-6 pb-20">
@@ -34,12 +34,16 @@ export default async function CertificatesPage() {
         </Link>
 
         <div className="mb-6">
-          <p className="m-0 mb-[0.75rem] text-primary text-pixel text-[10px] font-semibold tracking-[0.06em] uppercase">all certificates</p>
-          <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">Certificate archive.</h1>
-          <p className="mt-2 text-muted-foreground">Featured and regular certificates are collected here. Featured items are marked directly on the card.</p>
+          <p className="m-0 mb-[0.75rem] text-primary text-pixel text-[10px] font-semibold tracking-[0.06em] uppercase">all apps</p>
+          <h1 className="m-0 text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em] font-bold">App catalog.</h1>
+          <p className="mt-2 text-muted-foreground">Featured and regular apps are collected here. Featured items are marked directly on the card.</p>
         </div>
 
-        <Certificates certificates={certificates} showFeaturedChip={true} />
+        <div className="space-y-3">
+          {apps.map((app) => (
+            <AppCard key={app.id} app={app} />
+          ))}
+        </div>
       </section>
 
       <script

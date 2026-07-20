@@ -1,24 +1,24 @@
 import Link from "next/link";
-import Image from "next/image";
-import type { ProjectItem } from "@/data/portfolio";
+import type { AppItem } from "@/data/types";
 
 interface ProjectsProps {
   title?: string;
   description?: string;
   showFeaturedChip?: boolean;
-  projects: ProjectItem[];
+  projects: AppItem[];
 }
 
-const projectTypeLabel = {
+const workTypeLabel = {
   personal: "Personal",
   work: "Work"
 } as const;
 
-const appTypeLabel = {
+const appTypeLabel: Record<string, string> = {
   mobile: "Mobile",
+  desktop: "Desktop",
   web: "Web",
-  "rest-api": "REST API"
-} as const;
+  backend: "Backend",
+};
 
 const typeChipStyles: Record<string, string> = {
   personal: "text-primary bg-primary/10",
@@ -41,7 +41,7 @@ export function Projects({ title, description, showFeaturedChip = false, project
           <Link
             key={project.id}
             className="block bg-card border border-border rounded-2xl p-6 transition-all hover:-translate-y-0.5 hover:border-muted hover:shadow-lg overflow-hidden"
-            href={`/projects/${project.id}`}
+            href={`/apps/${project.slug}`}
           >
             <div className="flex flex-wrap items-center gap-2 mb-4">
               {showFeaturedChip && isFeatured && (
@@ -49,33 +49,27 @@ export function Projects({ title, description, showFeaturedChip = false, project
                   Featured
                 </span>
               )}
-              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${typeChipStyles[project.projectType] || ""}`}>
-                {projectTypeLabel[project.projectType]}
+              <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${typeChipStyles[project.workType] || ""}`}>
+                {workTypeLabel[project.workType]}
               </span>
               <span className="rounded-full px-2.5 py-1 text-xs font-semibold text-success bg-success/10">
-                {appTypeLabel[project.appType]}
+                {appTypeLabel[project.appType] || project.appType}
               </span>
               <span className="ml-auto text-xs text-muted-foreground">{project.periodShort}</span>
             </div>
 
             <div className="flex items-center gap-3 mb-3">
-              {project.logo ? (
-                <Image
-                  className="w-14 h-14 object-cover p-2 shrink-0 border border-border rounded-2xl bg-muted/10"
-                  src={project.logo.src}
-                  alt={project.logo.alt}
-                  width={project.logo.width || 56}
-                  height={project.logo.height || 56}
-                />
-              ) : (
-                <div className="w-14 h-14 grid place-items-center shrink-0 border border-border rounded-2xl bg-muted/10 text-primary font-bold text-base" aria-hidden="true">
-                  {project.title.slice(0, 1)}
-                </div>
-              )}
+              <img
+                className="w-14 h-14 object-cover shrink-0 border border-border rounded-2xl bg-muted/10"
+                src={project.appIconSrc}
+                alt={project.appIconAlt}
+                width={56}
+                height={56}
+              />
               <h3 className="text-lg font-semibold leading-snug">{project.title}</h3>
             </div>
 
-            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{project.highlight}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{project.tagline}</p>
           </Link>
           );
         })}

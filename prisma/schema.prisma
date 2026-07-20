@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id                  String  @id @default(cuid())
+  name                String
+  role                String
+  intro               String
+  location            String
+  openToOpportunities Boolean @default(true)
+  photoSrc            String
+  photoAlt            String
+  photoWidth          Int     @default(400)
+  photoHeight         Int     @default(500)
+}
+
+model Contact {
+  id          String @id @default(cuid())
+  email       String
+  whatsapp    String
+  github      String
+  linkedin    String
+  playStore   String
+  playConsole String
+  cv          String
+}
+
+model HeroLink {
+  id    String @id @default(cuid())
+  label String
+  href  String
+  kind  String
+  note  String
+  order Int    @default(0)
+}
+
+model DirectoryLink {
+  id      String @id @default(cuid())
+  title   String
+  value   String
+  href    String
+  caption String
+  order   Int    @default(0)
+}
+
+model App {
+  id            String @id
+  title         String
+  slug          String @unique
+  tagline       String
+  description   String
+  featured      Boolean @default(false)
+  appType       String
+  workType      String
+  period        String
+  periodShort   String
+  sortOrder     Int    @default(0)
+
+  appStoreUrl   String?
+  playStoreUrl  String?
+  websiteUrl    String?
+  githubUrl     String?
+  otherUrl      String?
+  otherUrlLabel String?
+
+  appIconSrc    String
+  appIconAlt    String
+  thumbnailSrc  String
+  thumbnailAlt  String
+
+  stack         String[]
+  highlights    String[]
+  sections      Json
+
+  screenshots   AppScreenshot[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model AppScreenshot {
+  id     String @id @default(cuid())
+  src    String
+  alt    String
+  width  Int
+  height Int
+  order  Int    @default(0)
+  appId  String
+  app    App    @relation(fields: [appId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id          String   @id
+  title       String
+  featured    Boolean  @default(false)
+  issuer      String
+  issued      String
+  type        String
+  summary     String
+  details     String[]
+  relevance   String
+  issuerNotes String[]
+  imageSrc    String?
+  imageAlt    String?
+  imageWidth  Int?
+  imageHeight Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WorkExperience {
+  id         String   @id @default(cuid())
+  company    String
+  location   String
+  role       String
+  start      String
+  end        String
+  period     String
+  sortOrder  Int      @default(0)
+  summary    String
+  highlights String[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SkillCategory {
+  id    String   @id @default(cuid())
+  name  String   @unique
+  items String[]
+}

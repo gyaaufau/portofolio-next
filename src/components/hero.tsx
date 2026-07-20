@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { PortfolioLink } from "@/data/portfolio";
+import type { PortfolioLink } from "@/data/types";
 
 interface HeroProps {
   name: string;

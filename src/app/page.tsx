@@ -1,15 +1,21 @@
 import { Hero } from "@/components/hero";
 import { SectionShell } from "@/components/section-shell";
-import { Projects } from "@/components/projects";
+import { AppCard } from "@/components/app-card";
 import { WorkExperience } from "@/components/work-experience";
 import { About } from "@/components/about";
 import { Certificates } from "@/components/certificates";
 import { Contact } from "@/components/contact";
-import { featuredCertificates, featuredProjects, portfolio } from "@/data/portfolio";
+import { getPortfolio, getFeaturedApps, getFeaturedCertificates } from "@/data/db";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const [portfolio, featuredApps, featuredCertificates] = await Promise.all([
+    getPortfolio(),
+    getFeaturedApps(),
+    getFeaturedCertificates(),
+  ]);
+
   const contactMap = Object.fromEntries(portfolio.directoryLinks.map((link) => [link.title, link.href]));
   const contactValueMap = Object.fromEntries(portfolio.directoryLinks.map((link) => [link.title, link.value]));
 
@@ -26,20 +32,24 @@ export default function Home() {
       />
 
       <SectionShell
-        id="projects"
+        id="apps"
         eyebrow="01 // selected work"
         title="Selected work."
-        description="A few projects I want to highlight."
+        description="A few apps I want to highlight."
       >
-        {featuredProjects.length > 0 && (
-          <Projects projects={featuredProjects} />
+        {featuredApps.length > 0 && (
+          <div className="space-y-3">
+            {featuredApps.map((app) => (
+              <AppCard key={app.id} app={app} />
+            ))}
+          </div>
         )}
         <div className="mt-4 md:mt-6 rounded-2xl p-4 md:p-6 bg-card border border-border flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="text-base md:text-lg font-semibold text-foreground">Other Projects</h3>
-            <p className="mt-0.5 md:mt-1 text-sm text-muted-foreground">Full archive of featured and regular work.</p>
+            <h3 className="text-base md:text-lg font-semibold text-foreground">All Apps</h3>
+            <p className="mt-0.5 md:mt-1 text-sm text-muted-foreground">Full catalog of featured and regular apps.</p>
           </div>
-          <Link className="inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/projects">
+          <Link className="inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-border text-sm font-semibold bg-card text-foreground hover:bg-secondary hover:border-muted transition-all shrink-0" href="/apps">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

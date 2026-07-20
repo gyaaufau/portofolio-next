@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { CertificateItem } from "@/data/portfolio";
+import type { CertificateItem } from "@/data/types";
 
 interface CertificatesProps {
   title?: string;

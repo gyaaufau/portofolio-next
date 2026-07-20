@@ -1,22 +1,18 @@
 import { CertificateDetailView } from "@/components/certificate-detail-view";
-import { portfolioCertificates } from "@/data/portfolio";
+import { getCertificateBySlug } from "@/data/db";
 import { absoluteUrl, siteConfig } from "@/data/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return portfolioCertificates.map((certificate) => ({
-    slug: certificate.id,
-  }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const certificate = portfolioCertificates.find((c) => c.id === slug);
+  const certificate = await getCertificateBySlug(slug);
 
   if (!certificate) {
     return {
@@ -37,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CertificatePage({ params }: Props) {
   const { slug } = await params;
-  const certificate = portfolioCertificates.find((c) => c.id === slug);
+  const certificate = await getCertificateBySlug(slug);
 
   if (!certificate) {
     notFound();

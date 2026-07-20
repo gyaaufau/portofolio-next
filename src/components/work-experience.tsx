@@ -1,4 +1,4 @@
-import type { WorkExperienceItem } from "@/data/portfolio";
+import type { WorkExperienceItem } from "@/data/types";
 
 interface WorkExperienceProps {
   experiences: WorkExperienceItem[];
@@ -6,7 +6,7 @@ interface WorkExperienceProps {
 
 export function WorkExperience({ experiences }: WorkExperienceProps) {
   const displayExperiences = [...experiences].sort((left, right) =>
-    right.order - left.order
+    right.sortOrder - left.sortOrder
   );
 
   return (
