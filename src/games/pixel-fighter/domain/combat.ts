@@ -1,3 +1,4 @@
+/** Pure combo and animation-state rules. */
 import type { AnimationId, AttackDefinition } from "./types";
 
 export function nextComboStage(current: number, grounded: boolean, aerialStages: number) {

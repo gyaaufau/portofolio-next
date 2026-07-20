@@ -1,3 +1,4 @@
+/** Round, scoring, and deterministic random helpers. */
 import type { MatchResult, RoundState } from "./types";
 
 export const MAX_VITALITY = 100;

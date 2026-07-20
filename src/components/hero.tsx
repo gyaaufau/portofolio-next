@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowDownRight, FileText, MapPin } from "lucide-react";
-import { FightGameHero } from "./fight-game-hero";
+import { HeroGameShell } from "@/games/core/hero-game-shell";
 
 interface HeroProps {
   name: string;
@@ -15,8 +15,7 @@ export function Hero({ name, role, intro, location, openToOpportunities = true }
 
   return (
     <header id="top" className="immersive-hero">
-      <FightGameHero />
-      <div className="immersive-hero-copy hero-enter">
+      <HeroGameShell>
         <div className="max-w-xl">
           <div className="mb-7 flex items-center gap-3">
             <span className="text-pixel text-[9px] text-[color:var(--hero-accent)]">PLAYER ONE</span>
@@ -39,7 +38,7 @@ export function Hero({ name, role, intro, location, openToOpportunities = true }
             </Link>
           </div>
         </div>
-      </div>
+      </HeroGameShell>
     </header>
   );
 }

@@ -1,11 +1,11 @@
 import * as Phaser from "phaser";
-import { decideAI } from "./ai";
-import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "./combat";
-import { CHARACTERS, chooseOpponent } from "./characters";
-import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "./items";
-import { createArenaLayout } from "./layout";
-import { canUseBufferedJump, COYOTE_TIME_MS, fastFallVelocity, JUMP_BUFFER_MS } from "./movement";
-import { applyDamage, awardRound, calculateKnockback, createSeededRandom, getMatchResult, MAX_VITALITY, resolveTimedRound, ROUND_SECONDS } from "./rules";
+import { decideAI } from "../domain/ai";
+import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "../domain/combat";
+import { CHARACTERS, chooseOpponent } from "../domain/characters";
+import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "../domain/items";
+import { createArenaLayout } from "../domain/layout";
+import { canUseBufferedJump, COYOTE_TIME_MS, fastFallVelocity, JUMP_BUFFER_MS } from "../domain/movement";
+import { applyDamage, awardRound, calculateKnockback, createSeededRandom, getMatchResult, MAX_VITALITY, resolveTimedRound, ROUND_SECONDS } from "../domain/rules";
 import {
   EMPTY_INPUT,
   type ActiveItemState,
@@ -22,12 +22,13 @@ import {
   type InputState,
   type ItemId,
   type RoundState,
-} from "./types";
+} from "../domain/types";
 
-const BASE_WIDTH = 300;
-const BASE_HEIGHT = 200;
+export const BASE_WIDTH = 300;
+export const BASE_HEIGHT = 200;
 const GRAVITY = 430;
-const ASSET_ROOT = "/FIGHTGAME_Assets";
+const SOURCE_ASSET_ROOT = "/FIGHTGAME_Assets";
+const RUNTIME_ASSET_ROOT = "/games/pixel-fighter/generated";
 
 type KeyMap = {
   left: Phaser.Input.Keyboard.Key;
@@ -95,16 +96,7 @@ type PickupRuntime = {
   spawnedAt: number;
 };
 
-export type FightGameController = {
-  start: () => void;
-  replay: () => void;
-  pause: (paused: boolean) => void;
-  setMobileInput: (next: Partial<InputState>) => void;
-  setMuted: (muted: boolean) => void;
-  destroy: () => void;
-};
-
-class FightScene extends Phaser.Scene {
+export class FightScene extends Phaser.Scene {
   private playerId: CharacterId;
   private enemyId: CharacterId;
   private bridge: GameBridge;
@@ -157,12 +149,12 @@ class FightScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.atlas("characters", `${ASSET_ROOT}/generated/characters.png`, `${ASSET_ROOT}/generated/characters.json`);
-    this.load.atlas("environment", `${ASSET_ROOT}/generated/environment.png`, `${ASSET_ROOT}/generated/environment.json`);
-    this.load.atlas("effects", `${ASSET_ROOT}/generated/effects.png`, `${ASSET_ROOT}/generated/effects.json`);
-    this.load.atlas("items", `${ASSET_ROOT}/generated/items.png`, `${ASSET_ROOT}/generated/items.json`);
-    this.load.image("snowball", `${ASSET_ROOT}/FXs/Snowball.png`);
-    this.load.image("muzzle", `${ASSET_ROOT}/FXs/MuzzleFlash.png`);
+    this.load.atlas("characters", `${RUNTIME_ASSET_ROOT}/characters.png`, `${RUNTIME_ASSET_ROOT}/characters.json`);
+    this.load.atlas("environment", `${RUNTIME_ASSET_ROOT}/environment.png`, `${RUNTIME_ASSET_ROOT}/environment.json`);
+    this.load.atlas("effects", `${RUNTIME_ASSET_ROOT}/effects.png`, `${RUNTIME_ASSET_ROOT}/effects.json`);
+    this.load.atlas("items", `${RUNTIME_ASSET_ROOT}/items.png`, `${RUNTIME_ASSET_ROOT}/items.json`);
+    this.load.image("snowball", `${SOURCE_ASSET_ROOT}/FXs/Snowball.png`);
+    this.load.image("muzzle", `${SOURCE_ASSET_ROOT}/FXs/MuzzleFlash.png`);
   }
 
   create() {
@@ -942,7 +934,7 @@ class FightScene extends Phaser.Scene {
 
   private ensureFinishers() {
     if (this.finishersReady || this.textures.exists("finishers")) return;
-    this.load.atlas("finishers", `${ASSET_ROOT}/generated/finishers.png`, `${ASSET_ROOT}/generated/finishers.json`);
+    this.load.atlas("finishers", `${RUNTIME_ASSET_ROOT}/finishers.png`, `${RUNTIME_ASSET_ROOT}/finishers.json`);
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
       this.finishersReady = true;
       if (!this.anims.exists("out-glow")) {
@@ -1012,36 +1004,4 @@ class FightScene extends Phaser.Scene {
     oscillator.start();
     oscillator.stop(this.audioContext.currentTime + duration);
   }
-}
-
-export function mountFightGame(parent: HTMLElement, playerId: CharacterId, bridge: GameBridge, reducedMotion: boolean): FightGameController {
-  const scene = new FightScene(playerId, bridge, reducedMotion);
-  const game = new Phaser.Game({
-    type: Phaser.AUTO,
-    width: BASE_WIDTH,
-    height: BASE_HEIGHT,
-    parent,
-    transparent: true,
-    pixelArt: true,
-    roundPixels: true,
-    antialias: false,
-    physics: { default: "arcade", arcade: { gravity: { x: 0, y: 0 }, debug: false, fixedStep: true, fps: 60 } },
-    scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH, width: BASE_WIDTH, height: BASE_HEIGHT },
-    input: { activePointers: 6 },
-    scene,
-    banner: false,
-    render: { pixelArt: true, antialias: false, roundPixels: true, transparent: true, maxTextures: 16 },
-  });
-
-  return {
-    start: () => scene.startMatch(),
-    replay: () => scene.replay(),
-    pause: (paused) => scene.setPaused(paused),
-    setMobileInput: (next) => scene.setMobileInput(next),
-    setMuted: (muted) => scene.setMuted(muted),
-    destroy: () => {
-      scene.shutdownAudio();
-      game.destroy(true);
-    },
-  };
 }

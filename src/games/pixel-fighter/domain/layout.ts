@@ -1,3 +1,4 @@
+/** Responsive arena geometry independent of the renderer. */
 import type { ArenaLayout } from "./types";
 
 export function createArenaLayout(width: number, height: number): ArenaLayout {

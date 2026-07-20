@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
-import { decideAI } from "../src/game/ai";
-import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "../src/game/combat";
-import { CHARACTER_IDS, CHARACTERS, chooseOpponent, parseCharacterSelection } from "../src/game/characters";
-import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "../src/game/items";
-import { createArenaLayout } from "../src/game/layout";
-import { canUseBufferedJump, fastFallVelocity, isOutsideBlastBoundary, needsEdgeRecovery } from "../src/game/movement";
-import { applyDamage, awardRound, calculateKnockback, createSeededRandom, getMatchResult, resolveTimedRound } from "../src/game/rules";
-import { EMPTY_INPUT, type FighterState, type RoundState } from "../src/game/types";
+import { decideAI } from "../src/games/pixel-fighter/domain/ai";
+import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "../src/games/pixel-fighter/domain/combat";
+import { CHARACTER_IDS, CHARACTERS, chooseOpponent, parseCharacterSelection } from "../src/games/pixel-fighter/domain/characters";
+import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "../src/games/pixel-fighter/domain/items";
+import { createArenaLayout } from "../src/games/pixel-fighter/domain/layout";
+import { canUseBufferedJump, fastFallVelocity, isOutsideBlastBoundary, needsEdgeRecovery } from "../src/games/pixel-fighter/domain/movement";
+import { applyDamage, awardRound, calculateKnockback, createSeededRandom, getMatchResult, resolveTimedRound } from "../src/games/pixel-fighter/domain/rules";
+import { EMPTY_INPUT, type FighterState, type RoundState } from "../src/games/pixel-fighter/domain/types";
 
 test("all fighters have complete animation and combat manifests", () => {
   for (const id of CHARACTER_IDS) {
@@ -32,7 +32,7 @@ test("all fighters have complete animation and combat manifests", () => {
 });
 
 test("generated atlases contain every declared character frame with stable origins", () => {
-  const atlasPath = new URL("../public/FIGHTGAME_Assets/generated/characters.json", import.meta.url);
+  const atlasPath = new URL("../public/games/pixel-fighter/generated/characters.json", import.meta.url);
   assert.equal(existsSync(atlasPath), true);
   type AtlasFrame = { frame: { x: number; y: number; w: number; h: number }; pivot: { x: number; y: number }; sourceSize: { w: number; h: number } };
   const atlas = JSON.parse(readFileSync(atlasPath, "utf8")) as { frames: Record<string, AtlasFrame>; meta: { image: string; size: { w: number; h: number } } };
@@ -52,8 +52,8 @@ test("generated atlases contain every declared character frame with stable origi
 
 test("environment, effects, finishers, and UI atlases have valid Phaser metadata and production files", () => {
   for (const name of ["environment", "effects", "finishers", "items"]) {
-    const jsonPath = new URL(`../public/FIGHTGAME_Assets/generated/${name}.json`, import.meta.url);
-    const imagePath = new URL(`../public/FIGHTGAME_Assets/generated/${name}.png`, import.meta.url);
+    const jsonPath = new URL(`../public/games/pixel-fighter/generated/${name}.json`, import.meta.url);
+    const imagePath = new URL(`../public/games/pixel-fighter/generated/${name}.png`, import.meta.url);
     assert.equal(existsSync(jsonPath), true);
     assert.equal(existsSync(imagePath), true);
     const atlas = JSON.parse(readFileSync(jsonPath, "utf8")) as { frames: Record<string, { frame: { x: number; y: number; w: number; h: number } }>; meta: { image: string } };

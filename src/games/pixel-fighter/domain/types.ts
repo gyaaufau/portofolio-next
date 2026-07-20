@@ -1,3 +1,4 @@
+/** Types owned exclusively by the pixel-fighter game. */
 export type CharacterId = "MARSTON" | "MUSASHI" | "NAMKA";
 
 export type AnimationId =

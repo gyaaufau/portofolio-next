@@ -1,3 +1,4 @@
+/** Seeded container and pickup rules. */
 import type { ContainerId, ItemId } from "./types";
 
 export const CONTAINERS: Record<ContainerId, { frame: string; hitPoints: number }> = {

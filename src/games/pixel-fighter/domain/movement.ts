@@ -1,3 +1,4 @@
+/** Pure movement and recovery rules. */
 export const COYOTE_TIME_MS = 105;
 export const JUMP_BUFFER_MS = 115;
 export const MAX_JUMPS = 2;

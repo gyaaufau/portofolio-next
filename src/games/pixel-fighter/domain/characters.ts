@@ -1,3 +1,4 @@
+/** Declarative pixel-fighter roster and combat manifests. */
 import type { AnimationDefinition, AttackDefinition, CharacterDefinition, CharacterId, HitWindow, ImpactId } from "./types";
 
 const frame = (character: CharacterId, path: string) => `CHARAs/${character}/${path}`;

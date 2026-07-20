@@ -1,3 +1,4 @@
+/** Deterministic utility AI for the pixel fighter. */
 import { CHARACTERS } from "./characters";
 import { EMPTY_INPUT, type AIContext, type AIDecision, type InputState } from "./types";
 

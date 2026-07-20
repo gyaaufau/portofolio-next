@@ -4,7 +4,7 @@ import sharp from "sharp";
 
 const projectRoot = process.cwd();
 const assetRoot = path.join(projectRoot, "public", "FIGHTGAME_Assets");
-const outputRoot = path.join(assetRoot, "generated");
+const outputRoot = path.join(projectRoot, "public", "games", "pixel-fighter", "generated");
 const maxAtlasWidth = 1024;
 const padding = 2;
 

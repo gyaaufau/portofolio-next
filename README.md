@@ -57,7 +57,9 @@ Legacy `/projects` URLs permanently redirect to `/apps`, including detail slugs.
 
 ## Playable hero
 
-The homepage fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/FIGHTGAME_Assets/generated` so deployments do not process the source art.
+The homepage uses a typed hero-game registry in `src/games/registry.ts`. Change `ACTIVE_HERO_GAME_ID` to select one registered game; visitors see only that curated game. Each game owns its engine, domain rules, UI, and runtime assets while the shared shell owns loading, fullscreen reveal, visibility, focus, and failure handling.
+
+The pixel fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/games/pixel-fighter/generated` so deployments do not process the source art.
 
 Regenerate the derived atlases after changing game art:
 
