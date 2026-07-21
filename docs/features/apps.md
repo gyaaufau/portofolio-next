@@ -79,7 +79,7 @@ Request
 
 Important state rules:
 
-- `force-dynamic` — fresh data on every request
+- ISR (`revalidate = 3600`) — cached static generation with hourly revalidation
 - No client-side state management
 
 Long-lived state:

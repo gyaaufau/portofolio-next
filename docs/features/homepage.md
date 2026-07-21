@@ -82,7 +82,8 @@ Request
 
 Important state rules:
 
-- `force-dynamic` — fresh data on every request
+- ISR (`revalidate = 3600`) — cached static generation with hourly revalidation
+- `React.cache()` deduplicates data queries within a single request
 - No client-side state management
 - All data fetched server-side
 
@@ -132,7 +133,7 @@ Source of truth:
 
 Local/cache behavior:
 
-`None` — `force-dynamic` disables caching
+ISR with 1-hour revalidation. Data functions wrapped with `React.cache()` for request deduplication.
 
 Remote behavior:
 
@@ -205,7 +206,7 @@ Prioritize:
 
 ## Known Limitations
 
-- No static generation (all dynamic)
+- Uses ISR (not fully static or fully dynamic)
 - No pagination for sections
 - HeroLink and DirectoryLink have no admin management UI
 

@@ -16,7 +16,7 @@ The goal is selective context loading: read only the documents needed for the cu
 | `navigation.md` | Route topology and cross-feature flows |
 | `features/*.md` | Feature behavior, ownership, state, contracts, and limitations |
 | `data/*.md` | Persistence, schema authority, migration, sync, and data-source rules |
-| `integrations/*.md` | External service boundaries and operational contracts |
+| `integrations/*.md` | External service boundaries and operational contracts (Prisma, Phaser, Jose, R2) |
 | `decisions/*.md` | Durable architecture decisions and rationale |
 | `archive/*` | Historical context only |
 

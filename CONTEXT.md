@@ -25,7 +25,7 @@ Use:
 **Product:** Gialoop Portfolio
 
 **One-line description:**
-A database-backed Next.js portfolio for Argya Aulia Fauzandika, showcasing Flutter apps, certificates, work experience, and a playable pixel-art hero game.
+A database-backed Next.js portfolio for Argya Aulia Fauzandika, showcasing Flutter apps, certificates, work experience, and a playable pixel-art hero game. Static assets served from Cloudflare R2.
 
 **Primary users:**
 - Visitors: recruiters, collaborators, and developers viewing portfolio work
@@ -375,9 +375,10 @@ Visitor Request
 | Concept | Canonical Owner | Notes |
 |---|---|---|
 | Portfolio data | PostgreSQL via Prisma | Single source of truth |
+| Static assets | Cloudflare R2 | Images, CV, brand files. See `docs/integrations/r2-assets.md` |
 | Admin auth | `src/lib/auth.ts` | JWT creation/verification |
 | Site theme | `SiteSettings` DB row | Accent color |
-| Data queries | `src/data/db.ts` | All Prisma queries |
+| Data queries | `src/data/db.ts` | All Prisma queries (wrapped with `React.cache()`) |
 | Types | `src/data/types.ts` | All TypeScript types |
 | Server Actions | `src/app/admin/actions.ts` | All mutations |
 | Game engine | `src/games/` | Phaser 4.1 |

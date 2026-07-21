@@ -101,6 +101,11 @@ Environment values:
 - `DATABASE_URL` — PostgreSQL connection string
 - `ADMIN_PASSWORD` — Plain-text password for admin login
 - `ADMIN_SESSION_SECRET` — 32+ character secret for JWT signing
+- `R2_ENDPOINT` — Cloudflare R2 S3-compatible API endpoint
+- `R2_BUCKET` — R2 bucket name
+- `R2_PUBLIC_URL` — R2 public access URL for serving assets
+- `R2_ACCESS_KEY_ID` — S3 access key for R2 authentication
+- `R2_SECRET_ACCESS_KEY` — S3 secret key for R2 authentication
 
 ---
 
@@ -218,6 +223,7 @@ Cache:
 
 - `Phaser 4.1` — Client-side game engine for hero section
 - `shadcn/ui` — UI component primitives
+- `Cloudflare R2` — Object storage for all portfolio assets (images, CV, brand files). See `docs/integrations/r2-assets.md`.
 
 Detailed contracts belong in `docs/integrations/`.
 
@@ -304,7 +310,8 @@ Cross-feature rules:
 
 - Admin routes share data functions with public routes
 - Admin Server Actions use `requireAdmin()` guard before mutations
-- Public pages use `force-dynamic` to ensure fresh data on each request
+- Public pages use ISR (`revalidate = 3600`) for cached static generation with hourly revalidation
+- Data functions wrapped with `React.cache()` for request-level deduplication
 
 Shared code rules:
 
@@ -324,7 +331,7 @@ Shared code rules:
 | Portfolio content (apps, certificates, work experience, profile, contact, skills) | PostgreSQL via Prisma | None |
 | Site settings (accent color) | PostgreSQL via Prisma | None |
 | Admin sessions | JWT in HTTP-only cookie | None |
-| Static assets (images, CV, brand) | `public/data/` filesystem | None |
+| Static assets (images, CV, brand) | Cloudflare R2 | S3 API for upload; public URL for serving |
 
 ### Remote Data
 
@@ -472,11 +479,11 @@ npx prisma validate
 ## 15. Known Global Gaps
 
 - No production caching layer (every request hits PostgreSQL)
-- No image optimization pipeline (images served directly from `public/`)
 - No CI/CD configuration in repository
 - No production monitoring or error tracking
 - Game engine has no fallback for browsers without WebGL
 - `src/game/` directory exists but is empty (legacy)
+- CDN proxy for R2 pending (`r2.dev` may be blocked in some countries)
 
 ---
 

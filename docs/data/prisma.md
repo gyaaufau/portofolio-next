@@ -14,7 +14,7 @@ This system owns:
 
 It does not own:
 
-- Static assets (images, CV PDF, brand files) — live in `public/data/`
+- Static assets (images, CV PDF, brand files) — served from Cloudflare R2 (see `docs/integrations/r2-assets.md`)
 - Admin sessions — JWT in HTTP-only cookie, not persisted in DB
 - Game state — client-side Phaser engine
 
@@ -109,7 +109,8 @@ Key read functions:
 
 Important read rules:
 
-- All public pages use `force-dynamic` — no static generation
+- Public pages use ISR (`revalidate = 3600`) — cached static generation with hourly revalidation
+- All data functions wrapped with `React.cache()` for request-level deduplication
 - `getSiteSettings()` has fallback defaults if DB query fails
 - `getFeaturedCertificates()` falls back to latest 3 if fewer than 3 are featured
 - `getPortfolio()` aggregates multiple queries via `Promise.all`
@@ -235,7 +236,7 @@ Source of truth:
 
 Cache:
 
-`None` — All pages use `force-dynamic`, no stale data
+ISR with 1-hour revalidation (`revalidate = 3600`). `React.cache()` deduplicates queries within a single request.
 
 Sync direction:
 
@@ -297,7 +298,8 @@ Smoke tests:
 - Seed is destructive — not safe for production use
 - No database backup strategy in repository
 - No connection pooling configuration (uses default Prisma behavior)
-- Json type for `sections` has no runtime validation beyond `JSON.parse`
+- Json type for `sections` parsed via `parseSections()` with try/catch fallback in admin actions
+- Indexes added: `App(featured,sortOrder)`, `AppScreenshot(appId,order)`, `Certificate(featured,issued)`, `WorkExperience(sortOrder)`
 - Singleton models (Profile, Contact, SiteSettings) have no enforcement of single-row constraint at DB level
 
 ---

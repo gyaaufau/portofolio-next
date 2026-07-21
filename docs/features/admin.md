@@ -166,7 +166,7 @@ Read rules:
 | Expired JWT | Redirect to `/admin/login` |
 | Missing env vars | Error thrown on first auth attempt |
 | Duplicate slug | Prisma unique constraint error |
-| Invalid JSON in sections | JSON.parse throws error |
+| Invalid JSON in sections | `parseSections()` catches and returns empty array (safe fallback) |
 
 ---
 
@@ -211,7 +211,7 @@ Prioritize:
 - No rate limiting on login
 - No audit log for mutations
 - HeroLink and DirectoryLink have no admin management UI
-- No file upload — images must be pre-placed in `public/data/`
+- No file upload UI — images uploaded to R2 via `scripts/migrate-to-r2.ts`, paths entered as text in admin forms
 
 ---
 

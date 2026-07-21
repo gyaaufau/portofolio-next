@@ -102,7 +102,7 @@ Success:
 
 Failure:
 
-- Login: `{ error: "Invalid password" }` or `{ error: "Admin authentication is not configured." }`
+- Login: `{ error: "Invalid password" }` or `{ error: <actual error message from auth module> }`
 - Verify: `false`
 
 Retry:

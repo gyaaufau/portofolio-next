@@ -78,7 +78,7 @@ Request
 
 Important state rules:
 
-- `force-dynamic` — fresh data on every request
+- ISR (`revalidate = 3600`) — cached static generation with hourly revalidation
 - Route parameter named `[slug]` but uses certificate `id` for lookup
 
 Long-lived state:
