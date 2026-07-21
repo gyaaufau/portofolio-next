@@ -7,6 +7,7 @@ import { PublicChrome } from "@/components/public-chrome";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
 import { getSiteSettings } from "@/data/db";
 import { readableForeground } from "@/lib/theme";
+import { r2Url } from "@/lib/r2";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
@@ -20,15 +21,15 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.siteName,
-    images: [{ url: "/data/brand/og-image.png", width: 1731, height: 909, alt: "Gialoop portfolio preview image" }],
+    images: [{ url: r2Url("/data/brand/og-image.png"), width: 1731, height: 909, alt: "Gialoop portfolio preview image" }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: ["/data/brand/og-image.png"],
+    images: [r2Url("/data/brand/og-image.png")],
   },
-  icons: { icon: "/data/brand/logo-loop.svg" },
+  icons: { icon: r2Url("/data/brand/logo-loop.svg") },
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { BackLink } from "@/components/back-link";
+import { r2Url } from "@/lib/r2";
 
 export const metadata: Metadata = { title: "CV | Argya Aulia Fauzandika", description: "Resume for Argya Aulia Fauzandika.", robots: "noindex, nofollow" };
 
 export default function CVPage() {
-  const cvFile = "/data/myself/CV_ARGYA AULIA FAUZANDIKA.pdf";
+  const cvFile = r2Url("/data/myself/CV_ARGYA AULIA FAUZANDIKA.pdf");
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1200px] px-5 pb-10 pt-10 md:px-6 md:pt-16">
       <BackLink href="/" label="Home" />

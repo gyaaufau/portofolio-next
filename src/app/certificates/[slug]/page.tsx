@@ -4,7 +4,7 @@ import { absoluteUrl } from "@/data/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 interface Props {
   params: Promise<{ slug: string }>;

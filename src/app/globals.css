@@ -155,7 +155,6 @@
 }
 
 .hero-enter { animation: pixel-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.hero-enter-delay { animation: pixel-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both; }
 
 @property --iris-radius {
   syntax: "<length>";
@@ -425,7 +424,7 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  .hero-enter, .hero-enter-delay { animation: none; }
+  .hero-enter { animation: none; }
   .fight-idle-sprite, .fight-idle-shadow, .fight-preview-fog, .fight-preview-leaves, .fight-particle { animation: none !important; }
   .fight-scrim, .fight-aperture-ring, .fight-canvas-host, .fight-vitality i { transition: none !important; }
 }

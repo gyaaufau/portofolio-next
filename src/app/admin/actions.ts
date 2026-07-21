@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { r2Url } from "@/lib/r2";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import {
@@ -11,6 +12,17 @@ import {
   requireAdmin,
 } from "@/lib/auth";
 import { resolveAccent } from "@/lib/theme";
+import type { Prisma } from "@prisma/client";
+
+function parseSections(value: unknown): Prisma.InputJsonValue {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(String(value));
+    return Array.isArray(parsed) ? (parsed as Prisma.InputJsonValue) : [];
+  } catch {
+    return [];
+  }
+}
 
 export async function login(password: string) {
   try {
@@ -18,8 +30,9 @@ export async function login(password: string) {
     const cookieStore = await cookies();
     cookieStore.set(ADMIN_COOKIE, await createSessionToken(), adminCookieOptions);
     return { success: true };
-  } catch {
-    return { error: "Admin authentication is not configured." };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Admin authentication is not configured.";
+    return { error: message };
   }
 }
 
@@ -54,13 +67,13 @@ export async function createApp(formData: FormData) {
       githubUrl: String(data.githubUrl || "") || null,
       otherUrl: String(data.otherUrl || "") || null,
       otherUrlLabel: String(data.otherUrlLabel || "") || null,
-      appIconSrc: String(data.appIconSrc || "/data/myself/me.jpg"),
+      appIconSrc: String(data.appIconSrc || r2Url("/data/myself/me.jpg")),
       appIconAlt: String(data.appIconAlt || ""),
-      thumbnailSrc: String(data.thumbnailSrc || "/data/myself/me.jpg"),
+      thumbnailSrc: String(data.thumbnailSrc || r2Url("/data/myself/me.jpg")),
       thumbnailAlt: String(data.thumbnailAlt || ""),
       stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
       highlights: String(data.highlights || "").split("\n").filter(Boolean),
-      sections: data.sections ? JSON.parse(String(data.sections)) : [],
+      sections: parseSections(data.sections),
     },
   });
 
@@ -97,7 +110,7 @@ export async function updateApp(id: string, formData: FormData) {
       thumbnailAlt: String(data.thumbnailAlt || ""),
       stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
       highlights: String(data.highlights || "").split("\n").filter(Boolean),
-      sections: data.sections ? JSON.parse(String(data.sections)) : [],
+      sections: parseSections(data.sections),
     },
   });
 
@@ -255,7 +268,7 @@ export async function updateProfile(formData: FormData) {
     intro: String(data.intro || ""),
     location: String(data.location || ""),
     openToOpportunities: data.openToOpportunities === "on",
-    photoSrc: String(data.photoSrc || "/data/myself/me.jpg"),
+    photoSrc: String(data.photoSrc || r2Url("/data/myself/me.jpg")),
     photoAlt: String(data.photoAlt || ""),
     photoWidth: Number(data.photoWidth || 400),
     photoHeight: Number(data.photoHeight || 500),

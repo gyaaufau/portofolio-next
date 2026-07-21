@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
+import { r2Url } from "../src/lib/r2";
 
 const connectionString = process.env.DATABASE_URL!;
 const adapter = new PrismaPg({ connectionString });
@@ -37,7 +38,7 @@ async function main() {
       intro: "I build scalable Flutter apps that don\u2019t just work\u2014but are fast, maintainable, and designed to deliver real user value.",
       location: "Bandung, Indonesia",
       openToOpportunities: true,
-      photoSrc: "/data/myself/me.jpg",
+      photoSrc: r2Url("/data/myself/me.jpg"),
       photoAlt: "Portrait of Argya Aulia Fauzandika",
       photoWidth: 400,
       photoHeight: 500,
@@ -100,9 +101,9 @@ async function main() {
       period: "October 2022 - March 2023",
       periodShort: "Oct 2022 - Mar 2023",
       sortOrder: 40,
-      appIconSrc: "/data/project/01_shou/logo/app_icon.png",
+      appIconSrc: r2Url("/data/project/01_shou/logo/app_icon.png"),
       appIconAlt: "Shou Project logo",
-      thumbnailSrc: "/data/project/01_shou/logo/app_icon.png",
+      thumbnailSrc: r2Url("/data/project/01_shou/logo/app_icon.png"),
       thumbnailAlt: "Shou Project thumbnail",
       stack: ["Flutter", "Dart", "dio", "flutter_bloc", "hydrated_bloc", "GoRouter", "GetIt", "Hive", "SharedPreferences", "melos"],
       highlights: [
@@ -130,11 +131,11 @@ async function main() {
   });
 
   const shouScreenshots = [
-    { src: "/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png", alt: "Shou screenshot 1", width: 887, height: 1920 },
-    { src: "/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png", alt: "Shou screenshot 2", width: 887, height: 1920 },
-    { src: "/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png", alt: "Shou screenshot 3", width: 887, height: 1920 },
-    { src: "/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.07.png", alt: "Shou screenshot 4", width: 887, height: 1920 },
-    { src: "/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.13.png", alt: "Shou screenshot 5", width: 887, height: 1920 },
+    { src: r2Url("/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png"), alt: "Shou screenshot 1", width: 887, height: 1920 },
+    { src: r2Url("/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png"), alt: "Shou screenshot 2", width: 887, height: 1920 },
+    { src: r2Url("/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png"), alt: "Shou screenshot 3", width: 887, height: 1920 },
+    { src: r2Url("/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.07.png"), alt: "Shou screenshot 4", width: 887, height: 1920 },
+    { src: r2Url("/data/project/01_shou/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.13.png"), alt: "Shou screenshot 5", width: 887, height: 1920 },
   ];
   await prisma.appScreenshot.createMany({
     data: shouScreenshots.map((s, i) => ({ ...s, order: i, appId: shou.id })),
@@ -157,9 +158,9 @@ async function main() {
       playStoreUrl: "https://play.google.com/store/apps/details?id=com.gialoop.otolog",
       websiteUrl: null,
       githubUrl: "https://github.com/gyaaufau/otolog",
-      appIconSrc: "/data/project/02_otolog/logo/otolog_app_icon_1024.png",
+      appIconSrc: r2Url("/data/project/02_otolog/logo/otolog_app_icon_1024.png"),
       appIconAlt: "OtoLog logo",
-      thumbnailSrc: "/data/project/02_otolog/logo/otolog_app_icon_1024.png",
+      thumbnailSrc: r2Url("/data/project/02_otolog/logo/otolog_app_icon_1024.png"),
       thumbnailAlt: "OtoLog thumbnail",
       stack: ["Flutter", "flutter_bloc (Cubit)", "Drift + SQLite", "GetIt", "GoRouter"],
       highlights: [
@@ -186,11 +187,11 @@ async function main() {
   });
 
   const otologScreenshots = [
-    { src: "/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png", alt: "OtoLog screenshot 1", width: 887, height: 1920 },
-    { src: "/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png", alt: "OtoLog screenshot 2", width: 887, height: 1920 },
-    { src: "/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png", alt: "OtoLog screenshot 3", width: 887, height: 1920 },
-    { src: "/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.07.png", alt: "OtoLog screenshot 4", width: 887, height: 1920 },
-    { src: "/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.13.png", alt: "OtoLog screenshot 5", width: 887, height: 1920 },
+    { src: r2Url("/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png"), alt: "OtoLog screenshot 1", width: 887, height: 1920 },
+    { src: r2Url("/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png"), alt: "OtoLog screenshot 2", width: 887, height: 1920 },
+    { src: r2Url("/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png"), alt: "OtoLog screenshot 3", width: 887, height: 1920 },
+    { src: r2Url("/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.07.png"), alt: "OtoLog screenshot 4", width: 887, height: 1920 },
+    { src: r2Url("/data/project/02_otolog/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.13.png"), alt: "OtoLog screenshot 5", width: 887, height: 1920 },
   ];
   await prisma.appScreenshot.createMany({
     data: otologScreenshots.map((s, i) => ({ ...s, order: i, appId: otolog.id })),
@@ -209,9 +210,9 @@ async function main() {
       period: "August 2025 - September 2025",
       periodShort: "Aug 2025 - Sep 2025",
       sortOrder: 20,
-      appIconSrc: "/data/project/03_litbang_au_app/logo/logo.png",
+      appIconSrc: r2Url("/data/project/03_litbang_au_app/logo/logo.png"),
       appIconAlt: "Litbang TNI AU App logo",
-      thumbnailSrc: "/data/project/03_litbang_au_app/logo/logo.png",
+      thumbnailSrc: r2Url("/data/project/03_litbang_au_app/logo/logo.png"),
       thumbnailAlt: "Litbang TNI AU App thumbnail",
       stack: ["Flutter", "Dart", "flutter_bloc", "go_router", "dio", "get_it", "flutter_secure_storage", "shared_preferences", "sqflite", "Firebase Core", "Cloud Firestore"],
       highlights: [
@@ -241,9 +242,9 @@ async function main() {
   });
 
   const litbangScreenshots = [
-    { src: "/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png", alt: "Litbang screenshot 1", width: 887, height: 1920 },
-    { src: "/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png", alt: "Litbang screenshot 2", width: 887, height: 1920 },
-    { src: "/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png", alt: "Litbang screenshot 3", width: 887, height: 1920 },
+    { src: r2Url("/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png"), alt: "Litbang screenshot 1", width: 887, height: 1920 },
+    { src: r2Url("/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png"), alt: "Litbang screenshot 2", width: 887, height: 1920 },
+    { src: r2Url("/data/project/03_litbang_au_app/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png"), alt: "Litbang screenshot 3", width: 887, height: 1920 },
   ];
   await prisma.appScreenshot.createMany({
     data: litbangScreenshots.map((s, i) => ({ ...s, order: i, appId: litbang.id })),
@@ -262,9 +263,9 @@ async function main() {
       period: "Not published",
       periodShort: "N/A",
       sortOrder: 10,
-      appIconSrc: "/data/project/04_ditonton/logo/circle-g.png",
+      appIconSrc: r2Url("/data/project/04_ditonton/logo/circle-g.png"),
       appIconAlt: "Ditonton logo",
-      thumbnailSrc: "/data/project/04_ditonton/logo/circle-g.png",
+      thumbnailSrc: r2Url("/data/project/04_ditonton/logo/circle-g.png"),
       thumbnailAlt: "Ditonton thumbnail",
       stack: ["Flutter", "Provider", "GetIt", "GoRouter", "Sqflite", "Dartz"],
       highlights: [
@@ -291,9 +292,9 @@ async function main() {
   });
 
   const ditontonScreenshots = [
-    { src: "/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png", alt: "Ditonton screenshot 1", width: 887, height: 1920 },
-    { src: "/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png", alt: "Ditonton screenshot 2", width: 887, height: 1920 },
-    { src: "/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png", alt: "Ditonton screenshot 3", width: 887, height: 1920 },
+    { src: r2Url("/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.05.19.png"), alt: "Ditonton screenshot 1", width: 887, height: 1920 },
+    { src: r2Url("/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.16.59.png"), alt: "Ditonton screenshot 2", width: 887, height: 1920 },
+    { src: r2Url("/data/project/04_ditonton/screenshots/Simulator Screenshot - iPhone 15 Pro - 2026-05-01 at 18.17.02.png"), alt: "Ditonton screenshot 3", width: 887, height: 1920 },
   ];
   await prisma.appScreenshot.createMany({
     data: ditontonScreenshots.map((s, i) => ({ ...s, order: i, appId: ditonton.id })),
@@ -317,7 +318,7 @@ async function main() {
         ],
         relevance: "This certificate shows consistency in staying active within the developer community, not only through building products but also through attending industry events that broaden perspective and keep technical knowledge current.",
         issuerNotes: ["Dicoding Indonesia", "Signed by Narenda Wicaksono, CEO Dicoding Indonesia"],
-        imageSrc: "/data/certifications/dicoding-developer-conference-2026/certificate.jpg",
+        imageSrc: r2Url("/data/certifications/dicoding-developer-conference-2026/certificate.jpg"),
         imageAlt: "Dicoding Developer Conference 2026 certificate preview",
         imageWidth: 800,
         imageHeight: 600,
@@ -337,7 +338,7 @@ async function main() {
         ],
         relevance: "This certificate demonstrates continued growth as a Flutter developer through structured learning, strengthening the technical foundation needed to build maintainable, production-ready mobile applications.",
         issuerNotes: ["Dicoding Indonesia", "Signed by Narenda Wicaksono, CEO Dicoding Indonesia"],
-        imageSrc: "/data/certifications/dicoding-flutter-developer-expert/certificate.jpg",
+        imageSrc: r2Url("/data/certifications/dicoding-flutter-developer-expert/certificate.jpg"),
         imageAlt: "Dicoding Flutter Developer Expert certificate preview",
         imageWidth: 800,
         imageHeight: 600,
@@ -359,7 +360,7 @@ async function main() {
         ],
         relevance: "This certificate marks one of the earlier milestones in the journey of learning Flutter seriously. It shows commitment to learning not only feature building, but also maintainable architecture patterns, modular project organization, and better engineering best practices for long-term app development.",
         issuerNotes: ["Android Enthusiast Jakarta", "Signed by Fiqri Hafzain Islami, Co-Founder of Android Enthusiast Jakarta"],
-        imageSrc: "/data/certifications/flutter-e-commerce-bootcamp/certificate.jpg",
+        imageSrc: r2Url("/data/certifications/flutter-e-commerce-bootcamp/certificate.jpg"),
         imageAlt: "Flutter E-commerce Bootcamp certificate preview",
         imageWidth: 800,
         imageHeight: 600,

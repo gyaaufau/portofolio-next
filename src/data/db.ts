@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type {
   AppItem,
@@ -161,39 +162,39 @@ function mapWorkExperience(row: {
   };
 }
 
-export async function getProfile(): Promise<Profile> {
+export const getProfile = cache(async function getProfile(): Promise<Profile> {
   const row = await prisma.profile.findFirst();
   if (!row) throw new Error("Profile not found");
   return row;
-}
+});
 
-export async function getContact(): Promise<Contact> {
+export const getContact = cache(async function getContact(): Promise<Contact> {
   const row = await prisma.contact.findFirst();
   if (!row) throw new Error("Contact not found");
   return row;
-}
+});
 
-export async function getHeroLinks(): Promise<HeroLink[]> {
+export const getHeroLinks = cache(async function getHeroLinks(): Promise<HeroLink[]> {
   return prisma.heroLink.findMany({ orderBy: { order: "asc" } });
-}
+});
 
-export async function getDirectoryLinks(): Promise<DirectoryLink[]> {
+export const getDirectoryLinks = cache(async function getDirectoryLinks(): Promise<DirectoryLink[]> {
   return prisma.directoryLink.findMany({ orderBy: { order: "asc" } });
-}
+});
 
-export async function getSkillCategories(): Promise<SkillCategory[]> {
+export const getSkillCategories = cache(async function getSkillCategories(): Promise<SkillCategory[]> {
   return prisma.skillCategory.findMany();
-}
+});
 
-export async function getApps(): Promise<AppItem[]> {
+export const getApps = cache(async function getApps(): Promise<AppItem[]> {
   const rows = await prisma.app.findMany({
     include: { screenshots: { orderBy: { order: "asc" } } },
     orderBy: { sortOrder: "desc" },
   });
   return rows.map(mapApp);
-}
+});
 
-export async function getFeaturedApps(): Promise<AppItem[]> {
+export const getFeaturedApps = cache(async function getFeaturedApps(): Promise<AppItem[]> {
   const rows = await prisma.app.findMany({
     where: { featured: true },
     include: { screenshots: { orderBy: { order: "asc" } } },
@@ -201,61 +202,59 @@ export async function getFeaturedApps(): Promise<AppItem[]> {
     take: 3,
   });
   return rows.map(mapApp);
-}
+});
 
-export async function getAppBySlug(slug: string): Promise<AppItem | null> {
+export const getAppBySlug = cache(async function getAppBySlug(slug: string): Promise<AppItem | null> {
   const row = await prisma.app.findUnique({
     where: { slug },
     include: { screenshots: { orderBy: { order: "asc" } } },
   });
   return row ? mapApp(row) : null;
-}
+});
 
-export async function getCertificates(): Promise<CertificateItem[]> {
+export const getCertificates = cache(async function getCertificates(): Promise<CertificateItem[]> {
   const rows = await prisma.certificate.findMany({
     orderBy: { issued: "desc" },
   });
   return rows.map(mapCertificate);
-}
+});
 
-export async function getFeaturedCertificates(): Promise<CertificateItem[]> {
-  const rows = await prisma.certificate.findMany({
+export const getFeaturedCertificates = cache(async function getFeaturedCertificates(): Promise<CertificateItem[]> {
+  const featured = await prisma.certificate.findMany({
     where: { featured: true },
     orderBy: { issued: "desc" },
     take: 3,
   });
-  if (rows.length < 3) {
-    const fallback = await prisma.certificate.findMany({
-      orderBy: { issued: "desc" },
-      take: 3,
-    });
-    return fallback.map(mapCertificate);
-  }
-  return rows.map(mapCertificate);
-}
+  if (featured.length >= 3) return featured.map(mapCertificate);
+  const fallback = await prisma.certificate.findMany({
+    orderBy: { issued: "desc" },
+    take: 3,
+  });
+  return fallback.map(mapCertificate);
+});
 
-export async function getCertificateBySlug(
+export const getCertificateBySlug = cache(async function getCertificateBySlug(
   id: string
 ): Promise<CertificateItem | null> {
   const row = await prisma.certificate.findUnique({ where: { id } });
   return row ? mapCertificate(row) : null;
-}
+});
 
-export async function getWorkExperiences(): Promise<WorkExperienceItem[]> {
+export const getWorkExperiences = cache(async function getWorkExperiences(): Promise<WorkExperienceItem[]> {
   const rows = await prisma.workExperience.findMany({
     orderBy: { sortOrder: "asc" },
   });
   return rows.map(mapWorkExperience);
-}
+});
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export const getSiteSettings = cache(async function getSiteSettings(): Promise<SiteSettings> {
   try {
     const settings = await prisma.siteSettings.findUnique({ where: { id: "site" } });
     return settings ?? { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
   } catch {
     return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
   }
-}
+});
 
 export async function getPortfolio() {
   const [profile, contact, heroLinks, skills, apps, certificates, experiences] =

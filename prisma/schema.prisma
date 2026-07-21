@@ -80,6 +80,8 @@ model App {
   screenshots   AppScreenshot[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@index([featured, sortOrder])
 }
 
 model AppScreenshot {
@@ -91,6 +93,8 @@ model AppScreenshot {
   order  Int    @default(0)
   appId  String
   app    App    @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@index([appId, order])
 }
 
 model Certificate {
@@ -110,6 +114,8 @@ model Certificate {
   imageHeight Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([featured, issued])
 }
 
 model WorkExperience {
@@ -125,6 +131,8 @@ model WorkExperience {
   highlights String[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([sortOrder])
 }
 
 model SkillCategory {

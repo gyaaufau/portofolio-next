@@ -11,6 +11,7 @@
     "game:atlas": "node scripts/build-fightgame-atlas.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1091.0",
     "@base-ui/react": "^1.4.1",
     "@fontsource/press-start-2p": "^5.3.0",
     "@neondatabase/serverless": "^1.1.0",
