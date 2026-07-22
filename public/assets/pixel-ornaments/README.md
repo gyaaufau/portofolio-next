@@ -108,7 +108,7 @@ Asset type: modular vertical pixel-art ornament for a modern editorial work-expe
 Input images: Image 1 is the original visual-direction reference. Image 2 is the approved pixel-ornament calibration sheet and should control palette density, hard pixel scale, weathering, moss, and silhouette treatment. Use both only as style references; do not copy their layouts or objects.
 Primary direction: a reclaimed weathered metal flagpole-like timeline spine with no flag anywhere, being overtaken by a slender living vine. Cozy post-apocalyptic/solarpunk, sparse rather than lush, asymmetrical leaf clusters, compact environmental sprite scale.
 Style/medium: genuine hard-edged pixel art, deliberate square pixel clusters, crisp silhouette, restricted retro palette, no painterly blending.
-Color palette: weathered charcoal and gray metal, warm rust traces, muted moss greens, tiny pale highlights. Match the approved pack.
+Color palette: weathered charcoal and gray metal, restrained warm rust traces, fresh natural greens, and tiny pale highlights. Vegetation must read as healthy and living in both themes without becoming neon or lush. Match the approved pack.
 Backdrop: perfectly flat solid #FF00FF chroma-key background, uniform edge to edge. No gradient, floor, texture, lighting variation, shadow, glow, reflection, or transparency. Do not use #FF00FF in the subject.
 Constraints: isolated module, generous padding, no flag, fabric, banner, character, face, animal, letters, numbers, logos, UI glyphs, watermark, cast shadow, antialiasing, soft blur, or accidental text.
 ```
@@ -117,21 +117,21 @@ Constraints: isolated module, generous padding, no flag, fabric, banner, charact
 
 ```text
 Module: TOP CAP.
-Composition: tall narrow portrait module, pole precisely centered on the horizontal axis and exiting through the exact bottom center so it can connect to another module. Show the empty capped top of the pole, one tiny pulley or tie-loop detail without rope or flag, and a young vine tip curling around the upper pole with only a few leaves. Keep the bottom connection simple and perfectly vertical.
+Composition: tall narrow portrait module, pole precisely centered on the horizontal axis and exiting through the exact bottom center so it can connect to another module. Show the empty capped top of the pole, one tiny pulley or tie-loop detail without rope or flag, and a young healthy vine tip curling around the upper pole with only a few leaves. Give the outer ornament a 52-pixel final silhouette, centered exactly within the canvas, while leaving the connector thickness unchanged. Keep the bottom connection simple and perfectly vertical.
 ```
 
 ### Seamless middle repeat
 
 ```text
 Module: SEAMLESS MIDDLE REPEAT.
-Composition: very tall narrow portrait module. The metal pole must be precisely centered, perfectly vertical, constant width, and continue through both the exact top center and exact bottom center. A thin vine spirals around it and also crosses both top and bottom at the same horizontal connection point. Add three or four varied sparse leaf clusters at irregular heights and alternating sides. Make top and bottom visually compatible for vertical repetition; no base and no cap.
+Composition: very tall narrow portrait module. The metal pole must be precisely centered, perfectly vertical, constant width, and continue through both the exact top center and exact bottom center. A sturdy vine spirals around it and also crosses both top and bottom at the same horizontal connection point. The complete opaque silhouette must span 46–50 pixels on the final 96-pixel-wide canvas so it visually matches the cap. Add three or four varied sparse leaf clusters at irregular heights and alternating sides. Make top and bottom visually compatible for vertical repetition; no base and no cap.
 ```
 
 ### Rooted base
 
 ```text
 Module: ROOTED BASE.
-Composition: tall narrow portrait module, with the pole entering through the exact top center and ending in a compact reclaimed masonry-and-soil base near the bottom. Add visible roots, two restrained grass tufts, small moss patches, and a few loose stones. Keep the footprint wider than the pole but compact, with transparent-looking chroma space around it and no cast shadow.
+Composition: tall narrow portrait module, with the pole entering through the exact top center and ending in a compact reclaimed masonry-and-soil base near the bottom. Add visible roots, two restrained healthy grass tufts, fresh moss patches, and a few loose stones. Target a centered 128-pixel final footprint while keeping the top connector unchanged, transparent-looking chroma space around it, and no cast shadow.
 ```
 
 ## Production notes

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
@@ -17,6 +18,54 @@ type RailAsset = {
 
 function publicPath(assetPath: string) {
   return path.join("public", assetPath.replace(/^\//, ""));
+}
+
+async function alphaBoundsWidth(assetPath: string) {
+  const { data, info } = await sharp(assetPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  let left = info.width;
+  let right = -1;
+
+  for (let pixel = 0; pixel < info.width * info.height; pixel += 1) {
+    if (data[pixel * info.channels + 3] === 0) continue;
+    const x = pixel % info.width;
+    left = Math.min(left, x);
+    right = Math.max(right, x);
+  }
+
+  assert.ok(right >= left, `${assetPath} has no opaque pixels`);
+  return right - left + 1;
+}
+
+async function alphaBoundsCenter(assetPath: string) {
+  const { data, info } = await sharp(assetPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  let left = info.width;
+  let right = -1;
+
+  for (let pixel = 0; pixel < info.width * info.height; pixel += 1) {
+    if (data[pixel * info.channels + 3] === 0) continue;
+    const x = pixel % info.width;
+    left = Math.min(left, x);
+    right = Math.max(right, x);
+  }
+
+  assert.ok(right >= left, `${assetPath} has no opaque pixels`);
+  return { boundsCenter: (left + right + 1) / 2, canvasCenter: info.width / 2 };
+}
+
+async function greenCoverage(assetPath: string) {
+  const { data, info } = await sharp(assetPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  let opaque = 0;
+  let greenPixels = 0;
+
+  for (let pixel = 0; pixel < info.width * info.height; pixel += 1) {
+    const offset = pixel * info.channels;
+    const [red, green, blue, alpha] = data.subarray(offset, offset + info.channels);
+    if (alpha === 0) continue;
+    opaque += 1;
+    if (green > red * 1.15 && green > blue * 1.05) greenPixels += 1;
+  }
+
+  return greenPixels / opaque;
 }
 
 test("the work-experience vine is a complete modular rail", async () => {
@@ -73,6 +122,46 @@ test("the work-experience vine is a complete modular rail", async () => {
       alphaMasks.push(alpha);
     }
     assert.deepEqual(alphaMasks[0], alphaMasks[1], `${asset.id} theme geometry drifted`);
+  }
+});
+
+test("the work-experience rail keeps its approved visual hierarchy", async () => {
+  const capWidth = await alphaBoundsWidth(path.join(root, "rails/work-experience-vine/cap/light.png"));
+  const repeatWidth = await alphaBoundsWidth(path.join(root, "rails/work-experience-vine/repeat/light.png"));
+  const baseWidth = await alphaBoundsWidth(path.join(root, "rails/work-experience-vine/base/light.png"));
+
+  assert.ok(repeatWidth >= 46 && repeatWidth <= 50, `repeat silhouette is ${repeatWidth}px wide, expected 46–50px`);
+  assert.equal(capWidth, 52, `cap silhouette is ${capWidth}px wide, expected 52px`);
+  assert.equal(baseWidth, 128, `base silhouette is ${baseWidth}px wide, expected 128px`);
+});
+
+test("the work-experience endpoints stay centered on the rail axis", async () => {
+  for (const theme of ["light", "dark"] as const) {
+    for (const part of ["cap", "base"] as const) {
+      const centers = await alphaBoundsCenter(path.join(root, `rails/work-experience-vine/${part}/${theme}.png`));
+      assert.equal(centers.boundsCenter, centers.canvasCenter, `${part}/${theme} is not horizontally centered`);
+    }
+  }
+});
+
+test("the approved work-experience repeat stays byte-identical", async () => {
+  const expected = {
+    light: "a9562326f9c369162d63bcd6eda1b59381249d02442bcb683039cfb88db06563",
+    dark: "c247720b5a8a61ae5d74656d96986637990bea93ee8b0e90a9f63b3556158230",
+  } as const;
+
+  for (const theme of ["light", "dark"] as const) {
+    const data = await readFile(path.join(root, `rails/work-experience-vine/repeat/${theme}.png`));
+    assert.equal(createHash("sha256").update(data).digest("hex"), expected[theme], `${theme} repeat asset changed`);
+  }
+});
+
+test("the work-experience rail stays visibly alive in both themes", async () => {
+  for (const theme of ["light", "dark"] as const) {
+    for (const part of ["cap", "repeat", "base"] as const) {
+      const coverage = await greenCoverage(path.join(root, `rails/work-experience-vine/${part}/${theme}.png`));
+      assert.ok(coverage >= 0.15, `${part}/${theme} has only ${(coverage * 100).toFixed(1)}% healthy-green coverage`);
+    }
   }
 });
 
