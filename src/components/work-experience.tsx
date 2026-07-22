@@ -5,10 +5,15 @@ export function WorkExperience({ experiences }: { experiences: WorkExperienceIte
   if (!items.length) return <p className="pixel-frame bg-card p-6 text-muted-foreground">No work history has been added yet.</p>;
 
   return (
-    <div className="relative border-l border-border pl-5 md:pl-8">
+    <div className="work-experience-timeline relative pb-12 pl-[4.5rem] pt-8">
+      <div className="work-experience-vine" aria-hidden="true">
+        <span className="work-experience-vine-cap" />
+        <span className="work-experience-vine-repeat" />
+        <span className="work-experience-vine-base" />
+      </div>
       {items.map((experience) => (
-        <article key={experience.id} className="relative pb-10 last:pb-0">
-          <span className="absolute -left-[1.72rem] top-1.5 size-3 bg-primary shadow-[2px_2px_0_var(--pixel-shadow)] md:-left-[2.36rem]" aria-hidden="true" />
+        <article key={experience.id} className="relative z-[1] pb-10 last:pb-0">
+          <span className="absolute -left-[2.875rem] top-1.5 size-3 bg-primary shadow-[2px_2px_0_var(--pixel-shadow)]" aria-hidden="true" />
           <div className="grid gap-3 md:grid-cols-[12rem_1fr] md:gap-8">
             <div>
               <p className="text-pixel text-[8px] text-primary">{experience.period}</p>

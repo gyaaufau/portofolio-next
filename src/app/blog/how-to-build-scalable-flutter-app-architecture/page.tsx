@@ -2,6 +2,7 @@ import { absoluteUrl, siteConfig } from "@/data/seo";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { PixelOrnament } from "@/components/pixel-ornament";
 
 const publishedTime = "2026-04-29T09:00:00+07:00";
 const modifiedTime = "2026-04-29T09:00:00+07:00";
@@ -89,7 +90,7 @@ export default function BlogArticlePage() {
         </nav>
 
         <header className="grid gap-4 py-8 md:py-12">
-          <p className="text-pixel text-[9px] text-primary">FLUTTER ARCHITECTURE</p>
+          <div className="flex items-center gap-3"><PixelOrnament name="blog-notebook" className="size-12 shrink-0" /><p className="text-pixel text-[9px] text-primary">FLUTTER ARCHITECTURE</p></div>
           <h1 className="text-[clamp(3rem,7vw,6rem)] font-semibold leading-[0.92] tracking-[-0.06em]">{articleTitle}</h1>
           <p className="text-[1.1rem] text-foreground leading-[1.7]">
             The short answer: a scalable Flutter app needs clear feature boundaries, predictable state management,
@@ -185,6 +186,8 @@ export default function BlogArticlePage() {
             rules appear in real work, while the main <Link href="/">homepage</Link> explains the engineering value you bring.
           </p>
         </section>
+
+        <div className="flex justify-center overflow-hidden py-2" aria-hidden="true"><PixelOrnament name="weathered-conduit" className="w-96 min-w-96" /></div>
 
         <section className="grid gap-[0.9rem]">
           <h2>FAQ</h2>

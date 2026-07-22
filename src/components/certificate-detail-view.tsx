@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BackLink } from "./back-link";
+import { PixelOrnament } from "./pixel-ornament";
 import type { CertificateItem } from "@/data/types";
 
 export function CertificateDetailView({ certificate }: { certificate: CertificateItem }) {
@@ -7,7 +8,7 @@ export function CertificateDetailView({ certificate }: { certificate: Certificat
     <article>
       <BackLink href="/certificates" label="All certificates" />
       <header className="max-w-4xl py-12 md:py-16">
-        <div className="flex flex-wrap gap-4 text-pixel text-[8px] text-primary"><span>{certificate.type}</span><span>{certificate.issued}</span></div>
+        <div className="flex items-center gap-3"><PixelOrnament name="certificate-plaque" className="size-12 shrink-0" /><div className="flex flex-wrap gap-4 text-pixel text-[8px] text-primary"><span>{certificate.type}</span><span>{certificate.issued}</span></div></div>
         <h1 className="mt-6 text-[clamp(3rem,7vw,6.4rem)] font-semibold leading-[0.92] tracking-[-0.06em]">{certificate.title}</h1>
         <p className="mt-5 text-lg font-semibold text-primary">{certificate.issuer}</p>
         <p className="mt-5 max-w-[66ch] text-lg leading-8 text-muted-foreground">{certificate.summary}</p>

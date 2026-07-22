@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "themes": {
+    "light": {
+      "pageBackground": "#F5F4EF",
+      "cardBackground": "#FBFAF6"
+    },
+    "dark": {
+      "pageBackground": "#171B1E",
+      "cardBackground": "#1F2528"
+    }
+  },
+  "reviewSheets": {
+    "light": "/assets/pixel-ornaments/previews/light.png",
+    "dark": "/assets/pixel-ornaments/previews/dark.png",
+    "workExperienceLight": "/assets/pixel-ornaments/previews/work-experience-light.png",
+    "workExperienceDark": "/assets/pixel-ornaments/previews/work-experience-dark.png",
+    "secondaryPagesLight": "/assets/pixel-ornaments/previews/secondary-pages-light.png",
+    "secondaryPagesDark": "/assets/pixel-ornaments/previews/secondary-pages-dark.png"
+  },
+  "assets": [
+    {
+      "id": "reclaimed-computer-folder",
+      "category": "icon",
+      "paths": {
+        "light": "/assets/pixel-ornaments/icons/reclaimed-computer-folder/light.png",
+        "dark": "/assets/pixel-ornaments/icons/reclaimed-computer-folder/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 96 },
+      "intendedPlacement": "Beside a section heading",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 48 },
+        { "width": 96, "height": 96 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "blog-notebook",
+      "category": "icon",
+      "paths": {
+        "light": "/assets/pixel-ornaments/icons/blog-notebook/light.png",
+        "dark": "/assets/pixel-ornaments/icons/blog-notebook/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 96 },
+      "intendedPlacement": "Beside blog page and article headings",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 48 },
+        { "width": 96, "height": 96 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "certificate-plaque",
+      "category": "icon",
+      "paths": {
+        "light": "/assets/pixel-ornaments/icons/certificate-plaque/light.png",
+        "dark": "/assets/pixel-ornaments/icons/certificate-plaque/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 96 },
+      "intendedPlacement": "Beside certificate collection and detail headings",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 48 },
+        { "width": 96, "height": 96 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "cv-document",
+      "category": "icon",
+      "paths": {
+        "light": "/assets/pixel-ornaments/icons/cv-document/light.png",
+        "dark": "/assets/pixel-ornaments/icons/cv-document/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 96 },
+      "intendedPlacement": "Beside the CV page heading",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 48 },
+        { "width": 96, "height": 96 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "mossy-masonry-vine",
+      "category": "corner",
+      "paths": {
+        "light": "/assets/pixel-ornaments/corners/mossy-masonry-vine/light.png",
+        "dark": "/assets/pixel-ornaments/corners/mossy-masonry-vine/dark.png"
+      },
+      "intrinsic": { "width": 256, "height": 256 },
+      "intendedPlacement": "Bottom-left section or card corner",
+      "recommendedDisplaySizes": [
+        { "width": 128, "height": 128 },
+        { "width": 256, "height": 256 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "weathered-conduit",
+      "category": "divider",
+      "paths": {
+        "light": "/assets/pixel-ornaments/dividers/weathered-conduit/light.png",
+        "dark": "/assets/pixel-ornaments/dividers/weathered-conduit/dark.png"
+      },
+      "intrinsic": { "width": 768, "height": 128 },
+      "intendedPlacement": "Between content sections",
+      "recommendedDisplaySizes": [
+        { "width": 384, "height": 64 },
+        { "width": 768, "height": 128 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "abandoned-workstation-window",
+      "category": "scene",
+      "paths": {
+        "light": "/assets/pixel-ornaments/scenes/abandoned-workstation-window/light.png",
+        "dark": "/assets/pixel-ornaments/scenes/abandoned-workstation-window/dark.png"
+      },
+      "intrinsic": { "width": 384, "height": 288 },
+      "intendedPlacement": "Supporting editorial illustration beside content",
+      "recommendedDisplaySizes": [
+        { "width": 192, "height": 144 },
+        { "width": 384, "height": 288 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "work-experience-vine-cap",
+      "category": "rail",
+      "group": "work-experience-vine",
+      "part": "cap",
+      "paths": {
+        "light": "/assets/pixel-ornaments/rails/work-experience-vine/cap/light.png",
+        "dark": "/assets/pixel-ornaments/rails/work-experience-vine/cap/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 128 },
+      "intendedPlacement": "Top of the work-experience timeline rail",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 64 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "work-experience-vine-repeat",
+      "category": "rail",
+      "group": "work-experience-vine",
+      "part": "repeat",
+      "repeatAxis": "y",
+      "paths": {
+        "light": "/assets/pixel-ornaments/rails/work-experience-vine/repeat/light.png",
+        "dark": "/assets/pixel-ornaments/rails/work-experience-vine/repeat/dark.png"
+      },
+      "intrinsic": { "width": 96, "height": 256 },
+      "intendedPlacement": "Repeated vertically through the work-experience timeline",
+      "recommendedDisplaySizes": [
+        { "width": 48, "height": 128 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "work-experience-vine-base",
+      "category": "rail",
+      "group": "work-experience-vine",
+      "part": "base",
+      "paths": {
+        "light": "/assets/pixel-ornaments/rails/work-experience-vine/base/light.png",
+        "dark": "/assets/pixel-ornaments/rails/work-experience-vine/base/dark.png"
+      },
+      "intrinsic": { "width": 128, "height": 96 },
+      "intendedPlacement": "Bottom of the work-experience timeline rail",
+      "recommendedDisplaySizes": [
+        { "width": 64, "height": 48 }
+      ],
+      "decorative": true
+    }
+  ]
+}
