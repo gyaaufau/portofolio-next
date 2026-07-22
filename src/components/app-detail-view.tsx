@@ -3,6 +3,7 @@ import { AppWindow, ExternalLink, GitFork, Globe, Smartphone } from "lucide-reac
 import { BackLink } from "./back-link";
 import { StoreBadge } from "./store-badge";
 import { ScreenshotCarousel } from "./screenshot-carousel";
+import { PixelOrnament } from "./pixel-ornament";
 import type { AppItem } from "@/data/types";
 
 export function AppDetailView({ app }: { app: AppItem }) {
@@ -30,6 +31,10 @@ export function AppDetailView({ app }: { app: AppItem }) {
       </header>
 
       <ScreenshotCarousel screenshots={app.screenshots} appTitle={app.title} />
+
+      <div className="mx-auto mt-8 flex max-w-3xl justify-center overflow-hidden" aria-hidden="true">
+        <PixelOrnament name="weathered-conduit" className="w-96 max-w-full md:w-[768px]" />
+      </div>
 
       <div className="grid gap-12 py-16 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
         <aside>

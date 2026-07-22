@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { BackLink } from "@/components/back-link";
 import { Certificates } from "@/components/certificates";
+import { PublicPageHeader } from "@/components/public-page-header";
 import { getCertificates } from "@/data/db";
 import { absoluteUrl, siteConfig } from "@/data/seo";
 
@@ -13,11 +14,7 @@ export default async function CertificatesPage() {
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
       <BackLink href="/" label="Home" />
-      <header className="max-w-3xl py-14 md:py-20">
-        <p className="text-pixel text-[9px] text-primary">ACHIEVEMENT ROOM</p>
-        <h1 className="mt-5 text-[clamp(3.4rem,8vw,7rem)] font-semibold leading-[0.9] tracking-[-0.065em]">Proof of practice.</h1>
-        <p className="mt-6 max-w-[58ch] text-lg leading-8 text-muted-foreground">Training, conferences, and focused study that strengthened the way I build mobile products.</p>
-      </header>
+      <PublicPageHeader eyebrow="ACHIEVEMENT ROOM" title="Proof of practice." description="Training, conferences, and focused study that strengthened the way I build mobile products." ornament="certificate-plaque" />
       <Certificates certificates={certificates} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
     </main>
