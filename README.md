@@ -59,7 +59,7 @@ Legacy `/projects` URLs permanently redirect to `/apps`, including detail slugs.
 
 The homepage uses a typed hero-game registry in `src/games/registry.ts`. Change `ACTIVE_HERO_GAME_ID` to select one registered game; visitors see only that curated game. Each game owns its engine, domain rules, UI, and runtime assets while the shared shell owns loading, fullscreen reveal, visibility, focus, and failure handling.
 
-The pixel fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/games/pixel-fighter/generated` so deployments do not process the source art.
+The pixel fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/games/pixel-fighter/generated` so deployments do not process the source art. Curated CC0 battle sounds and their provenance are committed under `public/games/pixel-fighter/audio`.
 
 Regenerate the derived atlases after changing game art:
 
@@ -67,7 +67,7 @@ Regenerate the derived atlases after changing game art:
 npm run game:atlas
 ```
 
-The CSS idle preview loads before Phaser, then the complete engine is imported only as the hero approaches the viewport. Desktop controls are shown below the arena; screens below 768px receive a fullscreen arena and multi-touch controls. Sound stays muted until the visitor enables it.
+The CSS idle preview loads before Phaser, then the complete engine is imported only as the hero approaches the viewport. Pressing Enter Battle fades the preview fighter and expands the circular aperture to reveal a centered 3:2 arena. Screens below 768px keep fullscreen HUD and multi-touch controls around a letterboxed arena. The Play interaction enables sound, and visitors can mute it during the match.
 
 ## Verification
 

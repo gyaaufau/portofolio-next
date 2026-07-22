@@ -1,4 +1,10 @@
 /* Pixel-fighter presentation. Shared hero lifecycle styles remain in app/globals.css. */
+@property --fight-preview-reveal {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .fight-stage {
   position: relative;
   aspect-ratio: 3 / 2;
@@ -21,6 +27,9 @@
 .fight-canvas-host {
   z-index: 2;
   opacity: 0;
+  border: 1px solid rgb(150 188 164 / 0.26);
+  background: #0b1815;
+  box-shadow: 0 0 0 1px rgb(3 8 7 / 0.88), 0 1.1rem 3.4rem rgb(2 10 8 / 0.48);
   transition: opacity 180ms steps(3, end);
 }
 
@@ -34,25 +43,16 @@
 }
 
 .fight-preview { z-index: 3; }
-.hero-game-shell.is-revealing .fight-preview,
-.hero-game-shell.is-active:not(.is-revealing) .fight-preview { opacity: 0; }
-
-.fight-transition-fighter {
-  position: absolute;
-  z-index: 9;
-  left: var(--iris-x);
-  top: calc(var(--iris-y) + 3.25rem);
-  width: 5rem;
-  height: 6.4rem;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -100%);
-  transition: left var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), top var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), opacity 90ms steps(1, end);
+.fight-preview {
+  --fight-preview-reveal: 0px;
+  transition: --fight-preview-reveal 580ms cubic-bezier(0.76, 0, 0.24, 1) 120ms, opacity 120ms linear;
 }
-.fight-transition-fighter img { position: absolute; left: 50%; bottom: 0.48rem; width: auto; height: 5.6rem; image-rendering: pixelated; transform: translateX(-50%); animation: fight-idle-breathe 1120ms steps(2, jump-none) infinite; }
-.fight-transition-fighter span { position: absolute; left: 50%; bottom: 0.28rem; width: 2.7rem; height: 0.48rem; border-radius: 50%; background: rgb(2 9 8 / 0.58); transform: translateX(-50%); animation: fight-shadow-breathe 1120ms steps(2, jump-none) infinite; }
-.hero-game-shell.is-revealing .fight-transition-fighter { left: 32%; top: 86%; opacity: 1; }
-.hero-game-shell.is-active:not(.is-revealing) .fight-transition-fighter { left: 32%; top: 86%; opacity: 0; }
+.hero-game-shell.is-revealing .fight-preview {
+  --fight-preview-reveal: 120vmax;
+  -webkit-mask-image: radial-gradient(circle at var(--iris-x) var(--iris-y), transparent 0 var(--fight-preview-reveal), #000 calc(var(--fight-preview-reveal) + 2px));
+  mask-image: radial-gradient(circle at var(--iris-x) var(--iris-y), transparent 0 var(--fight-preview-reveal), #000 calc(var(--fight-preview-reveal) + 2px));
+}
+.hero-game-shell.is-active:not(.is-revealing) .fight-preview { opacity: 0; }
 
 .fight-preview-sky {
   position: absolute;
@@ -84,7 +84,15 @@
   opacity: 0.21;
   animation: fight-fog 18s steps(18, end) infinite;
 }
-.fight-preview-platform { position: absolute; bottom: 18%; left: 14%; width: 72%; height: 5%; }
+.fight-preview-platform {
+  position: absolute;
+  bottom: 18%;
+  left: 14%;
+  width: 72%;
+  height: clamp(0.8rem, 2.5vw, 1.55rem);
+  background: url("/FIGHTGAME_Assets/ENVIRO/Level%20Design/platform.png") left top / auto 100% repeat-x;
+  image-rendering: pixelated;
+}
 
 .fight-idle {
   --idle-duration: 1200ms;
@@ -96,7 +104,9 @@
   width: 5rem;
   height: 6.4rem;
   transform: translate(-50%, -100%);
+  transition: opacity 120ms linear;
 }
+.hero-game-shell.is-revealing .fight-idle { opacity: 0; }
 
 .fight-idle-sprite {
   position: absolute;
@@ -144,7 +154,7 @@
   background-size: 16px 16px;
   -webkit-mask-image: radial-gradient(circle at var(--iris-x) var(--iris-y), transparent 0 var(--iris-radius), #000 calc(var(--iris-radius) + 2px));
   mask-image: radial-gradient(circle at var(--iris-x) var(--iris-y), transparent 0 var(--iris-radius), #000 calc(var(--iris-radius) + 2px));
-  transition: --iris-radius var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), --iris-x var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), --iris-y var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), opacity 300ms ease 330ms;
+  transition: --iris-radius 580ms cubic-bezier(0.76, 0, 0.24, 1) 120ms, opacity 140ms linear 560ms;
 }
 
 .fight-aperture-ring {
@@ -159,11 +169,11 @@
   box-shadow: 0 0 0 1px rgb(0 0 0 / 0.35), 0 0 30px color-mix(in srgb, var(--primary) 18%, transparent);
   pointer-events: none;
   transform: translate(-50%, -50%);
-  transition: left var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), top var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), width var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), height var(--hero-game-reveal-duration, 650ms) cubic-bezier(0.76, 0, 0.24, 1), opacity 240ms ease 380ms;
+  transition: width 580ms cubic-bezier(0.76, 0, 0.24, 1) 120ms, height 580ms cubic-bezier(0.76, 0, 0.24, 1) 120ms, opacity 120ms linear 580ms;
 }
 
 .hero-game-shell.is-revealing,
-.hero-game-shell.is-active { --iris-radius: 120vmax; --iris-x: 50%; --iris-y: 50%; }
+.hero-game-shell.is-active { --iris-radius: 120vmax; }
 .hero-game-shell.is-revealing .fight-scrim,
 .hero-game-shell.is-revealing .fight-aperture-ring,
 .hero-game-shell.is-active .fight-scrim,
@@ -172,17 +182,29 @@
 .hero-game-shell.is-active:not(.is-revealing) .fight-aperture-ring { visibility: hidden; }
 
 .fight-preview-ui { position: absolute; z-index: 10; inset: 0; pointer-events: none; }
-.fight-preview-label { position: absolute; top: 1rem; left: 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
-.fight-preview-label .text-pixel { color: color-mix(in srgb, var(--primary) 80%, white); font-size: clamp(0.38rem, 1.3cqw, 0.5rem); }
+.fight-selection-panel {
+  position: absolute;
+  top: max(5.75rem, calc(env(safe-area-inset-top) + 4rem));
+  right: clamp(1.5rem, 7vw, 8.5rem);
+  display: grid;
+  width: min(20rem, 34vw);
+  gap: 0.85rem;
+  border: 1px solid rgb(226 240 222 / 0.18);
+  padding: 1rem;
+  background: rgb(5 14 12 / 0.76);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.28), 0.8rem 0.8rem 0 rgb(3 10 8 / 0.24);
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+}
+.fight-preview-label { display: flex; flex-direction: column; gap: 0.3rem; }
+.fight-preview-label .text-pixel { color: color-mix(in srgb, var(--primary) 80%, white); font-size: 0.42rem; letter-spacing: 0.08em; }
+.fight-preview-label strong { color: #f5f1e7; font-size: clamp(1.05rem, 1.8vw, 1.35rem); line-height: 1.1; letter-spacing: -0.025em; }
 .fight-preview-label span:last-child { color: rgb(245 243 235 / 0.68); font-size: 0.72rem; }
+.fight-preview-label b { color: #f5f1e7; font-weight: 650; }
 
 .fight-roster {
-  position: absolute;
-  left: 0.85rem;
-  bottom: 0.85rem;
   display: flex;
   gap: 0.38rem;
-  pointer-events: auto;
 }
 .fight-roster-button {
   display: grid;
@@ -203,12 +225,11 @@
 .fight-roster-name { width: auto; max-width: 85%; height: 0.52rem; object-fit: contain; }
 
 .fight-play-button {
-  position: absolute;
   z-index: 2;
-  left: var(--iris-x);
-  top: calc(var(--iris-y) + var(--iris-radius) - 1.2rem);
   display: inline-flex;
+  width: 100%;
   min-height: 2.55rem;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--primary) 80%, white);
@@ -220,10 +241,9 @@
   font-size: 0.78rem;
   font-weight: 750;
   pointer-events: auto;
-  transform: translate(-50%, -50%);
 }
-.fight-play-button:hover { transform: translate(calc(-50% - 1px), calc(-50% - 1px)); box-shadow: 4px 4px 0 rgb(0 0 0 / 0.55); }
-.fight-play-button:active { transform: translate(calc(-50% + 1px), calc(-50% + 1px)); box-shadow: 1px 1px 0 rgb(0 0 0 / 0.55); }
+.fight-play-button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 rgb(0 0 0 / 0.55); }
+.fight-play-button:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgb(0 0 0 / 0.55); }
 .fight-play-button:disabled { opacity: 0.72; cursor: wait; }
 .fight-load-error { position: absolute; right: 0.8rem; bottom: 0.8rem; max-width: 12rem; border: 1px solid rgb(255 255 255 / 0.22); background: rgb(7 12 13 / 0.9); padding: 0.6rem; color: rgb(255 255 255 / 0.72); font-size: 0.65rem; line-height: 1.45; pointer-events: auto; }
 .fight-load-error button { margin-left: 0.35rem; color: color-mix(in srgb, var(--primary) 65%, white); text-decoration: underline; }
@@ -273,9 +293,12 @@
 
 @media (max-width: 767px) {
   .fight-stage { min-height: 350px; }
-  .fight-preview-label span:last-child { display: none; }
-  .fight-roster { bottom: 0.65rem; left: 0.65rem; }
-  .fight-play-button { top: calc(var(--iris-y) + var(--iris-radius) - 0.3rem); }
+  .fight-selection-panel { top: auto; right: 0.75rem; bottom: 0.75rem; left: 0.75rem; width: auto; gap: 0.6rem; padding: 0.75rem; }
+  .immersive-hero .fight-preview-platform { bottom: 11.5rem; }
+  .immersive-hero .fight-idle { bottom: 11.5rem; }
+  .fight-preview-label strong { font-size: 1rem; }
+  .fight-preview-label span:last-child { font-size: 0.64rem; }
+  .fight-roster { justify-content: space-between; }
   .fight-desktop-help { display: none; }
   .fight-mobile-help { display: inline; text-align: right; }
 
@@ -291,7 +314,15 @@
   }
   .hero-game-shell.is-active .fight-stage { width: 100%; height: 100dvh; min-height: 0; border-radius: 0; }
   .hero-game-shell.is-active .fight-help { display: none; }
-  .hero-game-shell.is-active .fight-canvas-host { inset: max(3.1rem, env(safe-area-inset-top)) 0 max(6.9rem, env(safe-area-inset-bottom)); }
+  .hero-game-shell.is-active .fight-canvas-host {
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: min(100vw, calc((100dvh - 10rem) * 1.5));
+    height: auto;
+    aspect-ratio: 3 / 2;
+    transform: translate(-50%, -50%);
+  }
   .hero-game-shell.is-active .fight-hud { top: max(0.65rem, env(safe-area-inset-top)); }
   .hero-game-shell.is-active .fight-utility-controls { top: max(2.9rem, calc(env(safe-area-inset-top) + 2.3rem)); right: 0.65rem; bottom: auto; }
   .fight-touch-controls { position: absolute; z-index: 16; left: 0.75rem; right: 0.75rem; bottom: max(0.75rem, env(safe-area-inset-bottom)); display: flex; align-items: end; justify-content: space-between; gap: 1rem; pointer-events: none; }
@@ -305,7 +336,6 @@
 @media (max-width: 430px) {
   .hero-game-shell { --iris-radius: 78px; }
   .fight-stage { min-height: 330px; }
-  .fight-preview-label { top: 0.75rem; left: 0.75rem; }
   .fight-roster-button { width: 3.25rem; min-height: 4.1rem; }
   .fight-roster-portrait { height: 2.4rem; }
   .fight-roster-portrait img { height: 2.25rem; }

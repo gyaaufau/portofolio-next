@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { decideAI } from "../src/games/pixel-fighter/domain/ai";
+import { getAttackCue, getAttackCueAtMs, getContainerCue, getImpactCue, getPickupCue, SOUND_ASSETS } from "../src/games/pixel-fighter/domain/audio";
 import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "../src/games/pixel-fighter/domain/combat";
 import { CHARACTER_IDS, CHARACTERS, chooseOpponent, parseCharacterSelection } from "../src/games/pixel-fighter/domain/characters";
 import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "../src/games/pixel-fighter/domain/items";
@@ -48,6 +49,29 @@ test("generated atlases contain every declared character frame with stable origi
       for (const frame of animation.frames) assert.ok(atlas.frames[frame], `Missing ${frame}`);
     }
   }
+});
+
+test("battle sound manifest references committed assets and character-correct cues", () => {
+  for (const definition of Object.values(SOUND_ASSETS)) {
+    assert.ok(definition.files.length > 0);
+    assert.ok(definition.volume > 0 && definition.volume <= 1);
+    for (const file of definition.files) {
+      const path = new URL(`../public${file}`, import.meta.url);
+      assert.equal(existsSync(path), true, `Missing sound asset ${file}`);
+    }
+  }
+
+  assert.equal(getAttackCue("MARSTON", CHARACTERS.MARSTON.special), "revolver");
+  assert.equal(getAttackCue("NAMKA", CHARACTERS.NAMKA.special), "snow-shot");
+  assert.equal(getAttackCue("MUSASHI", CHARACTERS.MUSASHI.combo.stages[0]), "sword");
+  assert.equal(getAttackCue("MARSTON", CHARACTERS.MARSTON.combo.stages[0]), "swing");
+  assert.equal(getAttackCue("MUSASHI", CHARACTERS.MUSASHI.special), "dash");
+  assert.equal(getAttackCueAtMs(CHARACTERS.MARSTON.special), CHARACTERS.MARSTON.special.hits[0].atMs);
+  assert.equal(getAttackCueAtMs(CHARACTERS.MUSASHI.combo.stages[0]), CHARACTERS.MUSASHI.combo.stages[0].hits[0].atMs - 35);
+  assert.equal(getImpactCue("impact1"), "hit-light");
+  assert.equal(getImpactCue("impactHuge"), "finisher");
+  assert.equal(getContainerCue("metal-crate"), "container-metal");
+  assert.equal(getPickupCue("coin"), "pickup-coin");
 });
 
 test("environment, effects, finishers, and UI atlases have valid Phaser metadata and production files", () => {
@@ -152,13 +176,13 @@ test("seeded containers and pickup effects stay restrained and deterministic", (
   assert.deepEqual(applyPickup("coin", 80, 200), { vitality: 80, score: 300, resetCooldown: false, hasteMs: 0 });
 });
 
-test("responsive arena layout expands from the authored 300 by 200 baseline", () => {
+test("arena layout preserves the authored 300 by 200 baseline", () => {
   const baseline = createArenaLayout(300, 200);
-  const ultrawide = createArenaLayout(540, 200);
+  assert.equal(baseline.width, 300);
+  assert.equal(baseline.height, 200);
   assert.equal(baseline.floorY, 171);
-  assert.equal(ultrawide.width, 540);
-  assert.ok(ultrawide.playerSpawnX < ultrawide.enemySpawnX);
-  assert.ok(ultrawide.upperPlatforms.every((platform) => platform.x > 0 && platform.x < ultrawide.width));
+  assert.ok(baseline.playerSpawnX < baseline.enemySpawnX);
+  assert.ok(baseline.upperPlatforms.every((platform) => platform.x > 0 && platform.x < baseline.width));
 });
 
 test("AI recovers below the stage and attacks inside preferred range", () => {
