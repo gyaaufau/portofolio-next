@@ -1,37 +1,69 @@
 import type { WorkExperienceItem } from "@/data/types";
+import { getWorkExperiencePresentation } from "./work-experience-logic";
+import styles from "./work-experience.module.css";
+
+function WorkExperienceCard({ experience }: { experience: WorkExperienceItem }) {
+  const { current, density, title, employmentType } = getWorkExperiencePresentation(experience);
+
+  return (
+    <article className={styles.card} data-density={density}>
+      <div className={styles.topline}>
+        <p className={styles.period}>{experience.period}</p>
+        {current && (
+          <span className={styles.currentBadge} aria-label="Current role">
+            <span className={styles.currentBadgeDot} aria-hidden="true" />
+            Current
+          </span>
+        )}
+      </div>
+
+      <div className={styles.cardContent}>
+        <header className={styles.metadata}>
+          <h3 className={styles.role}>{title}</h3>
+          <p className={styles.companyLine}>
+            <span>{experience.company}</span>
+            {employmentType && <span className={styles.metadataDetail}>{employmentType}</span>}
+          </p>
+          {experience.location && <p className={styles.location}>{experience.location}</p>}
+        </header>
+
+        <div className={styles.description}>
+          <p className={styles.summary}>{experience.summary}</p>
+          {density === "expanded" && experience.highlights.length > 0 && (
+            <div className={styles.contributions}>
+              <p className={styles.contributionsLabel}>Key contributions</p>
+              <ul className={styles.highlights}>
+                {experience.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export function WorkExperience({ experiences }: { experiences: WorkExperienceItem[] }) {
   const items = [...experiences].sort((left, right) => right.sortOrder - left.sortOrder);
   if (!items.length) return <p className="pixel-frame bg-card p-6 text-muted-foreground">No work history has been added yet.</p>;
 
   return (
-    <div className="work-experience-timeline relative pb-12 pl-[4.5rem] pt-8">
+    <div className={styles.timeline}>
       <div className="work-experience-vine" aria-hidden="true">
         <span className="work-experience-vine-cap" />
         <span className="work-experience-vine-repeat" />
         <span className="work-experience-vine-base" />
       </div>
-      {items.map((experience) => (
-        <article key={experience.id} className="relative z-[1] pb-10 last:pb-0">
-          <span className="absolute -left-[2.875rem] top-1.5 size-3 bg-primary shadow-[2px_2px_0_var(--pixel-shadow)]" aria-hidden="true" />
-          <div className="grid gap-3 md:grid-cols-[12rem_1fr] md:gap-8">
-            <div>
-              <p className="text-pixel text-[8px] text-primary">{experience.period}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{experience.location}</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold tracking-[-0.025em]">{experience.role}</h3>
-              <p className="mt-1 font-medium text-muted-foreground">{experience.company}</p>
-              <p className="mt-4 max-w-[66ch] leading-7 text-muted-foreground">{experience.summary}</p>
-              {experience.highlights.length > 0 && (
-                <ul className="mt-4 grid gap-2 md:grid-cols-2">
-                  {experience.highlights.map((highlight) => <li key={highlight} className="border-l-2 border-primary/50 pl-3 text-sm leading-6 text-muted-foreground">{highlight}</li>)}
-                </ul>
-              )}
-            </div>
-          </div>
-        </article>
-      ))}
+      <ol className={styles.list} aria-label="Work experience timeline">
+        {items.map((experience) => (
+          <li key={experience.id} className={styles.item}>
+            <span className={styles.node} aria-hidden="true" />
+            <WorkExperienceCard experience={experience} />
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }

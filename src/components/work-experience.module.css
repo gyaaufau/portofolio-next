@@ -1,0 +1,276 @@
+.timeline {
+  position: relative;
+  padding: 2rem 0 3rem 4.5rem;
+}
+
+.list {
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  z-index: 1;
+}
+
+.node {
+  position: absolute;
+  top: 1.8rem;
+  left: -2.875rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--card);
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.node::after {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.25rem);
+  width: 1.1rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--primary) 48%, var(--border));
+  content: "";
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.card {
+  --work-card-surface: var(--card);
+  --work-card-border: color-mix(in srgb, var(--border) 86%, transparent);
+  --work-card-shadow: color-mix(in srgb, var(--foreground) 7%, transparent);
+
+  position: relative;
+  border: 1px solid var(--work-card-border);
+  border-radius: 1.25rem;
+  background: var(--work-card-surface);
+  padding: clamp(1.2rem, 2.2vw, 1.75rem);
+  color: var(--card-foreground);
+  box-shadow: 0 10px 35px var(--work-card-shadow);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.card::before {
+  position: absolute;
+  top: 1.65rem;
+  left: -0.55rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  content: "";
+  transform: rotate(45deg);
+  border-bottom: 1px solid var(--work-card-border);
+  border-left: 1px solid var(--work-card-border);
+  background: var(--work-card-surface);
+  box-shadow: -4px 4px 12px color-mix(in srgb, var(--foreground) 4%, transparent);
+  pointer-events: none;
+}
+
+.topline {
+  display: flex;
+  min-height: 1.75rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.period {
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+
+.currentBadge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 13%, var(--card));
+  padding: 0.35rem 0.6rem;
+  color: var(--foreground);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.currentBadgeDot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.cardContent {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.metadata {
+  min-width: 0;
+}
+
+.role {
+  color: var(--foreground);
+  font-size: clamp(1.08rem, 1.6vw, 1.3rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.companyLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.55rem;
+  margin-top: 0.55rem;
+  color: var(--foreground);
+  font-size: 0.92rem;
+  font-weight: 550;
+  line-height: 1.5;
+}
+
+.metadataDetail {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted-foreground);
+  font-weight: 450;
+}
+
+.metadataDetail::before {
+  margin-right: 0.55rem;
+  color: color-mix(in srgb, var(--primary) 72%, var(--muted-foreground));
+  content: "·";
+}
+
+.location {
+  margin-top: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.description {
+  min-width: 0;
+}
+
+.summary {
+  max-width: 65ch;
+  color: var(--muted-foreground);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.contributions {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+}
+
+.contributionsLabel {
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.highlights {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlights li {
+  position: relative;
+  max-width: 66ch;
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.highlights li::before {
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--primary);
+  content: "";
+}
+
+@media (min-width: 768px) {
+  .cardContent {
+    grid-template-columns: minmax(11.5rem, 14rem) minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+  }
+
+  .card[data-density="compact"] {
+    padding-top: 1.4rem;
+    padding-bottom: 1.45rem;
+  }
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
+    box-shadow: 0 14px 40px color-mix(in srgb, var(--foreground) 9%, transparent);
+  }
+
+  .card:hover::before {
+    border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
+  }
+}
+
+@media (max-width: 767px) {
+  .timeline {
+    padding-top: 1.5rem;
+  }
+
+  .list {
+    gap: 1.15rem;
+  }
+
+  .node {
+    top: 1.65rem;
+  }
+
+  .card::before {
+    top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .node::after {
+    width: 1.875rem;
+  }
+
+  .card::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
