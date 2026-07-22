@@ -46,7 +46,8 @@ Static arena preview appears
 → hero approaches the viewport
 → React dynamically imports the Pixel Fighter adapter
 → adapter mounts Phaser
-→ visitor selects a fighter and starts the match
+→ visitor selects a fighter and presses Enter Battle
+→ the preview fighter fades in place and a 700 ms circular aperture reveals the arena
 → best-of-three match runs against an AI opponent
 → visitor replays, returns to fighter selection, or visits /apps
 ```
@@ -68,9 +69,9 @@ Homepage Hero
 → pure domain modules for combat, movement, AI, items, layout, and rounds
 ```
 
-The game uses Phaser 4.1 with Arcade Physics at a fixed 60 FPS. The authored baseline is 300×200 pixels; `Phaser.Scale.EXPAND` and `createArenaLayout()` adapt the arena to the available area while preserving a minimum logical size.
+The game uses Phaser 4.1 with Arcade Physics at a fixed 60 FPS. The authored world remains fixed at 300×200 pixels and uses `Phaser.Scale.FIT`. Desktop gameplay is centered in a 3:2 frame capped at 960×640; mobile keeps a centered 3:2 field between the fullscreen HUD and touch controls.
 
-The React adapter owns selection, lifecycle, HUD, pause/result overlays, and touch controls. Phaser owns rendering, physics, keyboard input, combat execution, projectiles, effects, and synthesized sound.
+The React adapter owns selection, lifecycle, HUD, pause/result overlays, and touch controls. Phaser owns rendering, physics, keyboard input, combat execution, projectiles, effects, and sample playback.
 
 The imperative adapter boundary exposes:
 
@@ -95,7 +96,7 @@ Important rules:
 
 - The adapter and Phaser bundle load only when the hero approaches the viewport.
 - The game pauses when the hero leaves the viewport, the document becomes hidden, the user pauses manually, or a result overlay is open.
-- Sound starts muted and requires user interaction before creating or resuming an `AudioContext`.
+- Pressing Enter Battle enables sound as an explicit user interaction; the in-match mute control remains available.
 - Reduced-motion mode stops decorative preview and ambient movement and disables camera shake/hit pause.
 - Engine failures are caught by the shared error boundary and leave the static preview available.
 - Match state is transient and resets on page reload.
@@ -298,7 +299,7 @@ Mobile controls provide left, right, jump, combo, special, and dodge. Below 768 
 
 Owned UI includes:
 
-- Animated static preview and iris reveal transition
+- Layered static preview, stationary fighter fade, and 700 ms iris reveal transition
 - Character roster and persisted selection
 - Vitality bars, round counters, timer, notices, and best-of-three label
 - Mute, pause, and exit controls
@@ -310,19 +311,19 @@ Owned UI includes:
 
 ## Audio
 
-The game has no recorded audio assets. `FightScene` synthesizes nine cues with Web Audio oscillators and gain envelopes:
+Phaser preloads compact CC0 samples from `public/games/pixel-fighter/audio/`. The manifest provides deterministic variants and tuned volume for:
 
-- step
-- jump
-- swing
-- gun
-- hit
-- dash
-- pickup
-- finisher
-- knockout
+- wooden footsteps and jumps,
+- generic swings, Musashi sword slices, and dash,
+- Marston's revolver and Namka's snow shot,
+- light, medium, heavy, and finisher impacts,
+- wooden and metal container hits,
+- coin and power-up pickups,
+- knockout.
 
-Gun and hit cues use square waves; the others use triangle waves. Audio resources are closed when the Phaser instance is destroyed.
+Melee swings play 35 ms before the first hit window. Projectile sounds play at the actual launch window, so Namka uses a snow cue rather than a gunshot. Repeated variants rotate independently from the seeded gameplay RNG.
+
+Sources and redistribution notes are recorded in `public/games/pixel-fighter/audio/LICENSES.md`. The selected files come from Deva's 8-Bit Sound Effect Pack and Kenney's RPG Audio and Impact Sounds, all under CC0 1.0.
 
 ---
 
@@ -385,6 +386,7 @@ The generator uses Sharp, a maximum atlas width of 1024 pixels, and two pixels o
 Automated domain coverage currently verifies:
 
 - Complete character manifests and referenced character frames
+- Complete sound manifests, committed sample files, character-specific cues, and cue timing
 - Valid Phaser atlas metadata
 - Damage, knockback, timeouts, sudden death, and best-of-three rules
 - Deterministic non-mirror opponent selection
@@ -421,7 +423,7 @@ Add or prioritize integration coverage for:
 | Source art | `public/FIGHTGAME_Assets/` |
 | Atlas generation | `scripts/build-fightgame-atlas.mjs` |
 | Generated runtime atlases | `public/games/pixel-fighter/generated/` |
-| Domain and atlas tests | `tests/game.test.ts` |
+| Domain, atlas, and sound tests | `tests/game.test.ts` |
 
 ---
 

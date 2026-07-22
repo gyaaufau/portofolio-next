@@ -6,7 +6,7 @@ import { absoluteUrl, siteConfig } from "@/data/seo";
 
 const collectionSchema = { "@context": "https://schema.org", "@type": "CollectionPage", name: "Apps by Gialoop", url: absoluteUrl("/apps"), description: "Flutter app catalog by Gialoop.", isPartOf: { "@type": "WebSite", name: siteConfig.siteName, url: siteConfig.siteUrl } };
 export const metadata: Metadata = { title: "App Catalog | Gialoop", description: "Flutter apps, internal tools, and independent products built by Gialoop." };
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function AppsPage() {
   const apps = await getApps();

@@ -15,7 +15,7 @@ export function mountFightGame(parent: HTMLElement, playerId: CharacterId, bridg
     roundPixels: true,
     antialias: false,
     physics: { default: "arcade", arcade: { gravity: { x: 0, y: 0 }, debug: false, fixedStep: true, fps: 60 } },
-    scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH, width: BASE_WIDTH, height: BASE_HEIGHT },
+    scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: BASE_WIDTH, height: BASE_HEIGHT },
     input: { activePointers: 6 },
     scene,
     banner: false,
@@ -28,10 +28,6 @@ export function mountFightGame(parent: HTMLElement, playerId: CharacterId, bridg
     pause: (paused) => scene.setPaused(paused),
     setMobileInput: (next) => scene.setMobileInput(next),
     setMuted: (muted) => scene.setMuted(muted),
-    destroy: () => {
-      scene.shutdownAudio();
-      game.destroy(true);
-    },
+    destroy: () => game.destroy(true),
   };
 }
-

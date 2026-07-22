@@ -36,7 +36,7 @@ function ArenaPreview({ character, paused }: { character: CharacterId; paused: b
       <Image className="fight-preview-leaves fight-preview-leaves-left" src="/FIGHTGAME_Assets/ENVIRO/Background/tree_leaves2.png" alt="" width={96} height={55} priority />
       <Image className="fight-preview-leaves fight-preview-leaves-right" src="/FIGHTGAME_Assets/ENVIRO/Background/tree_leaves3.png" alt="" width={96} height={55} priority />
       <div className="fight-preview-fog" />
-      <Image className="fight-preview-platform" src="/FIGHTGAME_Assets/ENVIRO/Level%20Design/platform.png" alt="" width={130} height={8} priority />
+      <div className="fight-preview-platform" />
       <div
         className={`fight-idle fight-idle-${character.toLowerCase()}${paused ? " is-paused" : ""}`}
         style={{ "--idle-duration": `${definition.idle.durationMs}ms`, "--idle-delay": `${definition.idle.delayMs}ms` } as React.CSSProperties}
@@ -184,6 +184,10 @@ export default function PixelFighterAdapter({ runtime, actions }: HeroGameAdapte
   const startGame = () => {
     setResult(null);
     setManualPaused(false);
+    if (runtime.muted) {
+      controllerRef.current?.setMuted(false);
+      toggleMuted();
+    }
     requestPlay();
   };
 
@@ -198,7 +202,7 @@ export default function PixelFighterAdapter({ runtime, actions }: HeroGameAdapte
   }, [registerPreviewFocus]);
 
   const immersive = runtime.phase === "revealing" || runtime.phase === "active" || runtime.phase === "exiting";
-  const showingGameUi = runtime.phase === "revealing" || runtime.phase === "active";
+  const showingGameUi = runtime.phase === "active";
   const playing = runtime.phase === "active" && !result;
   const paused = manualPaused || runtime.hostPaused;
   const previewPaused = !runtime.inViewport || !runtime.documentVisible || runtime.reducedMotion || immersive;
@@ -209,54 +213,52 @@ export default function PixelFighterAdapter({ runtime, actions }: HeroGameAdapte
       <div ref={canvasHostRef} className={`fight-canvas-host${engineReady ? " is-ready" : ""}`} />
       <ArenaPreview character={selected} paused={previewPaused} />
 
-      <div className="fight-transition-fighter" aria-hidden="true">
-        <span />
-        <Image src={`/FIGHTGAME_Assets/CHARAs/${selected}/Idle.png`} alt="" width={76} height={96} priority />
-      </div>
-
       <div className="fight-scrim" aria-hidden="true" />
       <div className="fight-aperture-ring" aria-hidden="true" />
 
       {!immersive && (
         <div className="fight-preview-ui">
-          <div className="fight-preview-label">
-            <span className="text-pixel">CHOOSE YOUR FIGHTER</span>
-            <span>{definition.role}</span>
-          </div>
+          <div className="fight-selection-panel">
+            <div className="fight-preview-label">
+              <span className="text-pixel">PIXEL DUEL</span>
+              <strong>Choose your fighter</strong>
+              <span><b>{definition.name}</b> · {definition.role}</span>
+            </div>
 
-          <div className="fight-roster" aria-label="Choose your fighter">
-            {CHARACTER_IDS.map((character) => {
-              const item = CHARACTERS[character];
-              const selectedCharacter = character === selected;
-              return (
-                <button
-                  key={character}
-                  type="button"
-                  className="fight-roster-button"
-                  data-selected={selectedCharacter}
-                  aria-pressed={selectedCharacter}
-                  aria-label={`Choose ${item.name}, ${item.role}`}
-                  onClick={() => selectCharacter(character)}
-                >
-                  <span className="fight-roster-portrait">
-                    <Image src={`/FIGHTGAME_Assets/CHARAs/${character}/Idle.png`} alt="" width={38} height={48} priority />
-                  </span>
-                  <Image src={`/FIGHTGAME_Assets/CHARAs/${character}/name.png`} alt={item.name} width={43} height={9} priority className="fight-roster-name" />
-                </button>
-              );
-            })}
-          </div>
+            <div className="fight-roster" aria-label="Choose your fighter">
+              {CHARACTER_IDS.map((character) => {
+                const item = CHARACTERS[character];
+                const selectedCharacter = character === selected;
+                return (
+                  <button
+                    key={character}
+                    type="button"
+                    className="fight-roster-button"
+                    data-selected={selectedCharacter}
+                    aria-pressed={selectedCharacter}
+                    aria-label={`Choose ${item.name}, ${item.role}`}
+                    onClick={() => selectCharacter(character)}
+                  >
+                    <span className="fight-roster-portrait">
+                      <Image src={`/FIGHTGAME_Assets/CHARAs/${character}/Idle.png`} alt="" width={38} height={48} priority />
+                    </span>
+                    <Image src={`/FIGHTGAME_Assets/CHARAs/${character}/name.png`} alt={item.name} width={43} height={9} priority className="fight-roster-name" />
+                  </button>
+                );
+              })}
+            </div>
 
-          <button
-            ref={setPreviewFocus}
-            type="button"
-            className="fight-play-button"
-            onClick={startGame}
-            disabled={runtime.phase === "loading"}
-          >
-            <Play className="size-4 fill-current" aria-hidden="true" />
-            <span>{runtime.phase === "loading" ? "Loading arena" : "Tap to play"}</span>
-          </button>
+            <button
+              ref={setPreviewFocus}
+              type="button"
+              className="fight-play-button"
+              onClick={startGame}
+              disabled={runtime.phase === "loading"}
+            >
+              <Play className="size-4 fill-current" aria-hidden="true" />
+              <span>{runtime.phase === "loading" ? "Preparing arena" : "Enter battle"}</span>
+            </button>
+          </div>
         </div>
       )}
 

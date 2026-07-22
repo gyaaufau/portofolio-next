@@ -1,5 +1,15 @@
 import * as Phaser from "phaser";
 import { decideAI } from "../domain/ai";
+import {
+  getAttackCue,
+  getAttackCueAtMs,
+  getContainerCue,
+  getImpactCue,
+  getPickupCue,
+  getSoundAssetKey,
+  SOUND_ASSETS,
+  type SoundCueId,
+} from "../domain/audio";
 import { canDodgeCancel, nextComboStage, readyHitIndexes, shouldEnterVisualState } from "../domain/combat";
 import { CHARACTERS, chooseOpponent } from "../domain/characters";
 import { applyPickup, chooseContainer, chooseDrop, CONTAINERS, ITEMS } from "../domain/items";
@@ -71,6 +81,7 @@ type FighterRuntime = {
   comboStage: number;
   comboStartedGrounded: boolean;
   consumedHits: Set<number>;
+  attackCuePlayed: boolean;
   visualState?: AnimationId;
   isPlayer: boolean;
 };
@@ -132,8 +143,8 @@ export class FightScene extends Phaser.Scene {
   private lastHudSecond = -1;
   private lastAmbientAt = 0;
   private statusText!: Phaser.GameObjects.Text;
-  private audioContext?: AudioContext;
   private muted = true;
+  private soundVariants = new Map<SoundCueId, number>();
   private activeContainer?: ContainerRuntime;
   private activePickup?: PickupRuntime;
   private finishersReady = false;
@@ -155,6 +166,9 @@ export class FightScene extends Phaser.Scene {
     this.load.atlas("items", `${RUNTIME_ASSET_ROOT}/items.png`, `${RUNTIME_ASSET_ROOT}/items.json`);
     this.load.image("snowball", `${SOURCE_ASSET_ROOT}/FXs/Snowball.png`);
     this.load.image("muzzle", `${SOURCE_ASSET_ROOT}/FXs/MuzzleFlash.png`);
+    for (const [cue, definition] of Object.entries(SOUND_ASSETS) as Array<[SoundCueId, (typeof SOUND_ASSETS)[SoundCueId]]>) {
+      definition.files.forEach((file, index) => this.load.audio(getSoundAssetKey(cue, index), file));
+    }
   }
 
   create() {
@@ -164,7 +178,6 @@ export class FightScene extends Phaser.Scene {
     this.createAnimations();
     this.player = this.createFighter(this.playerId, this.layout.playerSpawnX, true);
     this.enemy = this.createFighter(this.enemyId, this.layout.enemySpawnX, false);
-    this.enemy.visual.setAlpha(0.72);
     this.createPools();
     this.createInput();
     this.statusText = this.add.text(this.layout.width / 2, Math.max(31, this.layout.height * 0.16), "", {
@@ -251,13 +264,12 @@ export class FightScene extends Phaser.Scene {
 
   setMuted(next: boolean) {
     this.muted = next;
-    if (!next && !this.audioContext) this.audioContext = new AudioContext();
-    if (!next && this.audioContext?.state === "suspended") void this.audioContext.resume();
-  }
-
-  shutdownAudio() {
-    void this.audioContext?.close();
-    this.audioContext = undefined;
+    const soundManager = this.game?.sound;
+    if (!soundManager) return;
+    soundManager.mute = next;
+    if (!next && soundManager instanceof Phaser.Sound.WebAudioSoundManager && soundManager.context.state === "suspended") {
+      void soundManager.context.resume();
+    }
   }
 
   private createArena() {
@@ -319,11 +331,11 @@ export class FightScene extends Phaser.Scene {
   }
 
   private addPlatform(x: number, y: number, width: number, height: number, depth: number, edges: boolean) {
-    this.add.image(x, y, "environment", "ENVIRO/Level Design/platform.png")
-      .setDisplaySize(width, height).setOrigin(0.5, 0).setDepth(depth);
+    this.add.tileSprite(x, y, width, height, "environment", "ENVIRO/Level Design/platform.png")
+      .setOrigin(0.5, 0).setDepth(depth);
     if (edges) {
-      this.add.image(x - width / 2, y, "environment", "ENVIRO/Level Design/platform_edge.png").setOrigin(0.5, 0).setDepth(depth + 1);
-      this.add.image(x + width / 2, y, "environment", "ENVIRO/Level Design/platform_edge.png").setOrigin(0.5, 0).setFlipX(true).setDepth(depth + 1);
+      this.add.image(x - width / 2, y, "environment", "ENVIRO/Level Design/platform_edge.png").setOrigin(0, 0).setDepth(depth + 1);
+      this.add.image(x + width / 2, y, "environment", "ENVIRO/Level Design/platform_edge.png").setOrigin(1, 0).setFlipX(true).setDepth(depth + 1);
     }
     const zone = this.add.zone(x, y + height / 2, width, height);
     this.physics.add.existing(zone, true);
@@ -399,6 +411,7 @@ export class FightScene extends Phaser.Scene {
       comboStage: -1,
       comboStartedGrounded: true,
       consumedHits: new Set(),
+      attackCuePlayed: false,
       isPlayer,
     };
     visual.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
@@ -478,6 +491,7 @@ export class FightScene extends Phaser.Scene {
     fighter.attackStartedAt = 0;
     fighter.comboStage = -1;
     fighter.consumedHits.clear();
+    fighter.attackCuePlayed = false;
     fighter.visualState = undefined;
     fighter.visual.setAlpha(1).setFlipX(facing < 0);
     this.setVisualState(fighter, "idle");
@@ -610,17 +624,21 @@ export class FightScene extends Phaser.Scene {
     fighter.comboStage = comboStage;
     fighter.comboStartedGrounded = grounded;
     fighter.consumedHits.clear();
+    fighter.attackCuePlayed = false;
     fighter.body.setAccelerationX(0);
     if (attack.dashSpeed) fighter.body.setVelocityX(fighter.facing * attack.dashSpeed);
     this.setVisualState(fighter, attack.animation);
     if (attack.projectileSpeed) fighter.armedUntil = time + attack.durationMs + 900;
-    this.playCue(attack.projectileSpeed ? "gun" : attack.dashSpeed ? "dash" : "swing");
   }
 
   private updateActiveAttack(fighter: FighterRuntime, opponent: FighterRuntime, time: number, grounded: boolean) {
     const attack = fighter.activeAttack;
     if (!attack) return;
     const elapsed = time - fighter.attackStartedAt;
+    if (!fighter.attackCuePlayed && elapsed >= getAttackCueAtMs(attack)) {
+      fighter.attackCuePlayed = true;
+      this.playCue(getAttackCue(fighter.definition.id, attack));
+    }
     for (const { window, index } of readyHitIndexes(attack, elapsed, fighter.consumedHits)) {
       fighter.consumedHits.add(index);
       if (attack.projectileSpeed) this.launchProjectile(fighter, window, attack.projectileSpeed, time);
@@ -643,6 +661,7 @@ export class FightScene extends Phaser.Scene {
     fighter.activeAttack = undefined;
     fighter.comboStage = -1;
     fighter.consumedHits.clear();
+    fighter.attackCuePlayed = false;
     fighter.visualState = undefined;
   }
 
@@ -650,6 +669,7 @@ export class FightScene extends Phaser.Scene {
     fighter.activeAttack = undefined;
     fighter.comboStage = -1;
     fighter.consumedHits.clear();
+    fighter.attackCuePlayed = false;
   }
 
   private tryMeleeHit(source: FighterRuntime, target: FighterRuntime, hit: HitWindow, time: number) {
@@ -720,7 +740,7 @@ export class FightScene extends Phaser.Scene {
         if (!this.paused && !this.roundTransition) this.physics.world.isPaused = false;
       });
     }
-    this.playCue(hit.impact === "impactHuge" ? "finisher" : "hit");
+    this.playCue(getImpactCue(hit.impact));
     this.roundState = {
       ...this.roundState,
       playerVitality: this.player.vitality,
@@ -843,6 +863,7 @@ export class FightScene extends Phaser.Scene {
     this.activeContainer.image.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
     this.time.delayedCall(55, () => this.activeContainer?.image.clearTint().setTintMode(Phaser.TintModes.MULTIPLY));
     this.playEffect("impact2", this.activeContainer.image.x, this.activeContainer.image.y - 6);
+    this.playCue(getContainerCue(this.activeContainer.id));
     if (this.activeContainer.hitPoints > 0) return;
     const x = this.activeContainer.image.x;
     const y = this.activeContainer.image.y;
@@ -866,7 +887,7 @@ export class FightScene extends Phaser.Scene {
       fighter.score = applied.score;
       if (applied.resetCooldown) fighter.cooldownUntil = 0;
       if (applied.hasteMs) fighter.hasteUntil = time + applied.hasteMs;
-      this.playCue("pickup");
+      this.playCue(getPickupCue(id));
       this.playEffect(id === "haste" ? "speed" : "snow1", this.activePickup.image.x, this.activePickup.image.y - 4);
       this.activePickup.image.destroy();
       this.activePickup = undefined;
@@ -985,23 +1006,13 @@ export class FightScene extends Phaser.Scene {
     this.aiInput = { ...this.aiInput, jump: false, light: false, special: false, dodge: false };
   }
 
-  private playCue(kind: "step" | "jump" | "swing" | "gun" | "hit" | "dash" | "pickup" | "finisher" | "knockout") {
-    if (this.muted || !this.audioContext) return;
-    const settings = {
-      step: [82, 0.018, 0.012], jump: [310, 0.035, 0.018], swing: [155, 0.045, 0.02],
-      gun: [620, 0.055, 0.028], hit: [96, 0.06, 0.03], dash: [225, 0.04, 0.018],
-      pickup: [740, 0.09, 0.022], finisher: [68, 0.13, 0.038], knockout: [52, 0.2, 0.04],
-    } as const;
-    const [frequency, duration, volume] = settings[kind];
-    const oscillator = this.audioContext.createOscillator();
-    const gain = this.audioContext.createGain();
-    oscillator.type = kind === "gun" || kind === "hit" ? "square" : "triangle";
-    oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(Math.max(30, frequency * 0.72), this.audioContext.currentTime + duration);
-    gain.gain.setValueAtTime(volume, this.audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, this.audioContext.currentTime + duration);
-    oscillator.connect(gain).connect(this.audioContext.destination);
-    oscillator.start();
-    oscillator.stop(this.audioContext.currentTime + duration);
+  private playCue(cue: SoundCueId) {
+    if (this.muted) return;
+    const definition = SOUND_ASSETS[cue];
+    const variant = this.soundVariants.get(cue) ?? 0;
+    this.soundVariants.set(cue, (variant + 1) % definition.files.length);
+    const key = getSoundAssetKey(cue, variant);
+    if (!this.cache.audio.exists(key)) return;
+    this.sound.play(key, { volume: definition.volume });
   }
 }

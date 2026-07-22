@@ -9,7 +9,7 @@ import { Certificates } from "@/components/certificates";
 import { Contact } from "@/components/contact";
 import { getPortfolio } from "@/data/db";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const portfolio = await getPortfolio();
