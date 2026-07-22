@@ -165,11 +165,10 @@ test("the work-experience rail stays visibly alive in both themes", async () => 
   }
 });
 
-test("the homepage uses every approved calibration ornament decoratively", async () => {
+test("the homepage retains its approved supporting ornaments decoratively", async () => {
   const component = await readFile(path.resolve("src/components/pixel-ornament.tsx"), "utf8");
   const homepage = await readFile(path.resolve("src/app/page.tsx"), "utf8");
   const approved = [
-    "reclaimed-computer-folder",
     "mossy-masonry-vine",
     "weathered-conduit",
     "abandoned-workstation-window",

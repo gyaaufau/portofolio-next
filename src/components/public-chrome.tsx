@@ -2,10 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
-export function PublicChrome({ children }: { children: React.ReactNode }) {
+export function PublicChrome({ children, footer }: { children: React.ReactNode; footer: React.ReactNode }) {
   const pathname = usePathname();
   if (pathname.startsWith("/admin")) return children;
 
@@ -15,7 +14,7 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
       <Navbar />
       {children}
       <ScrollReveal />
-      <Footer />
+      {footer}
     </>
   );
 }

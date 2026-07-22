@@ -172,6 +172,66 @@
         { "width": 64, "height": 48 }
       ],
       "decorative": true
+    },
+    {
+      "id": "section-icon-about",
+      "category": "section-icon",
+      "path": "/assets/pixel-ornaments/section-icons/section_icon_about.png",
+      "intrinsic": { "width": 64, "height": 64 },
+      "logicalGrid": { "width": 32, "height": 32, "scale": 2 },
+      "intendedPlacement": "Leading icon beside the About section heading",
+      "recommendedDisplaySizes": [{ "width": 32, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "section-icon-app-catalog",
+      "category": "section-icon",
+      "path": "/assets/pixel-ornaments/section-icons/section_icon_app_catalog.png",
+      "intrinsic": { "width": 64, "height": 64 },
+      "logicalGrid": { "width": 32, "height": 32, "scale": 2 },
+      "intendedPlacement": "Leading icon beside the App Catalog section heading",
+      "recommendedDisplaySizes": [{ "width": 32, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "section-icon-work-experience",
+      "category": "section-icon",
+      "path": "/assets/pixel-ornaments/section-icons/section_icon_work_experience.png",
+      "intrinsic": { "width": 64, "height": 64 },
+      "logicalGrid": { "width": 32, "height": 32, "scale": 2 },
+      "intendedPlacement": "Leading icon beside the Work Experience section heading",
+      "recommendedDisplaySizes": [{ "width": 32, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "section-icon-certificates",
+      "category": "section-icon",
+      "path": "/assets/pixel-ornaments/section-icons/section_icon_certificates.png",
+      "intrinsic": { "width": 64, "height": 64 },
+      "logicalGrid": { "width": 32, "height": 32, "scale": 2 },
+      "intendedPlacement": "Leading icon beside the Certificates section heading",
+      "recommendedDisplaySizes": [{ "width": 32, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "section-icon-contact",
+      "category": "section-icon",
+      "path": "/assets/pixel-ornaments/section-icons/section_icon_contact.png",
+      "intrinsic": { "width": 64, "height": 64 },
+      "logicalGrid": { "width": 32, "height": 32, "scale": 2 },
+      "intendedPlacement": "Leading icon beside the Contact section heading",
+      "recommendedDisplaySizes": [{ "width": 32, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "copyright-pixel-icon",
+      "category": "footer-icon",
+      "path": "/assets/pixel-ornaments/footer/copyright_pixel_icon.png",
+      "intrinsic": { "width": 32, "height": 32 },
+      "logicalGrid": { "width": 16, "height": 16, "scale": 2 },
+      "intendedPlacement": "Decorative icon beside the copyright footer text",
+      "recommendedDisplaySizes": [{ "width": 16, "height": 16 }],
+      "decorative": true
     }
   ]
 }

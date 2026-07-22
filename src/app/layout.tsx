@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import "@fontsource/press-start-2p/latin.css";
 import "./globals.css";
 import { PublicChrome } from "@/components/public-chrome";
+import { Footer } from "@/components/footer";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
 import { getSiteSettings } from "@/data/db";
 import { readableForeground } from "@/lib/theme";
@@ -46,7 +47,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
       <body>
-        <PublicChrome>{children}</PublicChrome>
+        <PublicChrome footer={<Footer />}>{children}</PublicChrome>
       </body>
     </html>
   );

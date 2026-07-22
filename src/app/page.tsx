@@ -8,6 +8,7 @@ import { About } from "@/components/about";
 import { Certificates } from "@/components/certificates";
 import { Contact } from "@/components/contact";
 import { PixelOrnament } from "@/components/pixel-ornament";
+import { SectionLeadingIcon } from "@/components/section-leading-icon";
 import { getPortfolio } from "@/data/db";
 
 export const dynamic = "force-dynamic";
@@ -23,13 +24,13 @@ export default async function Home() {
         id="apps"
         title="Apps worth opening."
         description="Production work and personal products, presented with the decisions and craft behind them."
-        headingAdornment={<PixelOrnament name="reclaimed-computer-folder" className="w-12" />}
+        headingAdornment={<SectionLeadingIcon name="app-catalog" />}
       >
         <div className="border-t border-border">{portfolio.projects.map((app) => <AppCard key={app.id} app={app} />)}</div>
         <Link href="/apps" className="pixel-button mt-7 bg-card text-foreground">Browse all apps <ArrowRight className="size-4" /></Link>
       </SectionShell>
 
-      <SectionShell id="work-experience" title="The quest log." description="Teams, roles, and the practical work completed along the way.">
+      <SectionShell id="work-experience" title="The quest log." description="Teams, roles, and the practical work completed along the way." headingAdornment={<SectionLeadingIcon name="work-experience" />}>
         <WorkExperience experiences={portfolio.workExperiences} />
       </SectionShell>
 
@@ -37,12 +38,13 @@ export default async function Home() {
         id="about"
         title="Tools in the inventory."
         description="A focused Flutter toolkit, backed by product thinking and reliable delivery."
+        headingAdornment={<SectionLeadingIcon name="about" />}
         asideAdornment={<PixelOrnament name="abandoned-workstation-window" className="w-48" />}
       >
         <About paragraphs={portfolio.about} skills={portfolio.skills} tech={portfolio.tech} softSkills={portfolio.softSkills} photo={portfolio.photo} />
       </SectionShell>
 
-      <SectionShell id="certificates" title="Achievements unlocked." description="Training and conference milestones that sharpened the work.">
+      <SectionShell id="certificates" title="Achievements unlocked." description="Training and conference milestones that sharpened the work." headingAdornment={<SectionLeadingIcon name="certificates" />}>
         <Certificates certificates={portfolio.certificates} />
         <Link href="/certificates" className="pixel-button mt-7 bg-card text-foreground">View all certificates <ArrowRight className="size-4" /></Link>
         <div className="mt-7 flex justify-center overflow-hidden md:mt-10">
@@ -50,7 +52,7 @@ export default async function Home() {
         </div>
       </SectionShell>
 
-      <SectionShell id="contact" title="Ready for the next build?">
+      <SectionShell id="contact" title="Ready for the next build?" headingAdornment={<SectionLeadingIcon name="contact" />}>
         <div className="relative">
           <div className="relative z-[1]">
             <Contact email={portfolio.contact.email} whatsapp={portfolio.contact.whatsapp} github={portfolio.contact.github} linkedin={portfolio.contact.linkedin} playConsole={portfolio.contact.playStore} cv={portfolio.contact.cv} />

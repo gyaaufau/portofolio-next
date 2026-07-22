@@ -136,4 +136,17 @@ Composition: tall narrow portrait module, with the pole entering through the exa
 
 ## Production notes
 
+### Section-leading and footer icons
+
+The homepage uses five neutral, single-variant leading icons from `section-icons/`:
+
+- `section_icon_about.png`
+- `section_icon_app_catalog.png`
+- `section_icon_work_experience.png`
+- `section_icon_certificates.png`
+- `section_icon_contact.png`
+
+Each file is 64×64 and represents a 32×32 logical grid at exact 2× scale. The compact footer uses `footer/copyright_pixel_icon.png`, a 32×32 file representing a 16×16 logical grid at exact 2× scale. These assets are intentionally theme-neutral rather than recolored by the configurable site accent.
+
+
 The chroma background was removed locally, edge pixels were despilled, and alpha was reduced to fully transparent or fully opaque values. Each cleaned subject was trimmed, fitted into a consistently padded logical canvas, mapped to a restrained palette, and upscaled exactly 2× with nearest-neighbor sampling. Dark contours were calibrated directly on the project’s real page and card colors.

@@ -1,12 +1,23 @@
-import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/data/seo";
+import { formatCopyrightYear } from "@/lib/copyright";
 
 export function Footer() {
+  const copyrightYear = formatCopyrightYear(new Date().getFullYear());
+
   return (
-    <footer className="mx-auto mb-24 mt-8 max-w-[1280px] border-t border-border px-6 py-8 text-sm text-muted-foreground md:mb-0">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p>&copy; {new Date().getFullYear()} {siteConfig.personName}</p>
-        <div className="flex gap-5"><Link href="/apps" className="hover:text-primary">Apps</Link><Link href="/blog" className="hover:text-primary">Writing</Link><Link href="/cv" className="hover:text-primary">CV</Link></div>
+    <footer className="mb-20 mt-8 border-t border-border bg-background text-muted-foreground md:mb-0">
+      <div className="mx-auto flex max-w-[1280px] items-center justify-center gap-2 px-5 py-6 text-center text-xs font-medium leading-5 md:px-6 md:py-7 md:text-sm">
+        <Image
+          src="/assets/pixel-ornaments/footer/copyright_pixel_icon.png"
+          alt=""
+          aria-hidden="true"
+          width={32}
+          height={32}
+          unoptimized
+          className="size-4 shrink-0 [image-rendering:pixelated] [image-rendering:crisp-edges]"
+        />
+        <span>© {copyrightYear} {siteConfig.personName}</span>
       </div>
     </footer>
   );
