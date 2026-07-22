@@ -224,13 +224,46 @@
       "decorative": true
     },
     {
-      "id": "copyright-pixel-icon",
-      "category": "footer-icon",
-      "path": "/assets/pixel-ornaments/footer/copyright_pixel_icon.png",
-      "intrinsic": { "width": 32, "height": 32 },
-      "logicalGrid": { "width": 16, "height": 16, "scale": 2 },
-      "intendedPlacement": "Decorative icon beside the copyright footer text",
-      "recommendedDisplaySizes": [{ "width": 16, "height": 16 }],
+      "id": "footer-ground-tile",
+      "category": "footer-environment",
+      "path": "/assets/pixel-ornaments/footer/footer_ground_tile.png",
+      "intrinsic": { "width": 128, "height": 32 },
+      "repeatAxis": "x",
+      "intendedPlacement": "Repeated across the full-width footer baseline",
+      "recommendedDisplaySizes": [{ "width": 128, "height": 32 }],
+      "decorative": true
+    },
+    {
+      "id": "footer-left-environment",
+      "category": "footer-environment",
+      "path": "/assets/pixel-ornaments/footer/footer_left_environment.png",
+      "intrinsic": { "width": 240, "height": 128 },
+      "intendedPlacement": "Left side of the desktop footer environment",
+      "recommendedDisplaySizes": [
+        { "width": 192, "height": 102 },
+        { "width": 240, "height": 128 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "footer-utility-cluster",
+      "category": "footer-environment",
+      "path": "/assets/pixel-ornaments/footer/footer_utility_cluster.png",
+      "intrinsic": { "width": 420, "height": 220 },
+      "intendedPlacement": "Center-right of the desktop footer environment",
+      "recommendedDisplaySizes": [
+        { "width": 336, "height": 176 },
+        { "width": 420, "height": 220 }
+      ],
+      "decorative": true
+    },
+    {
+      "id": "footer-mobile-utility-cluster",
+      "category": "footer-environment",
+      "path": "/assets/pixel-ornaments/footer/footer_mobile_utility_cluster.png",
+      "intrinsic": { "width": 260, "height": 160 },
+      "intendedPlacement": "Centered slightly right in the mobile footer environment",
+      "recommendedDisplaySizes": [{ "width": 220, "height": 135 }],
       "decorative": true
     }
   ]

@@ -136,7 +136,7 @@ Composition: tall narrow portrait module, with the pole entering through the exa
 
 ## Production notes
 
-### Section-leading and footer icons
+### Section-leading icons and footer environment
 
 The homepage uses five neutral, single-variant leading icons from `section-icons/`:
 
@@ -146,7 +146,17 @@ The homepage uses five neutral, single-variant leading icons from `section-icons
 - `section_icon_certificates.png`
 - `section_icon_contact.png`
 
-Each file is 64×64 and represents a 32×32 logical grid at exact 2× scale. The compact footer uses `footer/copyright_pixel_icon.png`, a 32×32 file representing a 16×16 logical grid at exact 2× scale. These assets are intentionally theme-neutral rather than recolored by the configurable site accent.
+Each section icon is 64×64 and represents a 32×32 logical grid at exact 2× scale. The section-icon files remain unchanged.
 
+The full-width footer uses exactly four neutral assets from `footer/`:
 
-The chroma background was removed locally, edge pixels were despilled, and alpha was reduced to fully transparent or fully opaque values. Each cleaned subject was trimmed, fitted into a consistently padded logical canvas, mapped to a restrained palette, and upscaled exactly 2× with nearest-neighbor sampling. Dark contours were calibrated directly on the project’s real page and card colors.
+- `footer_ground_tile.png` — 128×32 seamless horizontal repeat
+- `footer_left_environment.png` — 240×128 desktop supporting cluster
+- `footer_utility_cluster.png` — 420×220 desktop focal cluster
+- `footer_mobile_utility_cluster.png` — 260×160 simplified mobile cluster
+
+The desktop cluster contains a generic electrical box, slim pole, and a bird perched directly on the box. Electrical cables are intentionally omitted in both utility assets. Its approved display sizes are 420×220 on desktop and 336×176 on tablet. Mobile uses the dedicated cluster at approximately 220×135 so the environment stays compact on narrow screens. The ground tile is never stretched and repeats at its native 128×32 size.
+
+All four assets were generated separately with the built-in image generator. The approved workstation ornament and desktop utility result were used only as visual-family references. The final refinement prompts removed all wires, placed each bird on its utility box, and strengthened the vegetation with fresh muted greens while preserving sparse density. Prompts required a flat `#FF00FF` chroma background, neutral weathered materials, crisp square pixel clusters, upper-left lighting, no readable text or logos, and no configurable UI accent color. The ground prompt additionally required matching side-edge height and structure for seamless repetition.
+
+The chroma background was removed locally, edge pixels were despilled, and alpha was reduced to fully transparent or fully opaque values. Footer sources were normalized to their exact final canvases with nearest-neighbor sampling and an 18-color maximum palette. Every visible base is aligned to the last canvas row so CSS `bottom: 0` positioning shares one baseline with the ground tile. The ground tile received matching boundary columns so repeated copies join cleanly. Dark contours were checked directly on the project’s real light and dark surfaces.

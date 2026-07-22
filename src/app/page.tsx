@@ -15,6 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const portfolio = await getPortfolio();
+
   return (
     <main id="main-content" className="w-full pb-20">
       <Hero name={portfolio.name} role={portfolio.role} intro={portfolio.intro} location={portfolio.location} openToOpportunities={portfolio.openToOpportunities} />
@@ -47,9 +48,6 @@ export default async function Home() {
       <SectionShell id="certificates" title="Achievements unlocked." description="Training and conference milestones that sharpened the work." headingAdornment={<SectionLeadingIcon name="certificates" />}>
         <Certificates certificates={portfolio.certificates} />
         <Link href="/certificates" className="pixel-button mt-7 bg-card text-foreground">View all certificates <ArrowRight className="size-4" /></Link>
-        <div className="mt-7 flex justify-center overflow-hidden md:mt-10">
-          <PixelOrnament name="weathered-conduit" className="w-96 shrink-0 md:w-[48rem]" />
-        </div>
       </SectionShell>
 
       <SectionShell id="contact" title="Ready for the next build?" headingAdornment={<SectionLeadingIcon name="contact" />}>

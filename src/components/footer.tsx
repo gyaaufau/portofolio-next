@@ -1,23 +1,43 @@
 import Image from "next/image";
 import { siteConfig } from "@/data/seo";
 import { formatCopyrightYear } from "@/lib/copyright";
+import styles from "./footer.module.css";
 
 export function Footer() {
   const copyrightYear = formatCopyrightYear(new Date().getFullYear());
 
   return (
-    <footer className="mb-20 mt-8 border-t border-border bg-background text-muted-foreground md:mb-0">
-      <div className="mx-auto flex max-w-[1280px] items-center justify-center gap-2 px-5 py-6 text-center text-xs font-medium leading-5 md:px-6 md:py-7 md:text-sm">
-        <Image
-          src="/assets/pixel-ornaments/footer/copyright_pixel_icon.png"
-          alt=""
-          aria-hidden="true"
-          width={32}
-          height={32}
-          unoptimized
-          className="size-4 shrink-0 [image-rendering:pixelated] [image-rendering:crisp-edges]"
-        />
+    <footer className={`${styles.footer} mb-20 mt-8 md:mb-0`}>
+      <div className={styles.copyright}>
         <span>© {copyrightYear} {siteConfig.personName}</span>
+      </div>
+
+      <div className={styles.environment} aria-hidden="true">
+        <div className={styles.ground} />
+        <Image
+          src="/assets/pixel-ornaments/footer/footer_left_environment.png"
+          alt=""
+          width={240}
+          height={128}
+          unoptimized
+          className={`${styles.artwork} ${styles.leftEnvironment}`}
+        />
+        <Image
+          src="/assets/pixel-ornaments/footer/footer_utility_cluster.png"
+          alt=""
+          width={420}
+          height={220}
+          unoptimized
+          className={`${styles.artwork} ${styles.utilityCluster}`}
+        />
+        <Image
+          src="/assets/pixel-ornaments/footer/footer_mobile_utility_cluster.png"
+          alt=""
+          width={260}
+          height={160}
+          unoptimized
+          className={`${styles.artwork} ${styles.mobileUtilityCluster}`}
+        />
       </div>
     </footer>
   );

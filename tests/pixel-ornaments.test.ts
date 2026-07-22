@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import sharp from "sharp";
+import sharp, { type OutputInfo } from "sharp";
 
 const root = path.resolve("public/assets/pixel-ornaments");
 
@@ -170,7 +170,6 @@ test("the homepage retains its approved supporting ornaments decoratively", asyn
   const homepage = await readFile(path.resolve("src/app/page.tsx"), "utf8");
   const approved = [
     "mossy-masonry-vine",
-    "weathered-conduit",
     "abandoned-workstation-window",
   ];
 
@@ -178,6 +177,8 @@ test("the homepage retains its approved supporting ornaments decoratively", asyn
     assert.ok(component.includes(`\"${name}\"`), `${name} is missing from the typed ornament registry`);
     assert.ok(homepage.includes(`name=\"${name}\"`), `${name} is not integrated on the homepage`);
   }
+  assert.ok(component.includes('"weathered-conduit"'), "weathered-conduit must remain available to secondary pages");
+  assert.ok(!homepage.includes('name="weathered-conduit"'), "the legacy conduit must stay off the homepage");
   assert.ok(component.includes('alt=""'));
   assert.ok(component.includes('aria-hidden="true"'));
   assert.ok(component.includes("unoptimized"));
@@ -194,11 +195,11 @@ test("secondary-page icons have production-safe paired geometry", async () => {
 
     const masks: Buffer[] = [];
     for (const theme of ["light", "dark"] as const) {
-      const { data, info } = await sharp(publicPath(asset.paths[theme])).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+      const { data, info }: { data: Buffer; info: OutputInfo } = await sharp(publicPath(asset.paths[theme])).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
       const mask = Buffer.alloc(info.width * info.height);
       for (let y = 0; y < info.height; y += 2) {
         for (let x = 0; x < info.width; x += 2) {
-          const pixels = [
+          const pixels: Buffer[] = [
             (y * info.width + x) * info.channels,
             (y * info.width + x + 1) * info.channels,
             ((y + 1) * info.width + x) * info.channels,

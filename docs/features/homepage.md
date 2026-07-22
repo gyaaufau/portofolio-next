@@ -82,14 +82,14 @@ Request
 
 Important state rules:
 
-- ISR (`revalidate = 3600`) — cached static generation with hourly revalidation
+- Dynamic request-time rendering
 - `React.cache()` deduplicates data queries within a single request
 - No client-side state management
 - All data fetched server-side
 
 Long-lived state:
 
-None — every request fetches fresh from PostgreSQL.
+None - every request fetches fresh from PostgreSQL.
 
 ---
 
@@ -133,7 +133,7 @@ Source of truth:
 
 Local/cache behavior:
 
-ISR with 1-hour revalidation. Data functions wrapped with `React.cache()` for request deduplication.
+No route-level cache. Data functions are wrapped with `React.cache()` for request deduplication.
 
 Remote behavior:
 
@@ -206,7 +206,6 @@ Prioritize:
 
 ## Known Limitations
 
-- Uses ISR (not fully static or fully dynamic)
 - No pagination for sections
 - HeroLink and DirectoryLink have no admin management UI
 
