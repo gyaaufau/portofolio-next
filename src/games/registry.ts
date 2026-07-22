@@ -12,7 +12,7 @@ export const HERO_GAMES = {
       touchFullscreen: true,
     },
     transition: {
-      revealMs: 650,
+      revealMs: 700,
       exitMs: 650,
     },
     load: () => import("./pixel-fighter/adapter"),

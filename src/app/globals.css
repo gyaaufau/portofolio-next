@@ -274,7 +274,7 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
 .immersive-hero .hero-game-shell {
   --iris-radius: clamp(82px, 7.5vw, 108px);
   --iris-x: 73%;
-  --iris-y: 50%;
+  --iris-y: 76%;
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -299,7 +299,7 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
 .immersive-hero .fight-preview-tree-left { left: 2%; }
 .immersive-hero .fight-preview-tree-right { right: 3%; }
 .immersive-hero .fight-preview-leaves { top: -1%; width: min(30rem, 34vw); }
-.immersive-hero .fight-preview-platform { bottom: 13.5%; left: 12%; width: 76%; height: 2.5%; }
+.immersive-hero .fight-preview-platform { bottom: 13.5%; left: 12%; width: 76%; }
 .immersive-hero .fight-preview-fog { opacity: 0.25; }
 
 .immersive-hero .fight-scrim {
@@ -310,31 +310,15 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   background-size: 20px 20px;
 }
 
-.immersive-hero .fight-preview-label {
-  top: max(5.75rem, calc(env(safe-area-inset-top) + 4rem));
-  right: clamp(2rem, 9vw, 10rem);
-  left: auto;
-  align-items: flex-end;
-  text-align: right;
-}
-
-.immersive-hero .fight-roster {
-  right: clamp(2rem, 8.5vw, 9.5rem);
-  bottom: clamp(2.5rem, 7vh, 5.5rem);
-  left: auto;
-}
-
-.immersive-hero .fight-play-button {
-  top: calc(var(--iris-y) + var(--iris-radius) + 1.25rem);
-}
-
-.immersive-hero .fight-transition-fighter,
 .immersive-hero .fight-idle {
-  top: calc(var(--iris-y) + 3.25rem);
+  top: auto;
+  bottom: 13.5%;
+  width: 8rem;
+  height: 10rem;
+  transform: translateX(-50%);
 }
-
-.immersive-hero .hero-game-shell.is-revealing .fight-transition-fighter { left: 32%; top: 86%; }
-.immersive-hero .hero-game-shell.is-active:not(.is-revealing) .fight-transition-fighter { left: 32%; top: 86%; }
+.immersive-hero .fight-idle-sprite { bottom: 0.5rem; height: clamp(7rem, 10.5vw, 9.25rem); }
+.immersive-hero .fight-idle-shadow { bottom: 0.3rem; width: 3.8rem; height: 0.62rem; }
 
 .hero-game-shell.is-active {
   position: fixed !important;
@@ -350,7 +334,15 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
 }
 
 .hero-game-shell.is-active .fight-stage { width: 100%; height: 100%; min-height: 0; border-radius: 0; touch-action: none; }
-.hero-game-shell.is-active .fight-canvas-host { inset: 0; }
+.hero-game-shell.is-active .fight-canvas-host {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: min(60rem, calc(100vw - 3rem), calc((100dvh - 3rem) * 1.5));
+  height: auto;
+  aspect-ratio: 3 / 2;
+  transform: translate(-50%, -50%);
+}
 .hero-game-shell.is-active .fight-hud {
   top: max(1rem, env(safe-area-inset-top));
   right: max(1rem, env(safe-area-inset-right));
@@ -403,10 +395,7 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   .immersive-hero-copy > div { max-width: min(34rem, 88vw); }
   .immersive-hero-copy h1 { max-width: 9ch; font-size: clamp(3.1rem, 10.5vw, 5.1rem); }
   .immersive-hero-copy p:nth-of-type(2) { max-width: 38ch; font-size: 0.95rem; line-height: 1.55; }
-  .immersive-hero .hero-game-shell { --iris-radius: clamp(72px, 12vw, 92px); --iris-x: 74%; --iris-y: 67%; }
-  .immersive-hero .fight-preview-label { display: none; }
-  .immersive-hero .fight-roster { right: 1.25rem; bottom: max(5.6rem, calc(env(safe-area-inset-bottom) + 5rem)); }
-  .immersive-hero .fight-play-button { top: calc(var(--iris-y) + var(--iris-radius) + 0.8rem); }
+  .immersive-hero .hero-game-shell { --iris-radius: clamp(72px, 12vw, 92px); --iris-x: 74%; --iris-y: 72%; }
   .fight-instructions { display: none; }
 }
 
@@ -415,13 +404,11 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   .immersive-hero-copy { padding-top: max(4.8rem, calc(env(safe-area-inset-top) + 3.6rem)); }
   .immersive-hero-copy h1 { font-size: clamp(2.9rem, 14vw, 4.05rem); }
   .immersive-hero-copy p:nth-of-type(2) { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-  .immersive-hero .hero-game-shell { --iris-radius: 70px; --iris-x: 72%; --iris-y: 65%; }
-  .immersive-hero .fight-roster { right: 0.85rem; bottom: max(6.4rem, calc(env(safe-area-inset-bottom) + 6rem)); }
+  .immersive-hero .hero-game-shell { --iris-radius: 70px; --iris-x: 72%; --iris-y: 72%; }
   .immersive-hero .fight-roster-button { width: 3.15rem; min-height: 3.9rem; }
   .immersive-hero .fight-roster-portrait { height: 2.2rem; }
   .immersive-hero .fight-roster-portrait img { height: 2.08rem; }
   .immersive-hero .fight-play-button { font-size: 0.68rem; }
-  .hero-game-shell.is-active .fight-canvas-host { inset: 0; }
   .hero-game-shell.is-active .fight-utility-controls { top: max(3.15rem, calc(env(safe-area-inset-top) + 2.5rem)); bottom: auto; }
   .hero-game-shell.is-active .fight-hud { gap: 0.4rem; }
   .hero-game-shell.is-active .fight-timer { min-width: 2.8rem; }
@@ -504,5 +491,5 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .hero-enter { animation: none; }
   .fight-idle-sprite, .fight-idle-shadow, .fight-preview-fog, .fight-preview-leaves, .fight-particle { animation: none !important; }
-  .fight-scrim, .fight-aperture-ring, .fight-canvas-host, .fight-vitality i { transition: none !important; }
+  .fight-preview, .fight-scrim, .fight-aperture-ring, .fight-canvas-host, .fight-vitality i { transition: none !important; }
 }

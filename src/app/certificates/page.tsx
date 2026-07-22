@@ -7,7 +7,7 @@ import { absoluteUrl, siteConfig } from "@/data/seo";
 
 const collectionSchema = { "@context": "https://schema.org", "@type": "CollectionPage", name: "Certificates | Gialoop", url: absoluteUrl("/certificates"), description: "Professional learning milestones for Argya Aulia Fauzandika.", isPartOf: { "@type": "WebSite", name: siteConfig.siteName, url: siteConfig.siteUrl } };
 export const metadata: Metadata = { title: "Certificates | Gialoop", description: "Flutter training, developer conferences, and professional learning milestones." };
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function CertificatesPage() {
   const certificates = await getCertificates();
