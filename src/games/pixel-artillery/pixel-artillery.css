@@ -1,0 +1,144 @@
+.artillery-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  overflow: hidden;
+  background: #10251f;
+  color: #f4f1e8;
+  outline: none;
+  isolation: isolate;
+}
+
+.artillery-stage.is-focused::after {
+  position: absolute;
+  z-index: 24;
+  inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--primary) 72%, white);
+  content: "";
+  pointer-events: none;
+}
+
+.artillery-canvas {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.artillery-preview-ui { position: absolute; z-index: 10; inset: 0; pointer-events: none; }
+.artillery-preview-label {
+  position: absolute;
+  top: max(5.75rem, calc(env(safe-area-inset-top) + 4rem));
+  right: clamp(2rem, 9vw, 10rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  text-align: right;
+}
+.artillery-preview-label .text-pixel { color: color-mix(in srgb, var(--primary) 70%, white); font-size: 0.52rem; }
+.artillery-preview-label span:last-child { color: rgb(255 255 255 / 0.62); font-size: 0.76rem; }
+
+.artillery-start {
+  position: absolute;
+  right: clamp(2rem, 9vw, 10rem);
+  bottom: clamp(3rem, 10vh, 7rem);
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 78%, white);
+  border-radius: 0.25rem;
+  padding: 0.7rem 0.9rem;
+  background: color-mix(in srgb, var(--primary) 86%, #10201c);
+  box-shadow: 3px 3px 0 rgb(0 0 0 / 0.5);
+  color: var(--primary-foreground);
+  font-size: 0.82rem;
+  font-weight: 750;
+  pointer-events: auto;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+.artillery-start:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgb(0 0 0 / 0.5); }
+.artillery-start:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgb(0 0 0 / 0.5); }
+
+.artillery-hud {
+  position: absolute;
+  z-index: 12;
+  top: max(0.8rem, env(safe-area-inset-top));
+  left: max(0.8rem, env(safe-area-inset-left));
+  right: max(0.8rem, env(safe-area-inset-right));
+  display: grid;
+  grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
+  align-items: start;
+  gap: 1rem;
+  pointer-events: none;
+}
+.artillery-health { display: grid; grid-template-columns: 1fr auto; gap: 0.3rem 0.5rem; max-width: 18rem; font-size: 0.72rem; }
+.artillery-health strong { font-variant-numeric: tabular-nums; }
+.artillery-health i { grid-column: 1 / -1; height: 0.38rem; border: 1px solid rgb(255 255 255 / 0.24); background: rgb(5 11 11 / 0.64); }
+.artillery-health i b { display: block; height: 100%; background: color-mix(in srgb, var(--primary) 75%, #dbe5b8); transition: width 180ms steps(5, end); }
+.artillery-health.is-enemy { justify-self: end; width: 100%; text-align: right; }
+.artillery-health.is-enemy i b { margin-left: auto; background: #ce745f; }
+.artillery-status { display: grid; min-width: 7rem; justify-items: center; gap: 0.2rem; border: 1px solid rgb(255 255 255 / 0.2); border-radius: 0.25rem; background: rgb(5 11 11 / 0.72); padding: 0.45rem 0.6rem; }
+.artillery-status span { font-family: "Press Start 2P", monospace; font-size: 0.45rem; }
+.artillery-status small { color: rgb(255 255 255 / 0.64); font-size: 0.66rem; }
+
+.artillery-utility { position: absolute; z-index: 16; top: max(4rem, calc(env(safe-area-inset-top) + 3.2rem)); right: max(0.8rem, env(safe-area-inset-right)); }
+.artillery-utility button { display: grid; width: 2.35rem; height: 2.35rem; place-items: center; border: 1px solid rgb(255 255 255 / 0.22); border-radius: 0.25rem; background: rgb(5 11 11 / 0.72); color: #f4f1e8; }
+.artillery-utility svg { width: 1rem; height: 1rem; }
+
+.artillery-readout { position: absolute; z-index: 12; left: max(0.8rem, env(safe-area-inset-left)); bottom: 5.9rem; display: flex; gap: 0.45rem; pointer-events: none; }
+.artillery-readout span { border: 1px solid rgb(255 255 255 / 0.18); border-radius: 0.2rem; background: rgb(5 11 11 / 0.68); padding: 0.38rem 0.5rem; color: rgb(255 255 255 / 0.68); font-size: 0.7rem; }
+.artillery-readout b { color: #f4f1e8; font-variant-numeric: tabular-nums; }
+.artillery-instruction { position: absolute; z-index: 12; right: max(0.8rem, env(safe-area-inset-right)); bottom: 6rem; color: rgb(255 255 255 / 0.7); font-size: 0.72rem; pointer-events: none; }
+
+.artillery-controls { position: absolute; z-index: 15; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); display: flex; align-items: stretch; gap: 0.55rem; transform: translateX(-50%); }
+.artillery-controls > div { display: grid; grid-template-columns: repeat(2, auto); gap: 0.3rem; }
+.artillery-controls button { min-height: 2.75rem; border: 1px solid rgb(255 255 255 / 0.24); border-radius: 0.25rem; background: rgb(5 11 11 / 0.76); padding: 0.55rem 0.72rem; color: #f4f1e8; font-size: 0.72rem; font-weight: 700; white-space: nowrap; touch-action: manipulation; }
+.artillery-controls button:active:not(:disabled) { transform: translateY(1px); background: color-mix(in srgb, var(--primary) 42%, #07100e); }
+.artillery-controls button:disabled { opacity: 0.38; cursor: not-allowed; }
+.artillery-controls .artillery-fire { min-width: 6.25rem; border-color: color-mix(in srgb, var(--primary) 76%, white); background: color-mix(in srgb, var(--primary) 86%, #10201c); color: var(--primary-foreground); font-family: "Press Start 2P", monospace; font-size: 0.58rem; }
+.artillery-keyboard-hint { position: absolute; z-index: 12; left: 50%; bottom: 0.15rem; color: rgb(255 255 255 / 0.42); font-size: 0.58rem; transform: translateX(-50%); white-space: nowrap; pointer-events: none; }
+
+.artillery-overlay { position: absolute; z-index: 20; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1rem; background: rgb(5 10 11 / 0.76); backdrop-filter: blur(3px); }
+.artillery-overlay .text-pixel { color: color-mix(in srgb, var(--primary) 65%, white); font-size: clamp(0.75rem, 2vw, 1rem); }
+.artillery-result p { color: rgb(255 255 255 / 0.72); }
+.artillery-result > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.55rem; }
+.artillery-result .pixel-button { min-height: 2.45rem; padding: 0.55rem 0.72rem; }
+
+@media (max-width: 767px) {
+  .artillery-preview-label { top: 5rem; right: 1.25rem; }
+  .artillery-preview-label span:last-child { display: none; }
+  .artillery-start { right: 1.25rem; bottom: 2.5rem; }
+  .artillery-hud { grid-template-columns: 1fr auto 1fr; gap: 0.45rem; }
+  .artillery-health { font-size: 0.61rem; }
+  .artillery-status { min-width: 5.7rem; padding-inline: 0.35rem; }
+  .artillery-status span { font-size: 0.36rem; }
+  .artillery-status small { font-size: 0.58rem; }
+  .artillery-readout { bottom: 10.2rem; }
+  .artillery-instruction { right: 0.8rem; bottom: 10.25rem; max-width: 11rem; text-align: right; }
+  .artillery-controls { right: 0.75rem; bottom: max(1rem, env(safe-area-inset-bottom)); left: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; transform: none; }
+  .artillery-controls > div { grid-template-columns: 1fr 1fr; }
+  .artillery-controls button { width: 100%; min-height: 3rem; padding-inline: 0.45rem; }
+  .artillery-controls .artillery-fire { grid-column: 1 / -1; min-height: 3.25rem; }
+  .artillery-keyboard-hint { display: none; }
+}
+
+@media (max-width: 430px) {
+  .artillery-health span { display: none; }
+  .artillery-health strong { grid-column: 1 / -1; }
+  .artillery-status { min-width: 5rem; }
+  .artillery-readout { bottom: 10rem; }
+  .artillery-readout span { padding: 0.32rem 0.4rem; font-size: 0.64rem; }
+  .artillery-instruction { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artillery-start,
+  .artillery-health i b,
+  .artillery-controls button { transition: none; }
+}
