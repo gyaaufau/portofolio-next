@@ -1,11 +1,13 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { DEFAULT_ACCENT } from "@/lib/theme";
 import { AppearanceForm } from "./appearance-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function AppearancePage() {
-  const settings = await prisma.siteSettings.findUnique({ where: { id: "site" } });
+  const supabase = createClient(await cookies());
+  const { data: settings } = await supabase.from("site_settings").select("*").eq("id", "site").single();
   return (
     <div className="space-y-6">
       <div>
@@ -14,8 +16,8 @@ export default async function AppearancePage() {
         <p className="text-sm text-muted-foreground mt-1">Choose one accent for the entire public site.</p>
       </div>
       <AppearanceForm
-        initialPreset={settings?.accentPreset ?? "moss"}
-        initialColor={settings?.accentColor ?? DEFAULT_ACCENT}
+        initialPreset={settings?.accent_preset ?? "moss"}
+        initialColor={settings?.accent_color ?? DEFAULT_ACCENT}
       />
     </div>
   );

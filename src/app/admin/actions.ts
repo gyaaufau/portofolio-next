@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { r2Url } from "@/lib/r2";
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
+import { storageUrl } from "@/lib/storage";
+import { revalidatePath } from "next/cache";
 import {
   ADMIN_COOKIE,
   adminCookieOptions,
@@ -12,13 +12,17 @@ import {
   requireAdmin,
 } from "@/lib/auth";
 import { resolveAccent } from "@/lib/theme";
-import type { Prisma } from "@prisma/client";
 
-function parseSections(value: unknown): Prisma.InputJsonValue {
+async function getSupabase() {
+  const cookieStore = await cookies();
+  return createClient(cookieStore);
+}
+
+function parseSections(value: unknown): unknown[] {
   if (!value) return [];
   try {
     const parsed = JSON.parse(String(value));
-    return Array.isArray(parsed) ? (parsed as Prisma.InputJsonValue) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -45,36 +49,35 @@ export async function logout() {
 // Apps
 export async function createApp(formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
   const slug = String(data.slug || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
-  await prisma.app.create({
-    data: {
-      id: slug,
-      title: String(data.title),
-      slug,
-      tagline: String(data.tagline || ""),
-      description: String(data.description || ""),
-      featured: data.featured === "on",
-      appType: String(data.appType || "mobile"),
-      workType: String(data.workType || "personal"),
-      period: String(data.period || ""),
-      periodShort: String(data.periodShort || ""),
-      sortOrder: Number(data.sortOrder || 0),
-      appStoreUrl: String(data.appStoreUrl || "") || null,
-      playStoreUrl: String(data.playStoreUrl || "") || null,
-      websiteUrl: String(data.websiteUrl || "") || null,
-      githubUrl: String(data.githubUrl || "") || null,
-      otherUrl: String(data.otherUrl || "") || null,
-      otherUrlLabel: String(data.otherUrlLabel || "") || null,
-      appIconSrc: String(data.appIconSrc || r2Url("/data/myself/me.jpg")),
-      appIconAlt: String(data.appIconAlt || ""),
-      thumbnailSrc: String(data.thumbnailSrc || r2Url("/data/myself/me.jpg")),
-      thumbnailAlt: String(data.thumbnailAlt || ""),
-      stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
-      highlights: String(data.highlights || "").split("\n").filter(Boolean),
-      sections: parseSections(data.sections),
-    },
+  await supabase.from("app").insert({
+    id: slug,
+    title: String(data.title),
+    slug,
+    tagline: String(data.tagline || ""),
+    description: String(data.description || ""),
+    featured: data.featured === "on",
+    app_type: String(data.appType || "mobile"),
+    work_type: String(data.workType || "personal"),
+    period: String(data.period || ""),
+    period_short: String(data.periodShort || ""),
+    sort_order: Number(data.sortOrder || 0),
+    app_store_url: String(data.appStoreUrl || "") || null,
+    play_store_url: String(data.playStoreUrl || "") || null,
+    website_url: String(data.websiteUrl || "") || null,
+    github_url: String(data.githubUrl || "") || null,
+    other_url: String(data.otherUrl || "") || null,
+    other_url_label: String(data.otherUrlLabel || "") || null,
+    app_icon_src: String(data.appIconSrc || storageUrl("/data/myself/me.webp")),
+    app_icon_alt: String(data.appIconAlt || ""),
+    thumbnail_src: String(data.thumbnailSrc || storageUrl("/data/myself/me.webp")),
+    thumbnail_alt: String(data.thumbnailAlt || ""),
+    stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
+    highlights: String(data.highlights || "").split("\n").filter(Boolean),
+    sections: parseSections(data.sections),
   });
 
   revalidatePath("/admin/apps");
@@ -84,35 +87,33 @@ export async function createApp(formData: FormData) {
 
 export async function updateApp(id: string, formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await prisma.app.update({
-    where: { id },
-    data: {
-      title: String(data.title),
-      tagline: String(data.tagline || ""),
-      description: String(data.description || ""),
-      featured: data.featured === "on",
-      appType: String(data.appType || "mobile"),
-      workType: String(data.workType || "personal"),
-      period: String(data.period || ""),
-      periodShort: String(data.periodShort || ""),
-      sortOrder: Number(data.sortOrder || 0),
-      appStoreUrl: String(data.appStoreUrl || "") || null,
-      playStoreUrl: String(data.playStoreUrl || "") || null,
-      websiteUrl: String(data.websiteUrl || "") || null,
-      githubUrl: String(data.githubUrl || "") || null,
-      otherUrl: String(data.otherUrl || "") || null,
-      otherUrlLabel: String(data.otherUrlLabel || "") || null,
-      appIconSrc: String(data.appIconSrc || ""),
-      appIconAlt: String(data.appIconAlt || ""),
-      thumbnailSrc: String(data.thumbnailSrc || ""),
-      thumbnailAlt: String(data.thumbnailAlt || ""),
-      stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
-      highlights: String(data.highlights || "").split("\n").filter(Boolean),
-      sections: parseSections(data.sections),
-    },
-  });
+  await supabase.from("app").update({
+    title: String(data.title),
+    tagline: String(data.tagline || ""),
+    description: String(data.description || ""),
+    featured: data.featured === "on",
+    app_type: String(data.appType || "mobile"),
+    work_type: String(data.workType || "personal"),
+    period: String(data.period || ""),
+    period_short: String(data.periodShort || ""),
+    sort_order: Number(data.sortOrder || 0),
+    app_store_url: String(data.appStoreUrl || "") || null,
+    play_store_url: String(data.playStoreUrl || "") || null,
+    website_url: String(data.websiteUrl || "") || null,
+    github_url: String(data.githubUrl || "") || null,
+    other_url: String(data.otherUrl || "") || null,
+    other_url_label: String(data.otherUrlLabel || "") || null,
+    app_icon_src: String(data.appIconSrc || ""),
+    app_icon_alt: String(data.appIconAlt || ""),
+    thumbnail_src: String(data.thumbnailSrc || ""),
+    thumbnail_alt: String(data.thumbnailAlt || ""),
+    stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
+    highlights: String(data.highlights || "").split("\n").filter(Boolean),
+    sections: parseSections(data.sections),
+  }).eq("id", id);
 
   revalidatePath("/admin/apps");
   revalidatePath(`/apps/${id}`);
@@ -122,7 +123,8 @@ export async function updateApp(id: string, formData: FormData) {
 
 export async function deleteApp(id: string) {
   await requireAdmin();
-  await prisma.app.delete({ where: { id } });
+  const supabase = await getSupabase();
+  await supabase.from("app").delete().eq("id", id);
   revalidatePath("/admin/apps");
   revalidatePath("/apps");
   revalidatePath("/");
@@ -130,9 +132,10 @@ export async function deleteApp(id: string) {
 
 export async function toggleAppFeatured(id: string) {
   await requireAdmin();
-  const app = await prisma.app.findUnique({ where: { id } });
+  const supabase = await getSupabase();
+  const { data: app } = await supabase.from("app").select("featured").eq("id", id).single();
   if (app) {
-    await prisma.app.update({ where: { id }, data: { featured: !app.featured } });
+    await supabase.from("app").update({ featured: !app.featured }).eq("id", id);
     revalidatePath("/admin/apps");
     revalidatePath("/apps");
     revalidatePath("/");
@@ -142,26 +145,25 @@ export async function toggleAppFeatured(id: string) {
 // Certificates
 export async function createCertificate(formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
   const id = String(data.id || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
-  await prisma.certificate.create({
-    data: {
-      id,
-      title: String(data.title),
-      featured: data.featured === "on",
-      issuer: String(data.issuer),
-      issued: String(data.issued),
-      type: String(data.type || "Certificate"),
-      summary: String(data.summary || ""),
-      details: String(data.details || "").split("\n").filter(Boolean),
-      relevance: String(data.relevance || ""),
-      issuerNotes: String(data.issuerNotes || "").split("\n").filter(Boolean),
-      imageSrc: String(data.imageSrc || "") || null,
-      imageAlt: String(data.imageAlt || "") || null,
-      imageWidth: Number(data.imageWidth || 0) || null,
-      imageHeight: Number(data.imageHeight || 0) || null,
-    },
+  await supabase.from("certificate").insert({
+    id,
+    title: String(data.title),
+    featured: data.featured === "on",
+    issuer: String(data.issuer),
+    issued: String(data.issued),
+    type: String(data.type || "Certificate"),
+    summary: String(data.summary || ""),
+    details: String(data.details || "").split("\n").filter(Boolean),
+    relevance: String(data.relevance || ""),
+    issuer_notes: String(data.issuerNotes || "").split("\n").filter(Boolean),
+    image_src: String(data.imageSrc || "") || null,
+    image_alt: String(data.imageAlt || "") || null,
+    image_width: Number(data.imageWidth || 0) || null,
+    image_height: Number(data.imageHeight || 0) || null,
   });
 
   revalidatePath("/admin/certificates");
@@ -170,26 +172,24 @@ export async function createCertificate(formData: FormData) {
 
 export async function updateCertificate(id: string, formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await prisma.certificate.update({
-    where: { id },
-    data: {
-      title: String(data.title),
-      featured: data.featured === "on",
-      issuer: String(data.issuer),
-      issued: String(data.issued),
-      type: String(data.type || "Certificate"),
-      summary: String(data.summary || ""),
-      details: String(data.details || "").split("\n").filter(Boolean),
-      relevance: String(data.relevance || ""),
-      issuerNotes: String(data.issuerNotes || "").split("\n").filter(Boolean),
-      imageSrc: String(data.imageSrc || "") || null,
-      imageAlt: String(data.imageAlt || "") || null,
-      imageWidth: Number(data.imageWidth || 0) || null,
-      imageHeight: Number(data.imageHeight || 0) || null,
-    },
-  });
+  await supabase.from("certificate").update({
+    title: String(data.title),
+    featured: data.featured === "on",
+    issuer: String(data.issuer),
+    issued: String(data.issued),
+    type: String(data.type || "Certificate"),
+    summary: String(data.summary || ""),
+    details: String(data.details || "").split("\n").filter(Boolean),
+    relevance: String(data.relevance || ""),
+    issuer_notes: String(data.issuerNotes || "").split("\n").filter(Boolean),
+    image_src: String(data.imageSrc || "") || null,
+    image_alt: String(data.imageAlt || "") || null,
+    image_width: Number(data.imageWidth || 0) || null,
+    image_height: Number(data.imageHeight || 0) || null,
+  }).eq("id", id);
 
   revalidatePath("/admin/certificates");
   revalidatePath(`/certificates/${id}`);
@@ -198,7 +198,8 @@ export async function updateCertificate(id: string, formData: FormData) {
 
 export async function deleteCertificate(id: string) {
   await requireAdmin();
-  await prisma.certificate.delete({ where: { id } });
+  const supabase = await getSupabase();
+  await supabase.from("certificate").delete().eq("id", id);
   revalidatePath("/admin/certificates");
   revalidatePath("/certificates");
 }
@@ -206,20 +207,19 @@ export async function deleteCertificate(id: string) {
 // Work Experience
 export async function createWorkExperience(formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await prisma.workExperience.create({
-    data: {
-      company: String(data.company),
-      location: String(data.location || ""),
-      role: String(data.role),
-      start: String(data.start || ""),
-      end: String(data.end || ""),
-      period: String(data.period || ""),
-      sortOrder: Number(data.sortOrder || 0),
-      summary: String(data.summary || ""),
-      highlights: String(data.highlights || "").split("\n").filter(Boolean),
-    },
+  await supabase.from("work_experience").insert({
+    company: String(data.company),
+    location: String(data.location || ""),
+    role: String(data.role),
+    start: String(data.start || ""),
+    end: String(data.end || ""),
+    period: String(data.period || ""),
+    sort_order: Number(data.sortOrder || 0),
+    summary: String(data.summary || ""),
+    highlights: String(data.highlights || "").split("\n").filter(Boolean),
   });
 
   revalidatePath("/admin/work-experience");
@@ -228,22 +228,20 @@ export async function createWorkExperience(formData: FormData) {
 
 export async function updateWorkExperience(id: string, formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await prisma.workExperience.update({
-    where: { id },
-    data: {
-      company: String(data.company),
-      location: String(data.location || ""),
-      role: String(data.role),
-      start: String(data.start || ""),
-      end: String(data.end || ""),
-      period: String(data.period || ""),
-      sortOrder: Number(data.sortOrder || 0),
-      summary: String(data.summary || ""),
-      highlights: String(data.highlights || "").split("\n").filter(Boolean),
-    },
-  });
+  await supabase.from("work_experience").update({
+    company: String(data.company),
+    location: String(data.location || ""),
+    role: String(data.role),
+    start: String(data.start || ""),
+    end: String(data.end || ""),
+    period: String(data.period || ""),
+    sort_order: Number(data.sortOrder || 0),
+    summary: String(data.summary || ""),
+    highlights: String(data.highlights || "").split("\n").filter(Boolean),
+  }).eq("id", id);
 
   revalidatePath("/admin/work-experience");
   revalidatePath("/");
@@ -251,7 +249,8 @@ export async function updateWorkExperience(id: string, formData: FormData) {
 
 export async function deleteWorkExperience(id: string) {
   await requireAdmin();
-  await prisma.workExperience.delete({ where: { id } });
+  const supabase = await getSupabase();
+  await supabase.from("work_experience").delete().eq("id", id);
   revalidatePath("/admin/work-experience");
   revalidatePath("/");
 }
@@ -259,25 +258,26 @@ export async function deleteWorkExperience(id: string) {
 // Profile
 export async function updateProfile(formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
-  const existing = await prisma.profile.findFirst();
+  const { data: existing } = await supabase.from("profile").select("id").limit(1).single();
 
   const profileData = {
     name: String(data.name),
     role: String(data.role),
     intro: String(data.intro || ""),
     location: String(data.location || ""),
-    openToOpportunities: data.openToOpportunities === "on",
-    photoSrc: String(data.photoSrc || r2Url("/data/myself/me.jpg")),
-    photoAlt: String(data.photoAlt || ""),
-    photoWidth: Number(data.photoWidth || 400),
-    photoHeight: Number(data.photoHeight || 500),
+    open_to_opportunities: data.openToOpportunities === "on",
+    photo_src: String(data.photoSrc || storageUrl("/data/myself/me.webp")),
+    photo_alt: String(data.photoAlt || ""),
+    photo_width: Number(data.photoWidth || 400),
+    photo_height: Number(data.photoHeight || 500),
   };
 
   if (existing) {
-    await prisma.profile.update({ where: { id: existing.id }, data: profileData });
+    await supabase.from("profile").update(profileData).eq("id", existing.id);
   } else {
-    await prisma.profile.create({ data: profileData });
+    await supabase.from("profile").insert(profileData);
   }
 
   revalidatePath("/admin/profile");
@@ -287,23 +287,24 @@ export async function updateProfile(formData: FormData) {
 // Contact
 export async function updateContact(formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
-  const existing = await prisma.contact.findFirst();
+  const { data: existing } = await supabase.from("contact").select("id").limit(1).single();
 
   const contactData = {
     email: String(data.email),
     whatsapp: String(data.whatsapp || ""),
     github: String(data.github || ""),
     linkedin: String(data.linkedin || ""),
-    playStore: String(data.playStore || ""),
-    playConsole: String(data.playConsole || ""),
+    play_store: String(data.playStore || ""),
+    play_console: String(data.playConsole || ""),
     cv: String(data.cv || ""),
   };
 
   if (existing) {
-    await prisma.contact.update({ where: { id: existing.id }, data: contactData });
+    await supabase.from("contact").update(contactData).eq("id", existing.id);
   } else {
-    await prisma.contact.create({ data: contactData });
+    await supabase.from("contact").insert(contactData);
   }
 
   revalidatePath("/admin/contact");
@@ -313,14 +314,12 @@ export async function updateContact(formData: FormData) {
 // Skills
 export async function updateSkillCategory(id: string, formData: FormData) {
   await requireAdmin();
+  const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await prisma.skillCategory.update({
-    where: { id },
-    data: {
-      items: String(data.items || "").split("\n").filter(Boolean),
-    },
-  });
+  await supabase.from("skill_category").update({
+    items: String(data.items || "").split("\n").filter(Boolean),
+  }).eq("id", id);
 
   revalidatePath("/admin/skills");
   revalidatePath("/");
@@ -333,20 +332,14 @@ export async function updateSiteSettings(
   formData: FormData
 ): Promise<AppearanceState> {
   await requireAdmin();
+  const supabase = await getSupabase();
   const result = resolveAccent(formData.get("accentPreset"), formData.get("accentColor"));
   if ("error" in result) return { error: result.error };
 
-  await prisma.siteSettings.upsert({
-    where: { id: "site" },
-    create: {
-      id: "site",
-      accentPreset: result.preset,
-      accentColor: result.color,
-    },
-    update: {
-      accentPreset: result.preset,
-      accentColor: result.color,
-    },
+  await supabase.from("site_settings").upsert({
+    id: "site",
+    accent_preset: result.preset,
+    accent_color: result.color,
   });
 
   revalidatePath("/", "layout");

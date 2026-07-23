@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import { updateCertificate } from "@/app/admin/actions";
 import { CertForm } from "../../cert-form";
@@ -7,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 export default async function EditCertificatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const cert = await prisma.certificate.findUnique({ where: { id } });
+  const supabase = createClient(await cookies());
+  const { data: cert } = await supabase.from("certificate").select("*").eq("id", id).single();
   if (!cert) notFound();
 
   return (
@@ -21,12 +23,12 @@ export default async function EditCertificatePage({ params }: { params: Promise<
         summary: cert.summary,
         details: cert.details,
         relevance: cert.relevance,
-        issuerNotes: cert.issuerNotes,
+        issuerNotes: cert.issuer_notes,
         featured: cert.featured,
-        imageSrc: cert.imageSrc ?? undefined,
-        imageAlt: cert.imageAlt ?? undefined,
-        imageWidth: cert.imageWidth ?? undefined,
-        imageHeight: cert.imageHeight ?? undefined,
+        imageSrc: cert.image_src ?? undefined,
+        imageAlt: cert.image_alt ?? undefined,
+        imageWidth: cert.image_width ?? undefined,
+        imageHeight: cert.image_height ?? undefined,
       }}
       submitLabel="Update"
     />

@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, Star, Trash2, Pencil } from "lucide-react";
@@ -7,18 +8,11 @@ import { toggleAppFeatured, deleteApp } from "@/app/admin/actions";
 export const dynamic = "force-dynamic";
 
 export default async function AdminAppsPage() {
-  const apps = await prisma.app.findMany({
-    orderBy: { sortOrder: "desc" },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      appType: true,
-      workType: true,
-      featured: true,
-      appIconSrc: true,
-    },
-  });
+  const supabase = createClient(await cookies());
+  const { data: apps } = await supabase
+    .from("app")
+    .select("id, title, slug, app_type, work_type, featured, app_icon_src")
+    .order("sort_order", { ascending: false });
 
   return (
     <div className="space-y-6">
@@ -37,13 +31,13 @@ export default async function AdminAppsPage() {
       </div>
 
       <div className="space-y-2">
-        {apps.map((app) => (
+        {(apps ?? []).map((app) => (
           <div
             key={app.id}
             className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border group"
           >
             <Image
-              src={app.appIconSrc}
+              src={app.app_icon_src}
               alt=""
               width={40}
               height={40}
@@ -51,7 +45,7 @@ export default async function AdminAppsPage() {
             />
             <div className="min-w-0 flex-1">
               <h3 className="font-medium text-foreground truncate">{app.title}</h3>
-              <p className="text-xs text-muted-foreground">{app.appType} &middot; {app.workType}</p>
+              <p className="text-xs text-muted-foreground">{app.app_type} &middot; {app.work_type}</p>
             </div>
             <div className="flex items-center gap-2">
               <form action={async () => {
@@ -87,7 +81,7 @@ export default async function AdminAppsPage() {
             </div>
           </div>
         ))}
-        {apps.length === 0 && (
+        {(!apps || apps.length === 0) && (
           <div className="text-center py-12 text-muted-foreground">
             <p>No apps yet. Create your first one.</p>
           </div>

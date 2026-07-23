@@ -1,5 +1,6 @@
 import { cache } from "react";
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import type {
   AppItem,
   CertificateItem,
@@ -29,228 +30,195 @@ function normalizeWorkType(value: string): WorkType {
   return value.toLowerCase() === "work" ? "work" : "personal";
 }
 
-function mapApp(row: {
-  id: string;
-  title: string;
-  slug: string;
-  tagline: string;
-  description: string;
-  featured: boolean;
-  appType: string;
-  workType: string;
-  period: string;
-  periodShort: string;
-  appStoreUrl: string | null;
-  playStoreUrl: string | null;
-  websiteUrl: string | null;
-  githubUrl: string | null;
-  otherUrl: string | null;
-  otherUrlLabel: string | null;
-  appIconSrc: string;
-  appIconAlt: string;
-  thumbnailSrc: string;
-  thumbnailAlt: string;
-  stack: string[];
-  highlights: string[];
-  sections: unknown;
-  screenshots: {
-    id: string;
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-    order: number;
-  }[];
-}): AppItem {
+function mapApp(row: Record<string, unknown>): AppItem {
+  const screenshots = (row.app_screenshot as Record<string, unknown>[] ?? []).map((s) => ({
+    id: s.id as string,
+    src: s.src as string,
+    alt: s.alt as string,
+    width: s.width as number,
+    height: s.height as number,
+    order: s.order as number,
+  }));
+
   return {
-    id: row.id,
-    title: row.title,
-    slug: row.slug,
-    tagline: row.tagline,
-    description: row.description,
-    featured: row.featured,
-    appType: normalizeAppType(row.appType),
-    workType: normalizeWorkType(row.workType),
-    period: row.period,
-    periodShort: row.periodShort,
-    appStoreUrl: row.appStoreUrl,
-    playStoreUrl: row.playStoreUrl,
-    websiteUrl: row.websiteUrl,
-    githubUrl: row.githubUrl,
-    otherUrl: row.otherUrl,
-    otherUrlLabel: row.otherUrlLabel,
-    appIconSrc: row.appIconSrc,
-    appIconAlt: row.appIconAlt,
-    thumbnailSrc: row.thumbnailSrc,
-    thumbnailAlt: row.thumbnailAlt,
-    stack: row.stack,
-    highlights: row.highlights,
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    tagline: row.tagline as string,
+    description: row.description as string,
+    featured: row.featured as boolean,
+    appType: normalizeAppType(row.app_type as string),
+    workType: normalizeWorkType(row.work_type as string),
+    period: row.period as string,
+    periodShort: row.period_short as string,
+    appStoreUrl: row.app_store_url as string | null,
+    playStoreUrl: row.play_store_url as string | null,
+    websiteUrl: row.website_url as string | null,
+    githubUrl: row.github_url as string | null,
+    otherUrl: row.other_url as string | null,
+    otherUrlLabel: row.other_url_label as string | null,
+    appIconSrc: row.app_icon_src as string,
+    appIconAlt: row.app_icon_alt as string,
+    thumbnailSrc: row.thumbnail_src as string,
+    thumbnailAlt: row.thumbnail_alt as string,
+    stack: row.stack as string[],
+    highlights: row.highlights as string[],
     sections: (row.sections as ProjectSection[]) ?? [],
-    screenshots: row.screenshots.map((s) => ({
-      id: s.id,
-      src: s.src,
-      alt: s.alt,
-      width: s.width,
-      height: s.height,
-      order: s.order,
-    })),
+    screenshots,
   };
 }
 
-function mapCertificate(row: {
-  id: string;
-  title: string;
-  featured: boolean;
-  issuer: string;
-  issued: string;
-  type: string;
-  summary: string;
-  details: string[];
-  relevance: string;
-  issuerNotes: string[];
-  imageSrc: string | null;
-  imageAlt: string | null;
-  imageWidth: number | null;
-  imageHeight: number | null;
-}): CertificateItem {
+function mapCertificate(row: Record<string, unknown>): CertificateItem {
   return {
-    id: row.id,
-    title: row.title,
-    featured: row.featured,
-    issuer: row.issuer,
-    issued: row.issued,
-    type: row.type,
-    summary: row.summary,
-    details: row.details,
-    relevance: row.relevance,
-    issuerNotes: row.issuerNotes,
+    id: row.id as string,
+    title: row.title as string,
+    featured: row.featured as boolean,
+    issuer: row.issuer as string,
+    issued: row.issued as string,
+    type: row.type as string,
+    summary: row.summary as string,
+    details: row.details as string[],
+    relevance: row.relevance as string,
+    issuerNotes: row.issuer_notes as string[],
     image:
-      row.imageSrc && row.imageAlt && row.imageWidth && row.imageHeight
+      row.image_src && row.image_alt && row.image_width && row.image_height
         ? {
-            src: row.imageSrc,
-            alt: row.imageAlt,
-            width: row.imageWidth,
-            height: row.imageHeight,
+            src: row.image_src as string,
+            alt: row.image_alt as string,
+            width: row.image_width as number,
+            height: row.image_height as number,
           }
         : undefined,
   };
 }
 
-function mapWorkExperience(row: {
-  id: string;
-  company: string;
-  location: string;
-  role: string;
-  start: string;
-  end: string;
-  period: string;
-  sortOrder: number;
-  summary: string;
-  highlights: string[];
-}): WorkExperienceItem {
+function mapWorkExperience(row: Record<string, unknown>): WorkExperienceItem {
   return {
-    id: row.id,
-    company: row.company,
-    location: row.location,
-    role: row.role,
-    start: row.start,
-    end: row.end,
-    period: row.period,
-    sortOrder: row.sortOrder,
-    summary: row.summary,
-    highlights: row.highlights,
+    id: row.id as string,
+    company: row.company as string,
+    location: row.location as string,
+    role: row.role as string,
+    start: row.start as string,
+    end: row.end as string,
+    period: row.period as string,
+    sortOrder: row.sort_order as number,
+    summary: row.summary as string,
+    highlights: row.highlights as string[],
   };
 }
 
+async function getSupabase() {
+  const cookieStore = await cookies();
+  return createClient(cookieStore);
+}
+
 export const getProfile = cache(async function getProfile(): Promise<Profile> {
-  const row = await prisma.profile.findFirst();
-  if (!row) throw new Error("Profile not found");
-  return row;
+  const supabase = await getSupabase();
+  const { data, error } = await supabase.from("profile").select("*").limit(1).single();
+  if (error || !data) throw new Error("Profile not found");
+  return data as Profile;
 });
 
 export const getContact = cache(async function getContact(): Promise<Contact> {
-  const row = await prisma.contact.findFirst();
-  if (!row) throw new Error("Contact not found");
-  return row;
+  const supabase = await getSupabase();
+  const { data, error } = await supabase.from("contact").select("*").limit(1).single();
+  if (error || !data) throw new Error("Contact not found");
+  return data as Contact;
 });
 
 export const getHeroLinks = cache(async function getHeroLinks(): Promise<HeroLink[]> {
-  return prisma.heroLink.findMany({ orderBy: { order: "asc" } });
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("hero_link").select("*").order("order");
+  return (data ?? []) as HeroLink[];
 });
 
 export const getDirectoryLinks = cache(async function getDirectoryLinks(): Promise<DirectoryLink[]> {
-  return prisma.directoryLink.findMany({ orderBy: { order: "asc" } });
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("directory_link").select("*").order("order");
+  return (data ?? []) as DirectoryLink[];
 });
 
 export const getSkillCategories = cache(async function getSkillCategories(): Promise<SkillCategory[]> {
-  return prisma.skillCategory.findMany();
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("skill_category").select("*");
+  return (data ?? []) as SkillCategory[];
 });
 
 export const getApps = cache(async function getApps(): Promise<AppItem[]> {
-  const rows = await prisma.app.findMany({
-    include: { screenshots: { orderBy: { order: "asc" } } },
-    orderBy: { sortOrder: "desc" },
-  });
-  return rows.map(mapApp);
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("app")
+    .select("*, app_screenshot(*)")
+    .order("sort_order", { ascending: false });
+  return (data ?? []).map(mapApp);
 });
 
 export const getFeaturedApps = cache(async function getFeaturedApps(): Promise<AppItem[]> {
-  const rows = await prisma.app.findMany({
-    where: { featured: true },
-    include: { screenshots: { orderBy: { order: "asc" } } },
-    orderBy: { sortOrder: "desc" },
-    take: 3,
-  });
-  return rows.map(mapApp);
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("app")
+    .select("*, app_screenshot(*)")
+    .eq("featured", true)
+    .order("sort_order", { ascending: false })
+    .limit(3);
+  return (data ?? []).map(mapApp);
 });
 
 export const getAppBySlug = cache(async function getAppBySlug(slug: string): Promise<AppItem | null> {
-  const row = await prisma.app.findUnique({
-    where: { slug },
-    include: { screenshots: { orderBy: { order: "asc" } } },
-  });
-  return row ? mapApp(row) : null;
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("app")
+    .select("*, app_screenshot(*)")
+    .eq("slug", slug)
+    .single();
+  return data ? mapApp(data) : null;
 });
 
 export const getCertificates = cache(async function getCertificates(): Promise<CertificateItem[]> {
-  const rows = await prisma.certificate.findMany({
-    orderBy: { issued: "desc" },
-  });
-  return rows.map(mapCertificate);
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("certificate")
+    .select("*")
+    .order("issued", { ascending: false });
+  return (data ?? []).map(mapCertificate);
 });
 
 export const getFeaturedCertificates = cache(async function getFeaturedCertificates(): Promise<CertificateItem[]> {
-  const featured = await prisma.certificate.findMany({
-    where: { featured: true },
-    orderBy: { issued: "desc" },
-    take: 3,
-  });
-  if (featured.length >= 3) return featured.map(mapCertificate);
-  const fallback = await prisma.certificate.findMany({
-    orderBy: { issued: "desc" },
-    take: 3,
-  });
-  return fallback.map(mapCertificate);
+  const supabase = await getSupabase();
+  const { data: featured } = await supabase
+    .from("certificate")
+    .select("*")
+    .eq("featured", true)
+    .order("issued", { ascending: false })
+    .limit(3);
+  if (featured && featured.length >= 3) return featured.map(mapCertificate);
+  const { data: fallback } = await supabase
+    .from("certificate")
+    .select("*")
+    .order("issued", { ascending: false })
+    .limit(3);
+  return (fallback ?? []).map(mapCertificate);
 });
 
 export const getCertificateBySlug = cache(async function getCertificateBySlug(
   id: string
 ): Promise<CertificateItem | null> {
-  const row = await prisma.certificate.findUnique({ where: { id } });
-  return row ? mapCertificate(row) : null;
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("certificate").select("*").eq("id", id).single();
+  return data ? mapCertificate(data) : null;
 });
 
 export const getWorkExperiences = cache(async function getWorkExperiences(): Promise<WorkExperienceItem[]> {
-  const rows = await prisma.workExperience.findMany({
-    orderBy: { sortOrder: "asc" },
-  });
-  return rows.map(mapWorkExperience);
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("work_experience").select("*").order("sort_order");
+  return (data ?? []).map(mapWorkExperience);
 });
 
 export const getSiteSettings = cache(async function getSiteSettings(): Promise<SiteSettings> {
   try {
-    const settings = await prisma.siteSettings.findUnique({ where: { id: "site" } });
-    return settings ?? { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
+    const supabase = await getSupabase();
+    const { data } = await supabase.from("site_settings").select("*").eq("id", "site").single();
+    return data ?? { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
   } catch {
     return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
   }

@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { BackLink } from "@/components/back-link";
 import { PublicPageHeader } from "@/components/public-page-header";
-import { r2Url } from "@/lib/r2";
+import { storageUrl } from "@/lib/storage";
 
 export const metadata: Metadata = { title: "CV | Argya Aulia Fauzandika", description: "Resume for Argya Aulia Fauzandika.", robots: "noindex, nofollow" };
 
 export default function CVPage() {
-  const cvFile = r2Url("/data/myself/CV_ARGYA AULIA FAUZANDIKA.pdf");
+  const cvFile = storageUrl("/data/myself/CV_ARGYA AULIA FAUZANDIKA.pdf");
   return (
     <main id="main-content" className="mx-auto w-full max-w-[1200px] px-5 pb-10 pt-10 md:px-6 md:pt-16">
       <BackLink href="/" label="Home" />

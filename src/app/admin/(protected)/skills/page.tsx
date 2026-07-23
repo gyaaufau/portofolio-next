@@ -1,10 +1,12 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { updateSkillCategory } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSkillsPage() {
-  const categories = await prisma.skillCategory.findMany();
+  const supabase = createClient(await cookies());
+  const { data: categories } = await supabase.from("skill_category").select("*");
 
   return (
     <div className="space-y-8">
@@ -14,7 +16,7 @@ export default async function AdminSkillsPage() {
         <p className="text-sm text-muted-foreground mt-1">One item per line.</p>
       </div>
 
-      {categories.map((cat) => (
+      {(categories ?? []).map((cat) => (
         <div key={cat.id} className="p-5 rounded-xl bg-card border border-border space-y-4">
           <h2 className="text-lg font-semibold capitalize">{cat.name === "softSkills" ? "Soft Skills" : cat.name}</h2>
           <form action={async (formData) => { "use server"; await updateSkillCategory(cat.id, formData); }} className="space-y-4">

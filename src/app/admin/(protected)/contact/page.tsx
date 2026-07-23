@@ -1,10 +1,12 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import { updateContact } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminContactPage() {
-  const contact = await prisma.contact.findFirst();
+  const supabase = createClient(await cookies());
+  const { data: contact } = await supabase.from("contact").select("*").limit(1).single();
 
   return (
     <div className="space-y-6">
@@ -33,11 +35,11 @@ export default async function AdminContactPage() {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Play Store</label>
-            <input name="playStore" defaultValue={contact?.playStore} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input name="playStore" defaultValue={contact?.play_store} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Play Console</label>
-            <input name="playConsole" defaultValue={contact?.playConsole} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input name="playConsole" defaultValue={contact?.play_console} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">CV Path</label>

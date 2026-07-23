@@ -1,22 +1,25 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { AppWindow, Award, Briefcase, Star } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [appCount, certCount, workCount, featuredCount] = await Promise.all([
-    prisma.app.count(),
-    prisma.certificate.count(),
-    prisma.workExperience.count(),
-    prisma.app.count({ where: { featured: true } }),
+  const supabase = createClient(await cookies());
+
+  const [appRes, certRes, workRes, featuredRes] = await Promise.all([
+    supabase.from("app").select("*", { count: "exact", head: true }),
+    supabase.from("certificate").select("*", { count: "exact", head: true }),
+    supabase.from("work_experience").select("*", { count: "exact", head: true }),
+    supabase.from("app").select("*", { count: "exact", head: true }).eq("featured", true),
   ]);
 
   const stats = [
-    { label: "Apps", value: appCount, icon: AppWindow, href: "/admin/apps" },
-    { label: "Certificates", value: certCount, icon: Award, href: "/admin/certificates" },
-    { label: "Work Experience", value: workCount, icon: Briefcase, href: "/admin/work-experience" },
-    { label: "Featured Apps", value: featuredCount, icon: Star, href: "/admin/apps" },
+    { label: "Apps", value: appRes.count ?? 0, icon: AppWindow, href: "/admin/apps" },
+    { label: "Certificates", value: certRes.count ?? 0, icon: Award, href: "/admin/certificates" },
+    { label: "Work Experience", value: workRes.count ?? 0, icon: Briefcase, href: "/admin/work-experience" },
+    { label: "Featured Apps", value: featuredRes.count ?? 0, icon: Star, href: "/admin/apps" },
   ];
 
   return (

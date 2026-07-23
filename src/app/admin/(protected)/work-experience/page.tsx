@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { Plus, Trash2, Pencil } from "lucide-react";
 import { deleteWorkExperience } from "@/app/admin/actions";
@@ -6,10 +7,11 @@ import { deleteWorkExperience } from "@/app/admin/actions";
 export const dynamic = "force-dynamic";
 
 export default async function AdminWorkExperiencePage() {
-  const experiences = await prisma.workExperience.findMany({
-    orderBy: { sortOrder: "asc" },
-    select: { id: true, company: true, role: true, period: true, sortOrder: true },
-  });
+  const supabase = createClient(await cookies());
+  const { data: experiences } = await supabase
+    .from("work_experience")
+    .select("id, company, role, period, sort_order")
+    .order("sort_order");
 
   return (
     <div className="space-y-6">
@@ -24,7 +26,7 @@ export default async function AdminWorkExperiencePage() {
       </div>
 
       <div className="space-y-2">
-        {experiences.map((exp) => (
+        {(experiences ?? []).map((exp) => (
           <div key={exp.id} className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border">
             <div className="min-w-0 flex-1">
               <h3 className="font-medium text-foreground">{exp.role}</h3>
@@ -42,7 +44,7 @@ export default async function AdminWorkExperiencePage() {
             </div>
           </div>
         ))}
-        {experiences.length === 0 && <div className="text-center py-12 text-muted-foreground"><p>No work experience yet.</p></div>}
+        {(!experiences || experiences.length === 0) && <div className="text-center py-12 text-muted-foreground"><p>No work experience yet.</p></div>}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { Footer } from "@/components/footer";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
 import { getSiteSettings } from "@/data/db";
 import { readableForeground } from "@/lib/theme";
-import { r2Url } from "@/lib/r2";
+import { storageUrl } from "@/lib/storage";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
@@ -22,15 +22,15 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.siteName,
-    images: [{ url: r2Url("/data/brand/og-image.png"), width: 1731, height: 909, alt: "Gialoop portfolio preview image" }],
+    images: [{ url: storageUrl("/data/brand/og-image.webp"), width: 1731, height: 909, alt: "Gialoop portfolio preview image" }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [r2Url("/data/brand/og-image.png")],
+    images: [storageUrl("/data/brand/og-image.webp")],
   },
-  icons: { icon: r2Url("/data/brand/logo-loop.svg") },
+  icons: { icon: storageUrl("/data/brand/logo-loop.svg") },
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
