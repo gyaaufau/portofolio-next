@@ -13,6 +13,8 @@ export interface HeroGameTransition {
   exitMs: number;
 }
 
+export type HeroGamePresentation = "immersive" | "embedded";
+
 export interface HeroGameRuntime {
   phase: HeroGamePhase;
   nearViewport: boolean;
@@ -51,6 +53,7 @@ export interface HeroGameDefinition {
   name: string;
   ariaLabel: string;
   errorMessage: string;
+  presentation: HeroGamePresentation;
   capabilities: HeroGameCapabilities;
   transition: HeroGameTransition;
   load: () => Promise<HeroGameModule>;

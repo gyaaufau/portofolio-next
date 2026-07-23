@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Pixel Fighter is the interactive **Pixel Duel** fighting game embedded in the homepage hero. It gives visitors a playable demonstration of client-side game development using Phaser, responsive controls, deterministic AI, and a licensed pixel-art asset pack.
+Pixel Fighter is the registered **Pixel Duel** fighting game retained for the modular homepage hero. It gives visitors a playable demonstration of client-side game development using Phaser, responsive controls, deterministic AI, and a licensed pixel-art asset pack. Pixel Fishing is currently the active hero game.
 
 ---
 
@@ -51,7 +51,7 @@ Static arena preview appears
 → visitor replays, returns to fighter selection, or visits /apps
 ```
 
-`src/games/registry.ts` registers the game as `pixel-fighter`, displays the name `Pixel Duel`, and selects it through `ACTIVE_HERO_GAME_ID`.
+`src/games/registry.ts` registers the game as `pixel-fighter` and displays the name `Pixel Duel`. It can be reactivated through `ACTIVE_HERO_GAME_ID`.
 
 ---
 

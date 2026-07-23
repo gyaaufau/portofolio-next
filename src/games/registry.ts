@@ -1,11 +1,29 @@
 import type { HeroGameDefinition } from "./core/types";
 
 export const HERO_GAMES = {
+  "pixel-fishing": {
+    id: "pixel-fishing",
+    name: "Quiet Cast",
+    ariaLabel: "Cozy pixel fishing game",
+    errorMessage: "The lake could not load. The portfolio is still available.",
+    presentation: "embedded",
+    capabilities: {
+      sound: false,
+      pauseOffscreen: true,
+      touchFullscreen: false,
+    },
+    transition: {
+      revealMs: 240,
+      exitMs: 180,
+    },
+    load: () => import("./pixel-fishing/adapter"),
+  },
   "pixel-fighter": {
     id: "pixel-fighter",
     name: "Pixel Duel",
     ariaLabel: "Playable pixel fighter",
     errorMessage: "Arena could not load. The fighter preview is still available.",
+    presentation: "immersive",
     capabilities: {
       sound: true,
       pauseOffscreen: true,
@@ -34,7 +52,7 @@ export function selectHeroGame<TRegistry extends Record<string, HeroGameDefiniti
 }
 
 /** Change this one typed value to select a different registered hero game. */
-export const ACTIVE_HERO_GAME_ID: HeroGameId = "pixel-fighter";
+export const ACTIVE_HERO_GAME_ID: HeroGameId = "pixel-fishing";
 
 export function getHeroGameDefinition(id: HeroGameId): HeroGameDefinition {
   return selectHeroGame(HERO_GAMES, id);

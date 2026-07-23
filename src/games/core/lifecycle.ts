@@ -1,4 +1,4 @@
-import type { HeroGamePhase } from "./types";
+import type { HeroGamePhase, HeroGamePresentation } from "./types";
 
 export type HeroGameLifecycleEvent =
   | { type: "play"; ready: boolean }
@@ -22,6 +22,10 @@ export function reduceHeroGamePhase(phase: HeroGamePhase, event: HeroGameLifecyc
 
 export function isHeroGameImmersive(phase: HeroGamePhase) {
   return phase === "revealing" || phase === "active" || phase === "exiting";
+}
+
+export function shouldUseImmersivePresentation(phase: HeroGamePhase, presentation: HeroGamePresentation) {
+  return presentation === "immersive" && isHeroGameImmersive(phase);
 }
 
 export function shouldPauseHeroGame({
