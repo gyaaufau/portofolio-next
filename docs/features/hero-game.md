@@ -14,8 +14,8 @@ This feature owns:
 - Game core shell (`src/games/core/hero-game-shell.tsx`)
 - Game lifecycle management (`src/games/core/lifecycle.ts`)
 - Game type definitions (`src/games/core/types.ts`)
-- Pixel Fighter game (`src/games/pixel-fighter/`)
-- Game CSS (`src/games/pixel-fighter/pixel-fighter.css`)
+- Tiny Artillery game (`src/games/pixel-artillery/`)
+- Pixel Fighter game (`src/games/pixel-fighter/`, registered but inactive)
 - Atlas build script (`scripts/build-fightgame-atlas.mjs`)
 
 This feature does not own:
@@ -50,11 +50,12 @@ Primary route(s):
 Visitor lands on /
 → CSS idle preview loads immediately (no JS)
 → Hero game shell initializes
-→ Phaser engine lazy-loaded when hero approaches viewport
-→ Game renders in hero background
-→ Desktop: controls shown below arena
+→ Tiny Artillery adapter initializes when the hero approaches the viewport
+→ Canvas battlefield renders in the hero background
+→ Activating play opens the immersive arena
+→ Desktop: focus-scoped keyboard controls
 → Mobile (<768px): fullscreen arena with touch controls
-→ Sound muted by default; visitor can enable
+→ Sound is omitted for the active game
 → Game pauses when hero section leaves viewport
 ```
 
@@ -97,11 +98,11 @@ None — game state is transient, resets on page load.
 
 ```text
 src/games/registry.ts
-→ ACTIVE_HERO_GAME_ID → "pixel-fighter"
+→ ACTIVE_HERO_GAME_ID → "pixel-artillery"
 → getHeroGameDefinition() → HeroGameDefinition
 → src/games/core/hero-game-shell.tsx
-→ dynamic import("./pixel-fighter/adapter")
-→ Phaser engine initialization
+→ dynamic import("./pixel-artillery/adapter")
+→ lightweight Canvas 2D runtime initialization
 → Game runtime
 ```
 
@@ -128,7 +129,7 @@ No persistence. Game resets on every page load.
 
 Read rules:
 
-Game assets loaded from `public/games/pixel-fighter/generated/`.
+Tiny Artillery uses code-rendered pixel sprites and does not load external game assets.
 
 ---
 

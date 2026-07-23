@@ -6,7 +6,7 @@ import type { HeroGameDefinition } from "../src/games/core/types";
 import { ACTIVE_HERO_GAME_ID, HERO_GAMES, selectHeroGame, validateHeroGameRegistry } from "../src/games/registry";
 
 test("the active hero game is typed, registered, and uniquely identified", () => {
-  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-fighter");
+  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-artillery");
   assert.equal(validateHeroGameRegistry(HERO_GAMES), true);
   assert.equal(HERO_GAMES[ACTIVE_HERO_GAME_ID].id, ACTIVE_HERO_GAME_ID);
 });
