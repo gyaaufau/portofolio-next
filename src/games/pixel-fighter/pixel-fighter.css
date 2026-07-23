@@ -279,7 +279,7 @@
   .fight-desktop-help { display: none; }
   .fight-mobile-help { display: inline; text-align: right; }
 
-  .hero-game-shell.is-active {
+  .hero-game-shell[data-presentation="immersive"].is-active {
     position: fixed;
     z-index: 90;
     inset: 0;
@@ -289,11 +289,11 @@
     background: #07100e;
     box-shadow: none;
   }
-  .hero-game-shell.is-active .fight-stage { width: 100%; height: 100dvh; min-height: 0; border-radius: 0; }
-  .hero-game-shell.is-active .fight-help { display: none; }
-  .hero-game-shell.is-active .fight-canvas-host { inset: max(3.1rem, env(safe-area-inset-top)) 0 max(6.9rem, env(safe-area-inset-bottom)); }
-  .hero-game-shell.is-active .fight-hud { top: max(0.65rem, env(safe-area-inset-top)); }
-  .hero-game-shell.is-active .fight-utility-controls { top: max(2.9rem, calc(env(safe-area-inset-top) + 2.3rem)); right: 0.65rem; bottom: auto; }
+  .hero-game-shell[data-presentation="immersive"].is-active .fight-stage { width: 100%; height: 100dvh; min-height: 0; border-radius: 0; }
+  .hero-game-shell[data-presentation="immersive"].is-active .fight-help { display: none; }
+  .hero-game-shell[data-presentation="immersive"].is-active .fight-canvas-host { inset: max(3.1rem, env(safe-area-inset-top)) 0 max(6.9rem, env(safe-area-inset-bottom)); }
+  .hero-game-shell[data-presentation="immersive"].is-active .fight-hud { top: max(0.65rem, env(safe-area-inset-top)); }
+  .hero-game-shell[data-presentation="immersive"].is-active .fight-utility-controls { top: max(2.9rem, calc(env(safe-area-inset-top) + 2.3rem)); right: 0.65rem; bottom: auto; }
   .fight-touch-controls { position: absolute; z-index: 16; left: 0.75rem; right: 0.75rem; bottom: max(0.75rem, env(safe-area-inset-bottom)); display: flex; align-items: end; justify-content: space-between; gap: 1rem; pointer-events: none; }
   .fight-touch-direction, .fight-touch-actions { display: flex; align-items: end; gap: 0.45rem; pointer-events: auto; }
   .fight-touch-actions { display: grid; grid-template-columns: repeat(2, 2.85rem); }

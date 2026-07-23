@@ -10,8 +10,8 @@ Pixel Fighter is the interactive **Pixel Duel** fighting game embedded in the ho
 
 This feature owns:
 
-- Game registration and selection in `src/games/registry.ts`
-- Shared hero-game lifecycle in `src/games/core/`
+- Its `pixel-fighter` registration entry in `src/games/registry.ts`
+- Its use of the shared hero-game lifecycle in `src/games/core/`
 - React/Phaser adapter and presentation in `src/games/pixel-fighter/`
 - Combat, movement, AI, rounds, items, and arena rules
 - Atlas generation in `scripts/build-fightgame-atlas.mjs`
@@ -51,7 +51,7 @@ Static arena preview appears
 → visitor replays, returns to fighter selection, or visits /apps
 ```
 
-`src/games/registry.ts` registers the game as `pixel-fighter`, displays the name `Pixel Duel`, and selects it through `ACTIVE_HERO_GAME_ID`.
+`src/games/registry.ts` registers the game as `pixel-fighter`, displays the name `Pixel Duel`, marks it as an immersive presentation, and selects it through `ACTIVE_HERO_GAME_ID`.
 
 ---
 

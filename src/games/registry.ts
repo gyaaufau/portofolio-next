@@ -1,11 +1,29 @@
 import type { HeroGameDefinition } from "./core/types";
 
 export const HERO_GAMES = {
+  "tiny-garden": {
+    id: "tiny-garden",
+    name: "Tiny Garden",
+    ariaLabel: "Playable tiny pixel garden",
+    errorMessage: "The garden could not load. The portfolio is still available.",
+    presentation: "embedded",
+    capabilities: {
+      sound: false,
+      pauseOffscreen: true,
+      touchFullscreen: false,
+    },
+    transition: {
+      revealMs: 220,
+      exitMs: 180,
+    },
+    load: () => import("./tiny-garden/adapter"),
+  },
   "pixel-fighter": {
     id: "pixel-fighter",
     name: "Pixel Duel",
     ariaLabel: "Playable pixel fighter",
     errorMessage: "Arena could not load. The fighter preview is still available.",
+    presentation: "immersive",
     capabilities: {
       sound: true,
       pauseOffscreen: true,

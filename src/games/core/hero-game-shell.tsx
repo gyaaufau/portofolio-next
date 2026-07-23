@@ -219,14 +219,15 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
   }, []);
 
   useEffect(() => {
-    const immersive = isHeroGameImmersive(phase);
+    const immersive = definition.presentation === "immersive" && isHeroGameImmersive(phase);
     document.body.classList.toggle("hero-game-open", immersive);
-    document.documentElement.dataset.heroGamePhase = phase;
+    if (definition.presentation === "immersive") document.documentElement.dataset.heroGamePhase = phase;
+    else delete document.documentElement.dataset.heroGamePhase;
     return () => {
       document.body.classList.remove("hero-game-open");
       delete document.documentElement.dataset.heroGamePhase;
     };
-  }, [phase]);
+  }, [definition.presentation, phase]);
 
   useEffect(() => clearTransitionTimer, [clearTransitionTimer]);
 
@@ -237,6 +238,7 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
       ref={frameRef}
       className={`hero-game-shell${phase === "revealing" ? " is-revealing" : ""}${gameVisible ? " is-active" : ""}${phase === "exiting" ? " is-exiting" : ""}`}
       data-hero-game-id={definition.id}
+      data-presentation={definition.presentation}
       data-phase={phase}
       data-near-viewport={nearViewport}
       aria-label={definition.ariaLabel}
