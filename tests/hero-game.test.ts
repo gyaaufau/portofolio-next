@@ -1,14 +1,16 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame } from "../src/games/core/lifecycle";
+import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame, shouldUseImmersivePresentation } from "../src/games/core/lifecycle";
 import type { HeroGameDefinition } from "../src/games/core/types";
 import { ACTIVE_HERO_GAME_ID, HERO_GAMES, selectHeroGame, validateHeroGameRegistry } from "../src/games/registry";
 
 test("the active hero game is typed, registered, and uniquely identified", () => {
-  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-fighter");
+  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-fishing");
   assert.equal(validateHeroGameRegistry(HERO_GAMES), true);
   assert.equal(HERO_GAMES[ACTIVE_HERO_GAME_ID].id, ACTIVE_HERO_GAME_ID);
+  assert.equal(HERO_GAMES["pixel-fishing"].presentation, "embedded");
+  assert.equal(HERO_GAMES["pixel-fighter"].presentation, "immersive");
 });
 
 test("registry selection invokes only the selected engine loader", async () => {
@@ -18,6 +20,7 @@ test("registry selection invokes only the selected engine loader", async () => {
     name: id,
     ariaLabel: `${id} game`,
     errorMessage: "Could not load",
+    presentation: "embedded",
     capabilities: { sound: false, pauseOffscreen: true, touchFullscreen: false },
     transition: { revealMs: 0, exitMs: 0 },
     load: async () => {
@@ -61,11 +64,14 @@ test("the shared host pauses active games for visibility without assuming an eng
   assert.equal(shouldPauseHeroGame({ phase: "active", inViewport: false, documentVisible: true, pauseOffscreen: false }), false);
   assert.equal(isHeroGameImmersive("exiting"), true);
   assert.equal(isHeroGameImmersive("preview"), false);
+  assert.equal(shouldUseImmersivePresentation("active", "immersive"), true);
+  assert.equal(shouldUseImmersivePresentation("active", "embedded"), false);
+  assert.equal(shouldUseImmersivePresentation("preview", "immersive"), false);
 });
 
 test("core contracts contain no Phaser or pixel-fighter domain leakage", () => {
   const coreTypes = readFileSync(new URL("../src/games/core/types.ts", import.meta.url), "utf8");
-  for (const forbidden of ["Phaser", "CharacterId", "InputState", "HudState", "MatchResult"]) {
+  for (const forbidden of ["Phaser", "CharacterId", "InputState", "HudState", "MatchResult", "FishingPhase", "FishingState"]) {
     assert.equal(coreTypes.includes(forbidden), false, `${forbidden} leaked into the shared game contract`);
   }
 });

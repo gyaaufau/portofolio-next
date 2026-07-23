@@ -1,12 +1,12 @@
 # Phaser Game Engine Integration
 
-This document defines the boundary between the application and the Phaser 4.1 game engine for the hero section playable game.
+This document defines the boundary between the application and the retained Phaser 4.1 Pixel Fighter implementation. Pixel Fishing is the active hero game and does not load Phaser.
 
 ---
 
 ## Purpose
 
-Phaser provides a 2D game engine for rendering interactive pixel-art games in the hero section. It handles game loop, physics, sprite rendering, input handling, and audio.
+When Pixel Fighter is selected in the hero-game registry, Phaser provides its game loop, physics, sprite rendering, input handling, and audio.
 
 ---
 
@@ -52,7 +52,8 @@ npm dependency: `"phaser": "4.1.0"`
 ## Runtime Flow
 
 ```text
-Homepage loads
+Pixel Fighter is selected in the registry
+→ homepage loads
 → HeroGameShell mounts (Client Component)
 → IntersectionObserver watches hero visibility
 → Hero approaches viewport → dynamic import("./pixel-fighter/adapter")

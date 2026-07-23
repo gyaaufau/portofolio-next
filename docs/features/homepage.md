@@ -154,7 +154,8 @@ Read rules:
 
 ## External Integrations
 
-- `Phaser 4.1` — Playable hero game (lazy-loaded)
+- `Canvas 2D` — Active embedded Pixel Fishing game (lazy-loaded)
+- `Phaser 4.1` — Retained Pixel Fighter implementation (loaded only when selected)
 - `JSON-LD` — WebSite and Person schema for SEO
 
 ---

@@ -2,7 +2,7 @@
 
 import { Component, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ACTIVE_HERO_GAME } from "../registry";
-import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame } from "./lifecycle";
+import { reduceHeroGamePhase, shouldPauseHeroGame, shouldUseImmersivePresentation } from "./lifecycle";
 import type { ComponentType } from "react";
 import type { HeroGameActions, HeroGameAdapterProps, HeroGameDefinition, HeroGamePhase } from "./types";
 
@@ -219,14 +219,14 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
   }, []);
 
   useEffect(() => {
-    const immersive = isHeroGameImmersive(phase);
+    const immersive = shouldUseImmersivePresentation(phase, definition.presentation);
     document.body.classList.toggle("hero-game-open", immersive);
     document.documentElement.dataset.heroGamePhase = phase;
     return () => {
       document.body.classList.remove("hero-game-open");
       delete document.documentElement.dataset.heroGamePhase;
     };
-  }, [phase]);
+  }, [definition.presentation, phase]);
 
   useEffect(() => clearTransitionTimer, [clearTransitionTimer]);
 
@@ -237,6 +237,7 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
       ref={frameRef}
       className={`hero-game-shell${phase === "revealing" ? " is-revealing" : ""}${gameVisible ? " is-active" : ""}${phase === "exiting" ? " is-exiting" : ""}`}
       data-hero-game-id={definition.id}
+      data-presentation={definition.presentation}
       data-phase={phase}
       data-near-viewport={nearViewport}
       aria-label={definition.ariaLabel}
