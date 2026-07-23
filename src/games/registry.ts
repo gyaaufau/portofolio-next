@@ -1,11 +1,11 @@
 import type { HeroGameDefinition } from "./core/types";
 
 export const HERO_GAMES = {
-  "pixel-fishing": {
-    id: "pixel-fishing",
-    name: "Quiet Cast",
-    ariaLabel: "Cozy pixel fishing game",
-    errorMessage: "The lake could not load. The portfolio is still available.",
+  "tiny-garden": {
+    id: "tiny-garden",
+    name: "Tiny Garden",
+    ariaLabel: "Playable tiny pixel garden",
+    errorMessage: "The garden could not load. The portfolio is still available.",
     presentation: "embedded",
     capabilities: {
       sound: false,
@@ -13,26 +13,10 @@ export const HERO_GAMES = {
       touchFullscreen: false,
     },
     transition: {
-      revealMs: 240,
+      revealMs: 220,
       exitMs: 180,
     },
-    load: () => import("./pixel-fishing/adapter"),
-  },
-  "pixel-artillery": {
-    id: "pixel-artillery",
-    name: "Tiny Artillery",
-    ariaLabel: "Tiny Artillery, a turn-based pixel ant duel",
-    errorMessage: "The artillery duel could not load. The battlefield preview is still available.",
-    capabilities: {
-      sound: false,
-      pauseOffscreen: true,
-      touchFullscreen: true,
-    },
-    transition: {
-      revealMs: 560,
-      exitMs: 480,
-    },
-    load: () => import("./pixel-artillery/adapter"),
+    load: () => import("./tiny-garden/adapter"),
   },
   "pixel-fighter": {
     id: "pixel-fighter",
@@ -46,7 +30,7 @@ export const HERO_GAMES = {
       touchFullscreen: true,
     },
     transition: {
-      revealMs: 700,
+      revealMs: 650,
       exitMs: 650,
     },
     load: () => import("./pixel-fighter/adapter"),
@@ -68,7 +52,7 @@ export function selectHeroGame<TRegistry extends Record<string, HeroGameDefiniti
 }
 
 /** Change this one typed value to select a different registered hero game. */
-export const ACTIVE_HERO_GAME_ID: HeroGameId = "pixel-artillery";
+export const ACTIVE_HERO_GAME_ID: HeroGameId = "pixel-fighter";
 
 export function getHeroGameDefinition(id: HeroGameId): HeroGameDefinition {
   return selectHeroGame(HERO_GAMES, id);

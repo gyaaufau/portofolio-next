@@ -1,16 +1,15 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame, shouldUseImmersivePresentation } from "../src/games/core/lifecycle";
+import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame } from "../src/games/core/lifecycle";
 import type { HeroGameDefinition } from "../src/games/core/types";
 import { ACTIVE_HERO_GAME_ID, HERO_GAMES, selectHeroGame, validateHeroGameRegistry } from "../src/games/registry";
 
-test("the active hero game is typed, registered, and uniquely identified", () => {
-  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-artillery");
+test("hero games are typed, registered, and uniquely identified", () => {
+  assert.equal(ACTIVE_HERO_GAME_ID, "pixel-fighter");
   assert.equal(validateHeroGameRegistry(HERO_GAMES), true);
   assert.equal(HERO_GAMES[ACTIVE_HERO_GAME_ID].id, ACTIVE_HERO_GAME_ID);
-  assert.equal(HERO_GAMES["pixel-fishing"].presentation, "embedded");
-  assert.equal(HERO_GAMES["pixel-fighter"].presentation, "immersive");
+  assert.equal(HERO_GAMES["tiny-garden"].presentation, "embedded");
 });
 
 test("registry selection invokes only the selected engine loader", async () => {
@@ -64,14 +63,19 @@ test("the shared host pauses active games for visibility without assuming an eng
   assert.equal(shouldPauseHeroGame({ phase: "active", inViewport: false, documentVisible: true, pauseOffscreen: false }), false);
   assert.equal(isHeroGameImmersive("exiting"), true);
   assert.equal(isHeroGameImmersive("preview"), false);
-  assert.equal(shouldUseImmersivePresentation("active", "immersive"), true);
-  assert.equal(shouldUseImmersivePresentation("active", "embedded"), false);
-  assert.equal(shouldUseImmersivePresentation("preview", "immersive"), false);
 });
 
 test("core contracts contain no Phaser or pixel-fighter domain leakage", () => {
   const coreTypes = readFileSync(new URL("../src/games/core/types.ts", import.meta.url), "utf8");
-  for (const forbidden of ["Phaser", "CharacterId", "InputState", "HudState", "MatchResult", "FishingPhase", "FishingState"]) {
+  for (const forbidden of ["Phaser", "CharacterId", "InputState", "HudState", "MatchResult", "TinyGardenState", "SeedId"]) {
     assert.equal(coreTypes.includes(forbidden), false, `${forbidden} leaked into the shared game contract`);
   }
+});
+
+test("embedded games do not opt into immersive document behavior", () => {
+  const shell = readFileSync(new URL("../src/games/core/hero-game-shell.tsx", import.meta.url), "utf8");
+  const globalStyles = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
+  assert.ok(shell.includes('definition.presentation === "immersive" && isHeroGameImmersive(phase)'));
+  assert.ok(globalStyles.includes('.hero-game-shell[data-presentation="immersive"].is-active'));
+  assert.equal(globalStyles.includes("\n.hero-game-shell.is-active {\n  position: fixed"), false);
 });

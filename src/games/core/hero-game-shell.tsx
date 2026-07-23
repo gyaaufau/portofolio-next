@@ -2,7 +2,7 @@
 
 import { Component, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ACTIVE_HERO_GAME } from "../registry";
-import { reduceHeroGamePhase, shouldPauseHeroGame, shouldUseImmersivePresentation } from "./lifecycle";
+import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame } from "./lifecycle";
 import type { ComponentType } from "react";
 import type { HeroGameActions, HeroGameAdapterProps, HeroGameDefinition, HeroGamePhase } from "./types";
 
@@ -219,9 +219,10 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
   }, []);
 
   useEffect(() => {
-    const immersive = shouldUseImmersivePresentation(phase, definition.presentation);
+    const immersive = definition.presentation === "immersive" && isHeroGameImmersive(phase);
     document.body.classList.toggle("hero-game-open", immersive);
-    document.documentElement.dataset.heroGamePhase = phase;
+    if (definition.presentation === "immersive") document.documentElement.dataset.heroGamePhase = phase;
+    else delete document.documentElement.dataset.heroGamePhase;
     return () => {
       document.body.classList.remove("hero-game-open");
       delete document.documentElement.dataset.heroGamePhase;

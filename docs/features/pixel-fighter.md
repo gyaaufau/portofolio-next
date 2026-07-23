@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Pixel Fighter is the registered **Pixel Duel** fighting game retained for the modular homepage hero. It gives visitors a playable demonstration of client-side game development using Phaser, responsive controls, deterministic AI, and a licensed pixel-art asset pack. Pixel Fishing is currently the active hero game.
+Pixel Fighter is the interactive **Pixel Duel** fighting game embedded in the homepage hero. It gives visitors a playable demonstration of client-side game development using Phaser, responsive controls, deterministic AI, and a licensed pixel-art asset pack.
 
 ---
 
@@ -10,8 +10,8 @@ Pixel Fighter is the registered **Pixel Duel** fighting game retained for the mo
 
 This feature owns:
 
-- Game registration and selection in `src/games/registry.ts`
-- Shared hero-game lifecycle in `src/games/core/`
+- Its `pixel-fighter` registration entry in `src/games/registry.ts`
+- Its use of the shared hero-game lifecycle in `src/games/core/`
 - React/Phaser adapter and presentation in `src/games/pixel-fighter/`
 - Combat, movement, AI, rounds, items, and arena rules
 - Atlas generation in `scripts/build-fightgame-atlas.mjs`
@@ -46,13 +46,12 @@ Static arena preview appears
 → hero approaches the viewport
 → React dynamically imports the Pixel Fighter adapter
 → adapter mounts Phaser
-→ visitor selects a fighter and presses Enter Battle
-→ the preview fighter fades in place and a 700 ms circular aperture reveals the arena
+→ visitor selects a fighter and starts the match
 → best-of-three match runs against an AI opponent
 → visitor replays, returns to fighter selection, or visits /apps
 ```
 
-`src/games/registry.ts` registers the game as `pixel-fighter` and displays the name `Pixel Duel`. It can be reactivated through `ACTIVE_HERO_GAME_ID`.
+`src/games/registry.ts` registers the game as `pixel-fighter`, displays the name `Pixel Duel`, marks it as an immersive presentation, and selects it through `ACTIVE_HERO_GAME_ID`.
 
 ---
 
@@ -69,9 +68,9 @@ Homepage Hero
 → pure domain modules for combat, movement, AI, items, layout, and rounds
 ```
 
-The game uses Phaser 4.1 with Arcade Physics at a fixed 60 FPS. The authored world remains fixed at 300×200 pixels and uses `Phaser.Scale.FIT`. Desktop gameplay is centered in a 3:2 frame capped at 960×640; mobile keeps a centered 3:2 field between the fullscreen HUD and touch controls.
+The game uses Phaser 4.1 with Arcade Physics at a fixed 60 FPS. The authored baseline is 300×200 pixels; `Phaser.Scale.EXPAND` and `createArenaLayout()` adapt the arena to the available area while preserving a minimum logical size.
 
-The React adapter owns selection, lifecycle, HUD, pause/result overlays, and touch controls. Phaser owns rendering, physics, keyboard input, combat execution, projectiles, effects, and sample playback.
+The React adapter owns selection, lifecycle, HUD, pause/result overlays, and touch controls. Phaser owns rendering, physics, keyboard input, combat execution, projectiles, effects, and synthesized sound.
 
 The imperative adapter boundary exposes:
 
@@ -96,7 +95,7 @@ Important rules:
 
 - The adapter and Phaser bundle load only when the hero approaches the viewport.
 - The game pauses when the hero leaves the viewport, the document becomes hidden, the user pauses manually, or a result overlay is open.
-- Pressing Enter Battle enables sound as an explicit user interaction; the in-match mute control remains available.
+- Sound starts muted and requires user interaction before creating or resuming an `AudioContext`.
 - Reduced-motion mode stops decorative preview and ambient movement and disables camera shake/hit pause.
 - Engine failures are caught by the shared error boundary and leave the static preview available.
 - Match state is transient and resets on page reload.
@@ -299,7 +298,7 @@ Mobile controls provide left, right, jump, combo, special, and dodge. Below 768 
 
 Owned UI includes:
 
-- Layered static preview, stationary fighter fade, and 700 ms iris reveal transition
+- Animated static preview and iris reveal transition
 - Character roster and persisted selection
 - Vitality bars, round counters, timer, notices, and best-of-three label
 - Mute, pause, and exit controls
@@ -311,19 +310,19 @@ Owned UI includes:
 
 ## Audio
 
-Phaser preloads compact CC0 samples from `public/games/pixel-fighter/audio/`. The manifest provides deterministic variants and tuned volume for:
+The game has no recorded audio assets. `FightScene` synthesizes nine cues with Web Audio oscillators and gain envelopes:
 
-- wooden footsteps and jumps,
-- generic swings, Musashi sword slices, and dash,
-- Marston's revolver and Namka's snow shot,
-- light, medium, heavy, and finisher impacts,
-- wooden and metal container hits,
-- coin and power-up pickups,
-- knockout.
+- step
+- jump
+- swing
+- gun
+- hit
+- dash
+- pickup
+- finisher
+- knockout
 
-Melee swings play 35 ms before the first hit window. Projectile sounds play at the actual launch window, so Namka uses a snow cue rather than a gunshot. Repeated variants rotate independently from the seeded gameplay RNG.
-
-Sources and redistribution notes are recorded in `public/games/pixel-fighter/audio/LICENSES.md`. The selected files come from Deva's 8-Bit Sound Effect Pack and Kenney's RPG Audio and Impact Sounds, all under CC0 1.0.
+Gun and hit cues use square waves; the others use triangle waves. Audio resources are closed when the Phaser instance is destroyed.
 
 ---
 
@@ -386,7 +385,6 @@ The generator uses Sharp, a maximum atlas width of 1024 pixels, and two pixels o
 Automated domain coverage currently verifies:
 
 - Complete character manifests and referenced character frames
-- Complete sound manifests, committed sample files, character-specific cues, and cue timing
 - Valid Phaser atlas metadata
 - Damage, knockback, timeouts, sudden death, and best-of-three rules
 - Deterministic non-mirror opponent selection
@@ -423,7 +421,7 @@ Add or prioritize integration coverage for:
 | Source art | `public/FIGHTGAME_Assets/` |
 | Atlas generation | `scripts/build-fightgame-atlas.mjs` |
 | Generated runtime atlases | `public/games/pixel-fighter/generated/` |
-| Domain, atlas, and sound tests | `tests/game.test.ts` |
+| Domain and atlas tests | `tests/game.test.ts` |
 
 ---
 
