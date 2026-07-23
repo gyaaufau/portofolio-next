@@ -55,7 +55,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #171b1e;
     --foreground: #f1efe9;
     --card: #1f2528;
@@ -68,6 +68,20 @@
     --input: #4a5458;
     --pixel-shadow: color-mix(in srgb, var(--site-accent) 28%, #090b0c);
   }
+}
+
+:root[data-theme="dark"] {
+  --background: #171b1e;
+  --foreground: #f1efe9;
+  --card: #1f2528;
+  --card-foreground: #f1efe9;
+  --secondary: #282f32;
+  --secondary-foreground: #f1efe9;
+  --muted: #384044;
+  --muted-foreground: #aeb5b2;
+  --border: #3a4245;
+  --input: #4a5458;
+  --pixel-shadow: color-mix(in srgb, var(--site-accent) 28%, #090b0c);
 }
 
 @layer base {
@@ -238,7 +252,7 @@
 
 .immersive-hero-copy {
   position: relative;
-  z-index: 20;
+  z-index: 99;
   display: flex;
   width: 100%;
   height: 100%;
@@ -271,6 +285,84 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   background: #0d1e1a;
   box-shadow: none;
   isolation: isolate;
+}
+
+.hero-none-backgrounds,
+.hero-none-bg-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-none-bg-layer {
+  display: block;
+  transition: opacity 850ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-none-bg-layer-light { opacity: 1; }
+.hero-none-bg-layer-dark { opacity: 0; }
+
+.hero-none-bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.hero-none-celestial-layer {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-none-celestial {
+  position: absolute;
+  top: 10%;
+  left: 42%;
+  width: clamp(5.5rem, 7vw, 8rem);
+  height: auto;
+  image-rendering: pixelated;
+  transform-origin: center;
+  transition:
+    opacity 850ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 850ms cubic-bezier(0.45, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.hero-none-sun {
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+.hero-none-moon {
+  opacity: 0;
+  transform: translate3d(13vw, 42vh, 0) rotate(12deg) scale(0.74);
+}
+
+:root[data-theme="dark"] .hero-none-bg-layer-light { opacity: 0; }
+:root[data-theme="dark"] .hero-none-bg-layer-dark { opacity: 1; }
+:root[data-theme="dark"] .hero-none-sun {
+  opacity: 0;
+  transform: translate3d(17vw, 44vh, 0) rotate(14deg) scale(0.72);
+}
+:root[data-theme="dark"] .hero-none-moon {
+  opacity: 0.88;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-none-bg-layer-light { opacity: 0; }
+  :root:not([data-theme="light"]) .hero-none-bg-layer-dark { opacity: 1; }
+  :root:not([data-theme="light"]) .hero-none-sun {
+    opacity: 0;
+    transform: translate3d(17vw, 44vh, 0) rotate(14deg) scale(0.72);
+  }
+  :root:not([data-theme="light"]) .hero-none-moon {
+    opacity: 0.88;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
 }
 
 .immersive-hero .fight-stage {
@@ -390,10 +482,44 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   .immersive-hero-copy h1 { max-width: 9ch; font-size: clamp(3.1rem, 10.5vw, 5.1rem); }
   .immersive-hero-copy p:nth-of-type(2) { max-width: 38ch; font-size: 0.95rem; line-height: 1.55; }
   .immersive-hero .hero-game-shell { --iris-radius: clamp(72px, 12vw, 92px); --iris-x: 74%; --iris-y: 67%; }
+  .hero-none-celestial {
+    top: 12%;
+    left: 70%;
+    width: clamp(5.25rem, 18vw, 7rem);
+  }
+  .hero-none-moon { transform: translate3d(15vw, 38vh, 0) rotate(12deg) scale(0.74); }
+  :root[data-theme="dark"] .hero-none-sun { transform: translate3d(17vw, 39vh, 0) rotate(14deg) scale(0.72); }
   .immersive-hero .fight-preview-label { display: none; }
   .immersive-hero .fight-roster { right: 1.25rem; bottom: max(5.6rem, calc(env(safe-area-inset-bottom) + 5rem)); }
   .immersive-hero .fight-play-button { top: calc(var(--iris-y) + var(--iris-radius) + 0.8rem); }
   .fight-instructions { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-none-bg-layer,
+  .hero-none-celestial {
+    transition-duration: 120ms;
+  }
+
+  .hero-none-sun,
+  .hero-none-moon,
+  :root[data-theme="dark"] .hero-none-sun,
+  :root[data-theme="dark"] .hero-none-moon {
+    transform: none;
+  }
+}
+
+@media (max-width: 899px) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-none-sun {
+    transform: translate3d(17vw, 39vh, 0) rotate(14deg) scale(0.72);
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-reduced-motion: reduce) {
+  :root:not([data-theme="light"]) .hero-none-sun,
+  :root:not([data-theme="light"]) .hero-none-moon {
+    transform: none;
+  }
 }
 
 @media (max-width: 520px) {
@@ -412,6 +538,53 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   .hero-game-shell.is-active .fight-hud { gap: 0.4rem; }
   .hero-game-shell.is-active .fight-timer { min-width: 2.8rem; }
   .fight-notice { top: max(4.9rem, calc(env(safe-area-inset-top) + 4.1rem)); font-size: 0.34rem; }
+}
+
+/* Work-experience vine rail */
+.work-experience-vine {
+  position: absolute;
+  left: -1rem;
+  top: 0;
+  bottom: 0;
+  width: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.work-experience-vine-cap {
+  display: block;
+  width: 8rem;
+  height: 10.67rem;
+  background: url("/assets/pixel-ornaments/rails/work-experience-vine/cap/light.png") top center / 8rem auto no-repeat;
+  flex-shrink: 0;
+}
+
+.work-experience-vine-repeat {
+  display: block;
+  width: 6rem;
+  flex: 1;
+  background: url("/assets/pixel-ornaments/rails/work-experience-vine/repeat/light.png") top center / 6rem auto repeat-y;
+}
+
+.work-experience-vine-base {
+  display: block;
+  width: 10rem;
+  height: 7rem;
+  background: url("/assets/pixel-ornaments/rails/work-experience-vine/base/light.png") top center / contain no-repeat;
+  flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .work-experience-vine-cap { background-image: url("/assets/pixel-ornaments/rails/work-experience-vine/cap/dark.png"); }
+  .work-experience-vine-repeat { background-image: url("/assets/pixel-ornaments/rails/work-experience-vine/repeat/dark.png"); }
+  .work-experience-vine-base { background-image: url("/assets/pixel-ornaments/rails/work-experience-vine/base/dark.png"); }
+}
+
+.pixel-ornament {
+  display: block;
+  line-height: 0;
 }
 
 .prose-pixel > section:not(.pixel-frame) { border-top: 1px solid var(--border); padding-top: 2rem; }

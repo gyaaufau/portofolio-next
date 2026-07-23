@@ -107,6 +107,45 @@ function mapWorkExperience(row: Record<string, unknown>): WorkExperienceItem {
   };
 }
 
+function mapProfile(row: Record<string, unknown>): Profile {
+  return {
+    id: row.id as string,
+    name: row.name as string,
+    role: row.role as string,
+    intro: row.intro as string,
+    location: row.location as string,
+    openToOpportunities: row.open_to_opportunities as boolean,
+    photoSrc: row.photo_src as string,
+    photoAlt: row.photo_alt as string,
+    photoWidth: row.photo_width as number,
+    photoHeight: row.photo_height as number,
+  };
+}
+
+function mapContact(row: Record<string, unknown>): Contact {
+  return {
+    id: row.id as string,
+    email: row.email as string,
+    whatsapp: row.whatsapp as string,
+    github: row.github as string,
+    linkedin: row.linkedin as string,
+    playStore: row.play_store as string,
+    playConsole: row.play_console as string,
+    cv: row.cv as string,
+  };
+}
+
+function mapSiteSettings(row: Record<string, unknown>): SiteSettings {
+  return {
+    id: row.id as string,
+    accentPreset: row.accent_preset as string,
+    accentColor: row.accent_color as string,
+    heroGameId: (row.hero_game_id as string) ?? "pixel-fighter",
+    colorScheme: (row.color_scheme as string) ?? "system",
+    logoSrc: (row.logo_src as string) ?? "",
+  };
+}
+
 async function getSupabase() {
   const cookieStore = await cookies();
   return createClient(cookieStore);
@@ -116,14 +155,14 @@ export const getProfile = cache(async function getProfile(): Promise<Profile> {
   const supabase = await getSupabase();
   const { data, error } = await supabase.from("profile").select("*").limit(1).single();
   if (error || !data) throw new Error("Profile not found");
-  return data as Profile;
+  return mapProfile(data);
 });
 
 export const getContact = cache(async function getContact(): Promise<Contact> {
   const supabase = await getSupabase();
   const { data, error } = await supabase.from("contact").select("*").limit(1).single();
   if (error || !data) throw new Error("Contact not found");
-  return data as Contact;
+  return mapContact(data);
 });
 
 export const getHeroLinks = cache(async function getHeroLinks(): Promise<HeroLink[]> {
@@ -218,9 +257,9 @@ export const getSiteSettings = cache(async function getSiteSettings(): Promise<S
   try {
     const supabase = await getSupabase();
     const { data } = await supabase.from("site_settings").select("*").eq("id", "site").single();
-    return data ?? { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
+    return data ? mapSiteSettings(data) : { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT, heroGameId: "pixel-fighter", colorScheme: "system", logoSrc: "" };
   } catch {
-    return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT };
+    return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT, heroGameId: "pixel-fighter", colorScheme: "system", logoSrc: "" };
   }
 });
 

@@ -145,4 +145,7 @@ export type SiteSettings = {
   id: string;
   accentPreset: string;
   accentColor: string;
+  heroGameId: string;
+  colorScheme: string;
+  logoSrc: string;
 };

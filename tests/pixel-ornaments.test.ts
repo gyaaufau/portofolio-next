@@ -131,8 +131,8 @@ test("the work-experience rail keeps its approved visual hierarchy", async () =>
   const baseWidth = await alphaBoundsWidth(path.join(root, "rails/work-experience-vine/base/light.png"));
 
   assert.ok(repeatWidth >= 46 && repeatWidth <= 50, `repeat silhouette is ${repeatWidth}px wide, expected 46–50px`);
-  assert.equal(capWidth, 52, `cap silhouette is ${capWidth}px wide, expected 52px`);
-  assert.equal(baseWidth, 128, `base silhouette is ${baseWidth}px wide, expected 128px`);
+  assert.ok(capWidth >= 46 && capWidth <= 50, `cap silhouette is ${capWidth}px wide, expected 46–50px`);
+  assert.equal(baseWidth, 160, `base silhouette is ${baseWidth}px wide, expected 160px`);
 });
 
 test("the work-experience endpoints stay centered on the rail axis", async () => {
@@ -153,6 +153,42 @@ test("the approved work-experience repeat stays byte-identical", async () => {
   for (const theme of ["light", "dark"] as const) {
     const data = await readFile(path.join(root, `rails/work-experience-vine/repeat/${theme}.png`));
     assert.equal(createHash("sha256").update(data).digest("hex"), expected[theme], `${theme} repeat asset changed`);
+  }
+});
+
+test("the work-experience endpoints join the repeat without a pixel seam", async () => {
+  for (const theme of ["light", "dark"] as const) {
+    const parts = Object.fromEntries(await Promise.all(
+      (["cap", "repeat", "base"] as const).map(async (part) => {
+        const image = await sharp(path.join(root, `rails/work-experience-vine/${part}/${theme}.png`))
+          .ensureAlpha()
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        return [part, image] as const;
+      }),
+    ));
+
+    const assertCenteredRowsEqual = (
+      first: typeof parts.cap,
+      firstRow: number,
+      second: typeof parts.cap,
+      secondRow: number,
+      label: string,
+    ) => {
+      const halfWidth = 24;
+      for (let offset = -halfWidth; offset < halfWidth; offset += 1) {
+        const firstPixel = (firstRow * first.info.width + first.info.width / 2 + offset) * first.info.channels;
+        const secondPixel = (secondRow * second.info.width + second.info.width / 2 + offset) * second.info.channels;
+        assert.deepEqual(
+          first.data.subarray(firstPixel, firstPixel + first.info.channels),
+          second.data.subarray(secondPixel, secondPixel + second.info.channels),
+          `${label}/${theme} differs at centered offset ${offset}`,
+        );
+      }
+    };
+
+    assertCenteredRowsEqual(parts.cap, parts.cap.info.height - 1, parts.repeat, 0, "cap-repeat");
+    assertCenteredRowsEqual(parts.repeat, parts.repeat.info.height - 1, parts.base, 0, "repeat-base");
   }
 });
 

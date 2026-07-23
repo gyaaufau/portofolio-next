@@ -41,13 +41,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   } as CSSProperties;
 
   return (
-    <html lang="en" className={GeistSans.variable} style={themeStyle} data-scroll-behavior="smooth">
+    <html lang="en" className={GeistSans.variable} style={themeStyle} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)})()` }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
       <body>
-        <PublicChrome footer={<Footer />}>{children}</PublicChrome>
+        <PublicChrome logoSrc={settings.logoSrc} footer={<Footer />}>{children}</PublicChrome>
       </body>
     </html>
   );

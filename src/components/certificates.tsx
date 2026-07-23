@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { CertificateItem } from "@/data/types";
 
 export function Certificates({ certificates }: { title?: string; description?: string; showFeaturedChip?: boolean; certificates: CertificateItem[] }) {
-  if (!certificates.length) return <p className="pixel-frame bg-card p-6 text-muted-foreground">No certificates have been added yet.</p>;
+  if (!certificates.length) return <div className="pixel-frame pixel-grid bg-card p-8 text-center md:p-12"><p className="text-pixel text-[9px] text-primary">EMPTY ROOM</p><p className="mt-4 text-muted-foreground">No certificates have been added yet.</p></div>;
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-12" aria-label="Certificates">
       {certificates.map((certificate, index) => (

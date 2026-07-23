@@ -8,14 +8,16 @@ interface HeroProps {
   intro: string;
   location: string;
   openToOpportunities?: boolean;
+  gameId?: string;
 }
 
-export function Hero({ name, role, intro, location, openToOpportunities = true }: HeroProps) {
+export function Hero({ name, role, intro, location, openToOpportunities = true, gameId }: HeroProps) {
   const readableIntro = intro.replace(/\s*[—–]\s*/g, ", ");
 
   return (
     <header id="top" className="immersive-hero">
-      <HeroGameShell>
+      <HeroGameShell gameId={gameId} />
+      <div className="immersive-hero-copy hero-enter">
         <div className="max-w-xl">
           <div className="mb-7 flex items-center gap-3">
             <span className="text-pixel text-[9px] text-[color:var(--hero-accent)]">PLAYER ONE</span>
@@ -38,7 +40,7 @@ export function Hero({ name, role, intro, location, openToOpportunities = true }
             </Link>
           </div>
         </div>
-      </HeroGameShell>
+      </div>
     </header>
   );
 }

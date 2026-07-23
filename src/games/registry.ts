@@ -35,6 +35,40 @@ export const HERO_GAMES = {
     },
     load: () => import("./pixel-fighter/adapter"),
   },
+  "pixel-fishing": {
+    id: "pixel-fishing",
+    name: "Pixel Fishing",
+    ariaLabel: "Playable pixel fishing game",
+    errorMessage: "The fishing game could not load. The portfolio is still available.",
+    presentation: "embedded",
+    capabilities: {
+      sound: false,
+      pauseOffscreen: true,
+      touchFullscreen: false,
+    },
+    transition: {
+      revealMs: 220,
+      exitMs: 180,
+    },
+    load: () => import("./pixel-fishing/adapter"),
+  },
+  "pixel-artillery": {
+    id: "pixel-artillery",
+    name: "Pixel Artillery",
+    ariaLabel: "Playable pixel artillery game",
+    errorMessage: "The artillery game could not load. The portfolio is still available.",
+    presentation: "embedded",
+    capabilities: {
+      sound: false,
+      pauseOffscreen: true,
+      touchFullscreen: false,
+    },
+    transition: {
+      revealMs: 220,
+      exitMs: 180,
+    },
+    load: () => import("./pixel-artillery/adapter"),
+  },
 } as const satisfies Record<string, HeroGameDefinition>;
 
 export type HeroGameId = keyof typeof HERO_GAMES;

@@ -1,9 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
 import { storageUrl } from "@/lib/storage";
 import { revalidatePath } from "next/cache";
+import { HERO_GAMES } from "@/games/registry";
 import {
   ADMIN_COOKIE,
   adminCookieOptions,
@@ -12,10 +12,10 @@ import {
   requireAdmin,
 } from "@/lib/auth";
 import { resolveAccent } from "@/lib/theme";
+import { createAdminClient } from "@/utils/supabase/admin";
 
-async function getSupabase() {
-  const cookieStore = await cookies();
-  return createClient(cookieStore);
+function getSupabase() {
+  return createAdminClient();
 }
 
 function parseSections(value: unknown): unknown[] {
@@ -336,13 +336,20 @@ export async function updateSiteSettings(
   const result = resolveAccent(formData.get("accentPreset"), formData.get("accentColor"));
   if ("error" in result) return { error: result.error };
 
+  const heroGameId = formData.get("heroGameId") as string;
+  const validGameIds = Object.keys(HERO_GAMES);
+  const gameId = heroGameId === "" ? "" : validGameIds.includes(heroGameId) ? heroGameId : "pixel-fighter";
+  const logoSrc = (formData.get("logoSrc") as string)?.trim() ?? "";
+
   await supabase.from("site_settings").upsert({
     id: "site",
     accent_preset: result.preset,
     accent_color: result.color,
+    hero_game_id: gameId,
+    logo_src: logoSrc,
   });
 
   revalidatePath("/", "layout");
   revalidatePath("/admin/appearance");
-  return { success: "Accent updated." };
+  return { success: "Appearance updated." };
 }

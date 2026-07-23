@@ -12,14 +12,14 @@ export type SectionLeadingIconName = keyof typeof SECTION_ICONS;
 
 export function SectionLeadingIcon({ name }: { name: SectionLeadingIconName }) {
   return (
-    <span className="block size-8 shrink-0" aria-hidden="true">
+    <span className="block size-8 md:size-16 shrink-0" aria-hidden="true">
       <Image
         src={SECTION_ICONS[name]}
         alt=""
         width={64}
         height={64}
         unoptimized
-        className="size-8 object-contain [image-rendering:pixelated] [image-rendering:crisp-edges]"
+        className="size-8 md:size-16 object-contain [image-rendering:pixelated] [image-rendering:crisp-edges]"
       />
     </span>
   );

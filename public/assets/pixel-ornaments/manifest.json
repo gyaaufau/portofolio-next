@@ -166,10 +166,11 @@
         "light": "/assets/pixel-ornaments/rails/work-experience-vine/base/light.png",
         "dark": "/assets/pixel-ornaments/rails/work-experience-vine/base/dark.png"
       },
-      "intrinsic": { "width": 128, "height": 96 },
+      "intrinsic": { "width": 160, "height": 112 },
       "intendedPlacement": "Bottom of the work-experience timeline rail",
       "recommendedDisplaySizes": [
-        { "width": 64, "height": 48 }
+        { "width": 80, "height": 56 },
+        { "width": 160, "height": 112 }
       ],
       "decorative": true
     },

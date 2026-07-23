@@ -18,6 +18,8 @@ export default async function AppearancePage() {
       <AppearanceForm
         initialPreset={settings?.accent_preset ?? "moss"}
         initialColor={settings?.accent_color ?? DEFAULT_ACCENT}
+        initialGameId={settings?.hero_game_id ?? "pixel-fighter"}
+        initialLogoSrc={settings?.logo_src ?? ""}
       />
     </div>
   );

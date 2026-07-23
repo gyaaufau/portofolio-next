@@ -1,13 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { Component, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ACTIVE_HERO_GAME } from "../registry";
+import { ACTIVE_HERO_GAME, HERO_GAMES } from "../registry";
 import { isHeroGameImmersive, reduceHeroGamePhase, shouldPauseHeroGame } from "./lifecycle";
 import type { ComponentType } from "react";
 import type { HeroGameActions, HeroGameAdapterProps, HeroGameDefinition, HeroGamePhase } from "./types";
 
 interface HeroGameShellProps {
-  children: React.ReactNode;
+  gameId?: string;
 }
 
 interface ModuleBoundaryProps {
@@ -40,8 +41,60 @@ class ModuleBoundary extends Component<ModuleBoundaryProps, ModuleBoundaryState>
   }
 }
 
-export function HeroGameShell({ children }: HeroGameShellProps) {
-  const definition: HeroGameDefinition = ACTIVE_HERO_GAME;
+export function HeroGameShell({ gameId }: HeroGameShellProps) {
+  if (gameId === "") {
+    return (
+      <section className="hero-game-shell hero-game-none-bg" data-hero-game-id="none" data-presentation="embedded" data-phase="preview">
+        <div className="hero-none-backgrounds" aria-hidden="true">
+          <picture className="hero-none-bg-layer hero-none-bg-layer-light">
+            <source media="(max-width: 767px)" srcSet="/assets/hero/hero_none_apocalypse_pixel_background_mobile.png" />
+            <img
+              src="/assets/hero/hero_none_apocalypse_pixel_background.png"
+              alt=""
+              className="hero-none-bg-img"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </picture>
+          <picture className="hero-none-bg-layer hero-none-bg-layer-dark">
+            <source media="(max-width: 767px)" srcSet="/assets/hero/hero_none_apocalypse_pixel_background_mobile_dark.png" />
+            <img
+              src="/assets/hero/hero_none_apocalypse_pixel_background_dark.png"
+              alt=""
+              className="hero-none-bg-img"
+              decoding="async"
+              loading="eager"
+            />
+          </picture>
+        </div>
+        <div className="hero-none-celestial-layer" aria-hidden="true">
+          <Image
+            src="/assets/hero/hero_none_pixel_sun.png"
+            alt=""
+            width={256}
+            height={256}
+            className="hero-none-celestial hero-none-sun"
+            draggable={false}
+            unoptimized
+          />
+          <Image
+            src="/assets/hero/hero_none_pixel_moon.png"
+            alt=""
+            width={256}
+            height={256}
+            className="hero-none-celestial hero-none-moon"
+            draggable={false}
+            unoptimized
+          />
+        </div>
+      </section>
+    );
+  }
+  return <HeroGameShellInner gameId={gameId} />;
+}
+
+function HeroGameShellInner({ gameId }: HeroGameShellProps) {
+  const definition: HeroGameDefinition = gameId && gameId in HERO_GAMES ? HERO_GAMES[gameId as keyof typeof HERO_GAMES] : ACTIVE_HERO_GAME;
   const frameRef = useRef<HTMLElement>(null);
   const previewFocusRef = useRef<HTMLElement | null>(null);
   const activeFocusRef = useRef<HTMLElement | null>(null);
@@ -259,8 +312,6 @@ export function HeroGameShell({ children }: HeroGameShellProps) {
           <button type="button" onClick={retry}>Retry</button>
         </div>
       )}
-
-      <div className="immersive-hero-copy hero-enter">{children}</div>
     </section>
   );
 }

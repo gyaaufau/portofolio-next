@@ -79,3 +79,25 @@ test("embedded games do not opt into immersive document behavior", () => {
   assert.ok(globalStyles.includes('.hero-game-shell[data-presentation="immersive"].is-active'));
   assert.equal(globalStyles.includes("\n.hero-game-shell.is-active {\n  position: fixed"), false);
 });
+
+test("none mode ships aligned responsive day and night artwork with decorative celestial layers", () => {
+  const shell = readFileSync(new URL("../src/games/core/hero-game-shell.tsx", import.meta.url), "utf8");
+  const globalStyles = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
+
+  for (const asset of [
+    "hero_none_apocalypse_pixel_background.png",
+    "hero_none_apocalypse_pixel_background_mobile.png",
+    "hero_none_apocalypse_pixel_background_dark.png",
+    "hero_none_apocalypse_pixel_background_mobile_dark.png",
+    "hero_none_pixel_sun.png",
+    "hero_none_pixel_moon.png",
+  ]) {
+    assert.ok(shell.includes(asset), `${asset} is not rendered by none mode`);
+  }
+
+  assert.ok(shell.includes('className="hero-none-backgrounds" aria-hidden="true"'));
+  assert.ok(shell.includes('className="hero-none-celestial-layer" aria-hidden="true"'));
+  assert.ok(globalStyles.includes(':root[data-theme="dark"] .hero-none-bg-layer-dark { opacity: 1; }'));
+  assert.ok(globalStyles.includes(':root:not([data-theme="light"]) .hero-none-bg-layer-dark { opacity: 1; }'));
+  assert.ok(globalStyles.includes("@media (prefers-reduced-motion: reduce)"));
+});

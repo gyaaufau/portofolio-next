@@ -1,63 +1,48 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Hero } from "@/components/hero";
-import { SectionShell } from "@/components/section-shell";
-import { AppCard } from "@/components/app-card";
-import { WorkExperience } from "@/components/work-experience";
-import { About } from "@/components/about";
-import { Certificates } from "@/components/certificates";
-import { Contact } from "@/components/contact";
-import { PixelOrnament } from "@/components/pixel-ornament";
-import { SectionLeadingIcon } from "@/components/section-leading-icon";
-import { getPortfolio } from "@/data/db";
+import { Suspense } from "react";
+import { HeroSection } from "@/components/sections/hero-section";
+import { AppsSection } from "@/components/sections/apps-section";
+import { WorkSection } from "@/components/sections/work-section";
+import { AboutSection } from "@/components/sections/about-section";
+import { CertsSection } from "@/components/sections/certs-section";
+import { ContactSection } from "@/components/sections/contact-section";
+import {
+  HeroSkeleton,
+  AppsSectionSkeleton,
+  WorkSectionSkeleton,
+  AboutSectionSkeleton,
+  CertsSectionSkeleton,
+  ContactSectionSkeleton,
+} from "@/components/skeletons/home-sections";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
-  const portfolio = await getPortfolio();
-
+export default function Home() {
   return (
     <main id="main-content" className="w-full pb-20">
-      <Hero name={portfolio.name} role={portfolio.role} intro={portfolio.intro} location={portfolio.location} openToOpportunities={portfolio.openToOpportunities} />
+      <Suspense fallback={<HeroSkeleton />}>
+        <HeroSection />
+      </Suspense>
 
       <div className="mx-auto w-full max-w-[1280px] px-5 md:px-6">
-      <SectionShell
-        id="apps"
-        title="Apps worth opening."
-        description="Production work and personal products, presented with the decisions and craft behind them."
-        headingAdornment={<SectionLeadingIcon name="app-catalog" />}
-      >
-        <div className="border-t border-border">{portfolio.projects.map((app) => <AppCard key={app.id} app={app} />)}</div>
-        <Link href="/apps" className="pixel-button mt-7 bg-card text-foreground">Browse all apps <ArrowRight className="size-4" /></Link>
-      </SectionShell>
+        <Suspense fallback={<AppsSectionSkeleton />}>
+          <AppsSection />
+        </Suspense>
 
-      <SectionShell id="work-experience" title="The quest log." description="Teams, roles, and the practical work completed along the way." headingAdornment={<SectionLeadingIcon name="work-experience" />}>
-        <WorkExperience experiences={portfolio.workExperiences} />
-      </SectionShell>
+        <Suspense fallback={<WorkSectionSkeleton />}>
+          <WorkSection />
+        </Suspense>
 
-      <SectionShell
-        id="about"
-        title="Tools in the inventory."
-        description="A focused Flutter toolkit, backed by product thinking and reliable delivery."
-        headingAdornment={<SectionLeadingIcon name="about" />}
-        asideAdornment={<PixelOrnament name="abandoned-workstation-window" className="w-48" />}
-      >
-        <About paragraphs={portfolio.about} skills={portfolio.skills} tech={portfolio.tech} softSkills={portfolio.softSkills} photo={portfolio.photo} />
-      </SectionShell>
+        <Suspense fallback={<AboutSectionSkeleton />}>
+          <AboutSection />
+        </Suspense>
 
-      <SectionShell id="certificates" title="Achievements unlocked." description="Training and conference milestones that sharpened the work." headingAdornment={<SectionLeadingIcon name="certificates" />}>
-        <Certificates certificates={portfolio.certificates} />
-        <Link href="/certificates" className="pixel-button mt-7 bg-card text-foreground">View all certificates <ArrowRight className="size-4" /></Link>
-      </SectionShell>
+        <Suspense fallback={<CertsSectionSkeleton />}>
+          <CertsSection />
+        </Suspense>
 
-      <SectionShell id="contact" title="Ready for the next build?" headingAdornment={<SectionLeadingIcon name="contact" />}>
-        <div className="relative">
-          <div className="relative z-[1]">
-            <Contact email={portfolio.contact.email} whatsapp={portfolio.contact.whatsapp} github={portfolio.contact.github} linkedin={portfolio.contact.linkedin} playConsole={portfolio.contact.playStore} cv={portfolio.contact.cv} />
-          </div>
-          <PixelOrnament name="mossy-masonry-vine" className="relative z-0 ml-auto -mt-8 w-32 md:-mt-20 md:w-64" />
-        </div>
-      </SectionShell>
+        <Suspense fallback={<ContactSectionSkeleton />}>
+          <ContactSection />
+        </Suspense>
       </div>
     </main>
   );

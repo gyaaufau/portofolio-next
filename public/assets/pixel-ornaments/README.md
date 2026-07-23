@@ -22,7 +22,7 @@ Select the `light.png` asset for the light theme and `dark.png` for the dark the
 
 Use one of the discrete sizes recorded in `manifest.json`. The files use a 2× nearest-neighbor grid, so the documented half-size and native-size options preserve whole pixel blocks. Do not apply blur, smoothing, drop shadows, arbitrary recoloring, non-uniform scaling, or fractional transforms.
 
-The work-experience rail is assembled from `cap`, `repeat`, and `base`. Display them at 48×64, 48×128, and 64×48 respectively. Pin the cap and base to the timeline bounds and vertically repeat the middle part; taller content then produces more pole-and-vine growth without JavaScript measurement.
+The work-experience rail is assembled from `cap`, `repeat`, and `base`. The homepage displays the cap and repeat at their native 96-pixel width and the heroic base at its native 160×112 size. Center every module on the same rail axis, pin the cap and base to the timeline bounds, and vertically repeat the middle part; taller content then produces more pole-and-vine growth without JavaScript measurement.
 
 The review sheets composite the pack on the project surfaces:
 
@@ -117,7 +117,7 @@ Constraints: isolated module, generous padding, no flag, fabric, banner, charact
 
 ```text
 Module: TOP CAP.
-Composition: tall narrow portrait module, pole precisely centered on the horizontal axis and exiting through the exact bottom center so it can connect to another module. Show the empty capped top of the pole, one tiny pulley or tie-loop detail without rope or flag, and a young healthy vine tip curling around the upper pole with only a few leaves. Give the outer ornament a 52-pixel final silhouette, centered exactly within the canvas, while leaving the connector thickness unchanged. Keep the bottom connection simple and perfectly vertical.
+Composition: tall narrow portrait module, pole precisely centered on the horizontal axis and exiting through the exact bottom center so it can connect to another module. Match the approved repeat's vine winding, leaf scale, density, weathering, and 46–48-pixel silhouette so the cap reads as its natural upper continuation. Show the empty capped top of the pole and a restrained finishing vine curl without rope or flag. Keep the bottom connection simple and perfectly vertical.
 ```
 
 ### Seamless middle repeat
@@ -131,7 +131,7 @@ Composition: very tall narrow portrait module. The metal pole must be precisely 
 
 ```text
 Module: ROOTED BASE.
-Composition: tall narrow portrait module, with the pole entering through the exact top center and ending in a compact reclaimed masonry-and-soil base near the bottom. Add visible roots, two restrained healthy grass tufts, fresh moss patches, and a few loose stones. Target a centered 128-pixel final footprint while keeping the top connector unchanged, transparent-looking chroma space around it, and no cast shadow.
+Composition: wide 160×112 module, with the pole entering through the exact top center and ending in a heroic ancient stone plinth. Build a broad stepped boulder silhouette with a strong central peak, layered weathered masonry, visible roots, two restrained healthy grass tufts, fresh moss patches, and a few loose stones. Target a centered 160-pixel final footprint, keep the top connector identical to the repeat's bottom connector, rest the plinth on the final canvas row, and use no cast shadow.
 ```
 
 ## Production notes

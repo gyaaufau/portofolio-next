@@ -9,8 +9,8 @@ export function Contact({ email, whatsapp, github, linkedin, playConsole, cv }: 
     { label: "Play Store", href: playConsole, icon: Store },
   ];
   return (
-    <div className="pixel-frame grid overflow-hidden bg-card lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="pixel-grid p-6 md:p-10">
+    <div className="grid overflow-hidden rounded-xl border border-border bg-card lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="p-6 md:p-10">
         <p className="text-pixel text-[9px] text-primary">NEW QUEST?</p>
         <h3 className="mt-5 max-w-[12ch] text-3xl font-semibold leading-tight tracking-[-0.04em] md:text-5xl">Let&apos;s build something useful.</h3>
         <p className="mt-4 max-w-[50ch] leading-7 text-muted-foreground">For Flutter products, architecture work, or a thoughtful collaboration, email is the best place to start.</p>
