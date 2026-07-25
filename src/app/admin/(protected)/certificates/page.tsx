@@ -16,7 +16,7 @@ export default async function AdminCertificatesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-1">manage</p>
           <h1 className="text-2xl font-bold tracking-tight">Certificates</h1>
