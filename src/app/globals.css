@@ -553,23 +553,29 @@ body.hero-game-open .site-navbar { opacity: 0; translate: 0 -1rem; visibility: h
   pointer-events: none;
 }
 
-.work-experience-vine-cap {
+/* Rail modules render at their native pixel size so the cap, repeat, and base
+   share one pole width and join seamlessly on the centered rail axis. */
+.work-experience-vine-cap,
+.work-experience-vine-repeat,
+.work-experience-vine-base {
   display: block;
-  width: 8rem;
-  height: 10.67rem;
-  background: url("/assets/pixel-ornaments/rails/work-experience-vine/cap/light.png") top center / 8rem auto no-repeat;
+  image-rendering: pixelated;
+}
+
+.work-experience-vine-cap {
+  width: 6rem;
+  height: 5.5rem;
+  background: url("/assets/pixel-ornaments/rails/work-experience-vine/cap/light.png") top center / 6rem auto no-repeat;
   flex-shrink: 0;
 }
 
 .work-experience-vine-repeat {
-  display: block;
   width: 6rem;
   flex: 1;
   background: url("/assets/pixel-ornaments/rails/work-experience-vine/repeat/light.png") top center / 6rem auto repeat-y;
 }
 
 .work-experience-vine-base {
-  display: block;
   width: 10rem;
   height: 7rem;
   background: url("/assets/pixel-ornaments/rails/work-experience-vine/base/light.png") top center / contain no-repeat;

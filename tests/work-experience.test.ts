@@ -70,3 +70,33 @@ test("work-experience presentation uses shared theme tokens without hardcoded co
   assert.match(css, /\.node::after/);
   assert.match(css, /\.card::before[\s\S]*?width: 1\.1rem;[\s\S]*?height: 1\.1rem;/);
 });
+
+test("work-experience vine rail renders every module at its native scale", async () => {
+  const css = await readFile(path.resolve("src/app/globals.css"), "utf8");
+
+  // Shared selector groups (e.g. image-rendering) also list these classes, so
+  // pick the block that actually paints the module's background image.
+  const railBlock = (part: string) => {
+    const blocks = [...css.matchAll(new RegExp(`\\.work-experience-vine-${part}\\s*\\{([^}]*)\\}`, "g"))].map((match) => match[1]);
+    const block = blocks.find((candidate) => candidate.includes("background:"));
+    assert.ok(block, `vine ${part} styles are missing from globals.css`);
+    return block;
+  };
+
+  const cap = railBlock("cap");
+  const repeat = railBlock("repeat");
+  const base = railBlock("base");
+
+  // Native 96x88 thin vine-tip cap: shares the repeat's 10px pole only at 1x scale.
+  assert.match(cap, /width: 6rem;/);
+  assert.match(cap, /height: 5.5rem;/);
+  assert.match(cap, /\/ 6rem auto no-repeat/);
+
+  // Native 96px-wide seamless tile.
+  assert.match(repeat, /width: 6rem;/);
+  assert.match(repeat, /\/ 6rem auto repeat-y/);
+
+  // Native 160x112 heroic base.
+  assert.match(base, /width: 10rem;/);
+  assert.match(base, /height: 7rem;/);
+});

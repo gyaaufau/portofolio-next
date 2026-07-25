@@ -131,7 +131,8 @@ test("the work-experience rail keeps its approved visual hierarchy", async () =>
   const baseWidth = await alphaBoundsWidth(path.join(root, "rails/work-experience-vine/base/light.png"));
 
   assert.ok(repeatWidth >= 46 && repeatWidth <= 50, `repeat silhouette is ${repeatWidth}px wide, expected 46–50px`);
-  assert.ok(capWidth >= 46 && capWidth <= 50, `cap silhouette is ${capWidth}px wide, expected 46–50px`);
+  assert.ok(capWidth >= 32 && capWidth <= 40, `cap silhouette is ${capWidth}px wide, expected 32–40px`);
+  assert.ok(capWidth < repeatWidth, `thin vine-tip cap (${capWidth}px) must stay narrower than the repeat (${repeatWidth}px)`);
   assert.equal(baseWidth, 160, `base silhouette is ${baseWidth}px wide, expected 160px`);
 });
 

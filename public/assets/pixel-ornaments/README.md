@@ -136,6 +136,10 @@ Composition: wide 160×112 module, with the pole entering through the exact top 
 
 ## Production notes
 
+### Thin vine-tip cap
+
+The shipped cap is a thin 96×88 vine tip derived pixel-for-pixel from the approved cap artwork: the generated lantern housing (rows 26–65 of the original 96×128 module) was removed, joining the sprout tip directly to the lower vine-wrapped pole. The bottom connector row stays byte-identical to the repeat's top row, the 2× pixel grid, exact horizontal centering, and light/dark geometry parity are preserved, and the cap silhouette (36px) now reads thinner than the repeat (48px) — matching the documented "empty capped top of the pole" intent. Both theme files were rebuilt with the same row mapping. The `previews/work-experience-*.png` review sheets predate this change and still show the lantern cap.
+
 ### Section-leading icons and footer environment
 
 The homepage uses five neutral, single-variant leading icons from `section-icons/`:
