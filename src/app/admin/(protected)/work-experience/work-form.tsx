@@ -4,6 +4,10 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 type WorkFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -40,9 +44,9 @@ export function WorkForm({ action, initialData, submitLabel }: WorkFormProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/work-experience" className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+        <Button variant="ghost" size="icon" render={<Link href="/admin/work-experience" />}>
           <ChevronLeft className="size-5" />
-        </Link>
+        </Button>
         <div>
           <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-1">{submitLabel}</p>
           <h1 className="text-2xl font-bold tracking-tight">Work Experience</h1>
@@ -52,52 +56,57 @@ export function WorkForm({ action, initialData, submitLabel }: WorkFormProps) {
       <form action={formAction} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Company</label>
-            <input name="company" defaultValue={initialData?.company} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Company</Label>
+            <Input name="company" defaultValue={initialData?.company} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Location</label>
-            <input name="location" defaultValue={initialData?.location} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Location</Label>
+            <Input name="location" defaultValue={initialData?.location} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Role</label>
-            <input name="role" defaultValue={initialData?.role} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Role</Label>
+            <Input name="role" defaultValue={initialData?.role} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Period</label>
-            <input name="period" defaultValue={initialData?.period} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Sort Order</Label>
+            <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label>Start</Label>
+            <Input name="start" defaultValue={initialData?.start} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Start</label>
-            <input name="start" defaultValue={initialData?.start} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>End</Label>
+            <Input name="end" defaultValue={initialData?.end} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">End</label>
-            <input name="end" defaultValue={initialData?.end} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Sort Order</label>
-            <input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Period</Label>
+            <Input name="period" defaultValue={initialData?.period} />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Summary</label>
-          <textarea name="summary" defaultValue={initialData?.summary} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Label>Summary</Label>
+          <Textarea name="summary" defaultValue={initialData?.summary} rows={3} />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Highlights (one per line)</label>
-          <textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={4} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Label>Highlights (one per line)</Label>
+          <Textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={4} />
         </div>
 
-        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && (
+          <p className="text-sm text-destructive">{state.error}</p>
+        )}
 
         <div className="flex justify-end gap-3">
-          <Link href="/admin/work-experience" className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors">Cancel</Link>
-          <button type="submit" disabled={pending} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
+          <Button variant="outline" render={<Link href="/admin/work-experience" />}>Cancel</Button>
+          <Button type="submit" disabled={pending}>
             {pending ? "Saving..." : submitLabel}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

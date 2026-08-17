@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { updateSkillCategory } from "@/app/admin/actions";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -17,22 +20,28 @@ export default async function AdminSkillsPage() {
       </div>
 
       {(categories ?? []).map((cat) => (
-        <div key={cat.id} className="p-5 rounded-xl bg-card border border-border space-y-4">
-          <h2 className="text-lg font-semibold capitalize">{cat.name === "softSkills" ? "Soft Skills" : cat.name}</h2>
-          <form action={async (formData) => { "use server"; await updateSkillCategory(cat.id, formData); }} className="space-y-4">
-            <textarea
-              name="items"
-              defaultValue={cat.items.join("\n")}
-              rows={6}
-              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y"
-            />
-            <div className="flex justify-end">
-              <button type="submit" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-                Save {cat.name === "softSkills" ? "Soft Skills" : cat.name}
-              </button>
-            </div>
-          </form>
-        </div>
+        <Card key={cat.id}>
+          <CardHeader>
+            <CardTitle className="capitalize">
+              {cat.name === "softSkills" ? "Soft Skills" : cat.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={async (formData) => { "use server"; await updateSkillCategory(cat.id, formData); }} className="space-y-4">
+              <Textarea
+                name="items"
+                defaultValue={cat.items.join("\n")}
+                rows={6}
+                className="font-mono"
+              />
+              <div className="flex justify-end">
+                <Button type="submit">
+                  Save {cat.name === "softSkills" ? "Soft Skills" : cat.name}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

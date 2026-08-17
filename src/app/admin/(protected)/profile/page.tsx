@@ -2,6 +2,11 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { updateProfile } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/image-upload";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -19,34 +24,35 @@ export default async function AdminProfilePage() {
       <form action={async (formData) => { "use server"; await updateProfile(formData); }} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Name</label>
-            <input name="name" defaultValue={profile?.name} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Name</Label>
+            <Input name="name" defaultValue={profile?.name} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Role</label>
-            <input name="role" defaultValue={profile?.role} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Role</Label>
+            <Input name="role" defaultValue={profile?.role} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Location</label>
-            <input name="location" defaultValue={profile?.location} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Location</Label>
+            <Input name="location" defaultValue={profile?.location} />
           </div>
           <div className="flex items-center gap-3 pt-6">
-            <input type="checkbox" name="openToOpportunities" id="open" defaultChecked={profile?.open_to_opportunities} className="size-4 rounded border-border accent-primary" />
-            <label htmlFor="open" className="text-sm font-medium text-foreground">Open to opportunities</label>
+            <Checkbox name="openToOpportunities" id="open" defaultChecked={profile?.open_to_opportunities} />
+            <Label htmlFor="open">Open to opportunities</Label>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Intro</label>
-          <textarea name="intro" defaultValue={profile?.intro} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Label>Intro</Label>
+          <Textarea name="intro" defaultValue={profile?.intro} rows={3} />
         </div>
 
         <div className="divider-pixel" />
+
         <h2 className="text-lg font-semibold">Photo</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Photo</label>
+            <Label>Photo</Label>
             <ImageUpload
               bucket="portfolio"
               path="data/myself"
@@ -56,23 +62,21 @@ export default async function AdminProfilePage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Photo Alt</label>
-            <input name="photoAlt" defaultValue={profile?.photo_alt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Photo Alt</Label>
+            <Input name="photoAlt" defaultValue={profile?.photo_alt} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Width</label>
-            <input name="photoWidth" type="number" defaultValue={profile?.photo_width ?? 400} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Width</Label>
+            <Input name="photoWidth" type="number" defaultValue={profile?.photo_width ?? 400} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Height</label>
-            <input name="photoHeight" type="number" defaultValue={profile?.photo_height ?? 500} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Height</Label>
+            <Input name="photoHeight" type="number" defaultValue={profile?.photo_height ?? 500} />
           </div>
         </div>
 
         <div className="flex justify-end">
-          <button type="submit" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            Save Profile
-          </button>
+          <Button type="submit">Save Profile</Button>
         </div>
       </form>
     </div>

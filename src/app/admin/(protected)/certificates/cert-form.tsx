@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 type CertFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -45,9 +50,9 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/certificates" className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+        <Button variant="ghost" size="icon" render={<Link href="/admin/certificates" />}>
           <ChevronLeft className="size-5" />
-        </Link>
+        </Button>
         <div>
           <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-1">{submitLabel}</p>
           <h1 className="text-2xl font-bold tracking-tight">Certificate</h1>
@@ -57,54 +62,55 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
       <form action={formAction} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Title</label>
-            <input name="title" defaultValue={initialData?.title} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Title</Label>
+            <Input name="title" defaultValue={initialData?.title} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Issuer</label>
-            <input name="issuer" defaultValue={initialData?.issuer} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Issuer</Label>
+            <Input name="issuer" defaultValue={initialData?.issuer} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Issued Date</label>
-            <input name="issued" defaultValue={initialData?.issued} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Issued Date</Label>
+            <Input name="issued" defaultValue={initialData?.issued} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Type</label>
-            <input name="type" defaultValue={initialData?.type || "Certificate"} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Type</Label>
+            <Input name="type" defaultValue={initialData?.type || "Certificate"} />
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Summary</Label>
+          <Textarea name="summary" defaultValue={initialData?.summary} rows={3} />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Details (one per line)</Label>
+          <Textarea name="details" defaultValue={initialData?.details?.join("\n")} rows={4} />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Relevance</Label>
+          <Textarea name="relevance" defaultValue={initialData?.relevance} rows={3} />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Issuer Notes (one per line)</Label>
+          <Textarea name="issuerNotes" defaultValue={initialData?.issuerNotes?.join("\n")} rows={2} />
         </div>
 
         <div className="flex items-center gap-3">
-          <input type="checkbox" name="featured" id="featured" defaultChecked={initialData?.featured} className="size-4 rounded border-border accent-primary" />
-          <label htmlFor="featured" className="text-sm font-medium text-foreground">Featured</label>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Summary</label>
-          <textarea name="summary" defaultValue={initialData?.summary} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Details (one per line)</label>
-          <textarea name="details" defaultValue={initialData?.details?.join("\n")} rows={4} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Relevance</label>
-          <textarea name="relevance" defaultValue={initialData?.relevance} rows={3} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Issuer Notes (one per line)</label>
-          <textarea name="issuerNotes" defaultValue={initialData?.issuerNotes?.join("\n")} rows={2} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Checkbox name="featured" id="featured" defaultChecked={initialData?.featured} />
+          <Label htmlFor="featured">Featured</Label>
         </div>
 
         <div className="divider-pixel" />
+
         <h2 className="text-lg font-semibold">Image</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Image</label>
+            <Label>Image</Label>
             <ImageUpload
               bucket="portfolio"
               path="data/certifications"
@@ -113,26 +119,28 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Image Alt</label>
-            <input name="imageAlt" defaultValue={initialData?.imageAlt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Image Alt</Label>
+            <Input name="imageAlt" defaultValue={initialData?.imageAlt} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Width</label>
-            <input name="imageWidth" type="number" defaultValue={initialData?.imageWidth} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Width</Label>
+            <Input name="imageWidth" type="number" defaultValue={initialData?.imageWidth} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Height</label>
-            <input name="imageHeight" type="number" defaultValue={initialData?.imageHeight} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Height</Label>
+            <Input name="imageHeight" type="number" defaultValue={initialData?.imageHeight} />
           </div>
         </div>
 
-        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
+        {state?.error && (
+          <p className="text-sm text-destructive">{state.error}</p>
+        )}
 
         <div className="flex justify-end gap-3">
-          <Link href="/admin/certificates" className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors">Cancel</Link>
-          <button type="submit" disabled={pending} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
+          <Button variant="outline" render={<Link href="/admin/certificates" />}>Cancel</Button>
+          <Button type="submit" disabled={pending}>
             {pending ? "Saving..." : submitLabel}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

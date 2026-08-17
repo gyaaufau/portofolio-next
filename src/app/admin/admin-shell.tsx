@@ -13,8 +13,22 @@ import {
   Palette,
   User,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { logout } from "@/app/admin/actions";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -37,86 +51,83 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     router.refresh();
   };
 
-  const isActive = (href: string) => pathname === href || (href !== "/admin" && pathname.startsWith(href));
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/admin" && pathname.startsWith(href));
 
   return (
-    <div className="min-h-[100dvh] flex bg-background">
-      {/* Mobile top header */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-40 flex h-14 items-center justify-between border-b border-border bg-card px-4">
-        <div className="flex items-baseline gap-2">
-          <Link href="/admin" className="text-pixel text-[10px] text-primary font-semibold tracking-wider uppercase">
-            Gialoop
-          </Link>
-          <span className="text-xs text-muted-foreground">Admin panel</span>
-        </div>
-        <button
-          onClick={handleLogout}
-          aria-label="Logout"
-          className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-        >
-          <LogOut className="size-4" />
-        </button>
-      </header>
-
-      {/* Mobile bottom tab bar */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-card border-t border-border pb-[env(safe-area-inset-bottom)]" aria-label="Admin">
-        <div className="grid grid-cols-8">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-label={item.label}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "flex items-center justify-center py-2.5 transition-colors",
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <Icon className="size-5" />
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 shrink-0 bg-card border-r border-border p-4 flex-col">
-        <div className="mb-6 px-2">
-          <Link href="/admin" className="text-pixel text-[10px] text-primary font-semibold tracking-wider uppercase">
-            Gialoop
-          </Link>
-          <p className="text-xs text-muted-foreground mt-1">Admin panel</p>
-        </div>
-        <nav className="flex-1 space-y-1" aria-label="Admin">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                  active ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                )}
-              >
-                <Icon className="size-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors mt-auto">
-          <LogOut className="size-4" /> Logout
-        </button>
-      </aside>
-
-      <main className="flex-1 overflow-auto pt-14 pb-20 md:pt-0 md:pb-0">
-        <div className="max-w-4xl mx-auto p-4 md:p-8">{children}</div>
-      </main>
-    </div>
+    <SidebarProvider defaultOpen>
+      <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
+        <SidebarHeader>
+          <div className="px-2 py-2">
+            <Link
+              href="/admin"
+              className="text-pixel text-[10px] text-primary font-semibold tracking-wider uppercase"
+            >
+              Gialoop
+            </Link>
+            <p className="text-xs text-muted-foreground mt-1">Admin panel</p>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarMenu>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.href);
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton render={<Link href={item.href} />} isActive={active}>
+                      <Icon className="size-4" />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton render={<button onClick={handleLogout} className="w-full" />}>
+                <LogOut className="size-4" />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <div className="flex items-baseline gap-2">
+            <Link
+              href="/admin"
+              className="text-pixel text-[10px] text-primary font-semibold tracking-wider uppercase"
+            >
+              Gialoop
+            </Link>
+            <span className="text-xs text-muted-foreground hidden sm:inline">
+              Admin panel
+            </span>
+          </div>
+          <div className="ml-auto">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="text-muted-foreground"
+            >
+              <LogOut className="size-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+          </div>
+        </header>
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-4xl mx-auto p-4 md:p-8">{children}</div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

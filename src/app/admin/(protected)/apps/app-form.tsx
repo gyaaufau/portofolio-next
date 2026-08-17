@@ -7,6 +7,18 @@ import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
 import { ScreenshotUpload } from "@/components/screenshot-upload";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type AppFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -72,12 +84,9 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link
-          href="/admin/apps"
-          className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-        >
+        <Button variant="ghost" size="icon" render={<Link href="/admin/apps" />}>
           <ChevronLeft className="size-5" />
-        </Link>
+        </Button>
         <div>
           <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-1">{submitLabel}</p>
           <h1 className="text-2xl font-bold tracking-tight">App</h1>
@@ -87,57 +96,68 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
       <form action={formAction} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Title</label>
-            <input name="title" defaultValue={initialData?.title} onChange={(e) => setTitle(e.target.value)} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Title</Label>
+            <Input name="title" defaultValue={initialData?.title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Tagline</label>
-            <input name="tagline" defaultValue={initialData?.tagline} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Tagline</Label>
+            <Input name="tagline" defaultValue={initialData?.tagline} />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Description</label>
-          <textarea name="description" defaultValue={initialData?.description} rows={4} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Label>Description</Label>
+          <Textarea name="description" defaultValue={initialData?.description} rows={4} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">App Type</label>
-            <select name="appType" value={appType} onChange={(e) => setAppType(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
-              <option value="mobile">Mobile</option>
-              <option value="desktop">Desktop</option>
-              <option value="web">Web</option>
-              <option value="backend">Backend</option>
-            </select>
+            <Label>App Type</Label>
+            <Select name="appType" value={appType} onValueChange={(v) => setAppType(v ?? "mobile")}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mobile">Mobile</SelectItem>
+                <SelectItem value="desktop">Desktop</SelectItem>
+                <SelectItem value="web">Web</SelectItem>
+                <SelectItem value="backend">Backend</SelectItem>
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="appType" value={appType} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Work Type</label>
-            <select name="workType" defaultValue={initialData?.workType || "personal"} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
-              <option value="personal">Personal</option>
-              <option value="work">Work</option>
-            </select>
+            <Label>Work Type</Label>
+            <Select name="workType" defaultValue={initialData?.workType || "personal"}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="personal">Personal</SelectItem>
+                <SelectItem value="work">Work</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Sort Order</label>
-            <input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Sort Order</Label>
+            <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Period</label>
-            <input name="period" defaultValue={initialData?.period} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Period</Label>
+            <Input name="period" defaultValue={initialData?.period} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Period Short</label>
-            <input name="periodShort" defaultValue={initialData?.periodShort} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Period Short</Label>
+            <Input name="periodShort" defaultValue={initialData?.periodShort} />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <input type="checkbox" name="featured" id="featured" defaultChecked={initialData?.featured} className="size-4 rounded border-border accent-primary" />
-          <label htmlFor="featured" className="text-sm font-medium text-foreground">Featured</label>
+          <Checkbox name="featured" id="featured" defaultChecked={initialData?.featured} />
+          <Label htmlFor="featured">Featured</Label>
         </div>
 
         <div className="divider-pixel" />
@@ -146,7 +166,7 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">App Icon</label>
+            <Label>App Icon</Label>
             <ImageUpload
               bucket="apps"
               path={`${slug}/logo`}
@@ -155,11 +175,11 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">App Icon Alt</label>
-            <input name="appIconAlt" defaultValue={initialData?.appIconAlt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>App Icon Alt</Label>
+            <Input name="appIconAlt" defaultValue={initialData?.appIconAlt} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Thumbnail</label>
+            <Label>Thumbnail</Label>
             <ImageUpload
               bucket="apps"
               path={slug}
@@ -168,8 +188,8 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Thumbnail Alt</label>
-            <input name="thumbnailAlt" defaultValue={initialData?.thumbnailAlt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Thumbnail Alt</Label>
+            <Input name="thumbnailAlt" defaultValue={initialData?.thumbnailAlt} />
           </div>
         </div>
 
@@ -192,28 +212,28 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">App Store URL</label>
-            <input name="appStoreUrl" defaultValue={initialData?.appStoreUrl} placeholder="https://apps.apple.com/..." className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>App Store URL</Label>
+            <Input name="appStoreUrl" defaultValue={initialData?.appStoreUrl} placeholder="https://apps.apple.com/..." />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Play Store URL</label>
-            <input name="playStoreUrl" defaultValue={initialData?.playStoreUrl} placeholder="https://play.google.com/store/..." className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Play Store URL</Label>
+            <Input name="playStoreUrl" defaultValue={initialData?.playStoreUrl} placeholder="https://play.google.com/store/..." />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Website URL</label>
-            <input name="websiteUrl" defaultValue={initialData?.websiteUrl} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Website URL</Label>
+            <Input name="websiteUrl" defaultValue={initialData?.websiteUrl} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">GitHub URL</label>
-            <input name="githubUrl" defaultValue={initialData?.githubUrl} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>GitHub URL</Label>
+            <Input name="githubUrl" defaultValue={initialData?.githubUrl} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Other URL</label>
-            <input name="otherUrl" defaultValue={initialData?.otherUrl} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Other URL</Label>
+            <Input name="otherUrl" defaultValue={initialData?.otherUrl} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Other URL Label</label>
-            <input name="otherUrlLabel" defaultValue={initialData?.otherUrlLabel} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Other URL Label</Label>
+            <Input name="otherUrlLabel" defaultValue={initialData?.otherUrlLabel} />
           </div>
         </div>
 
@@ -222,19 +242,19 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
         <h2 className="text-lg font-semibold">Content</h2>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Tech Stack (comma separated)</label>
-          <input name="stack" defaultValue={initialData?.stack?.join(", ")} placeholder="Flutter, Dart, BLoC" className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+          <Label>Tech Stack (comma separated)</Label>
+          <Input name="stack" defaultValue={initialData?.stack?.join(", ")} placeholder="Flutter, Dart, BLoC" />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Highlights (one per line)</label>
-          <textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={5} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Label>Highlights (one per line)</Label>
+          <Textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={5} />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Sections (JSON)</label>
+          <Label>Sections (JSON)</Label>
           <p className="text-xs text-muted-foreground">Nested sections with paragraphs, bullets, code blocks. Leave empty for none.</p>
-          <textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
+          <Textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="font-mono" />
         </div>
 
         {appType === "mobile" && (
@@ -246,21 +266,17 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
+                <Checkbox
                   name="hasPrivacyPolicy"
                   id="hasPrivacyPolicy"
                   checked={hasPrivacyPolicy}
-                  onChange={(e) => setHasPrivacyPolicy(e.target.checked)}
-                  className="size-4 rounded border-border accent-primary"
+                  onCheckedChange={(checked) => setHasPrivacyPolicy(checked === true)}
                 />
-                <label htmlFor="hasPrivacyPolicy" className="text-sm font-medium text-foreground">
-                  Enable Privacy Policy Page
-                </label>
+                <Label htmlFor="hasPrivacyPolicy">Enable Privacy Policy Page</Label>
               </div>
               {hasPrivacyPolicy && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Privacy Policy Content</label>
+                  <Label>Privacy Policy Content</Label>
                   <RichTextEditor
                     name="privacyPolicyContent"
                     defaultValue={initialData?.privacyPolicyContent ?? ""}
@@ -271,39 +287,31 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
+                <Checkbox
                   name="hasAccountDeletion"
                   id="hasAccountDeletion"
                   checked={hasAccountDeletion}
-                  onChange={(e) => setHasAccountDeletion(e.target.checked)}
-                  className="size-4 rounded border-border accent-primary"
+                  onCheckedChange={(checked) => setHasAccountDeletion(checked === true)}
                 />
-                <label htmlFor="hasAccountDeletion" className="text-sm font-medium text-foreground">
-                  Enable Account Deletion Page
-                </label>
+                <Label htmlFor="hasAccountDeletion">Enable Account Deletion Page</Label>
               </div>
               {hasAccountDeletion && (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Account Deletion Content</label>
+                    <Label>Account Deletion Content</Label>
                     <RichTextEditor
                       name="accountDeletionContent"
                       defaultValue={initialData?.accountDeletionContent ?? ""}
                     />
                   </div>
                   <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       name="accountDeletionRequiresAuth"
                       id="accountDeletionRequiresAuth"
                       checked={accountDeletionRequiresAuth}
-                      onChange={(e) => setAccountDeletionRequiresAuth(e.target.checked)}
-                      className="size-4 rounded border-border accent-primary"
+                      onCheckedChange={(checked) => setAccountDeletionRequiresAuth(checked === true)}
                     />
-                    <label htmlFor="accountDeletionRequiresAuth" className="text-sm font-medium text-foreground">
-                      Requires Authentication
-                    </label>
+                    <Label htmlFor="accountDeletionRequiresAuth">Requires Authentication</Label>
                   </div>
                 </div>
               )}
@@ -316,19 +324,10 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
         )}
 
         <div className="flex justify-end gap-3">
-          <Link
-            href="/admin/apps"
-            className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-          >
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={pending}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
-          >
+          <Button variant="outline" render={<Link href="/admin/apps" />}>Cancel</Button>
+          <Button type="submit" disabled={pending}>
             {pending ? "Saving..." : submitLabel}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

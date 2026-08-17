@@ -5,6 +5,14 @@ import { updateSiteSettings } from "@/app/admin/actions";
 import { ACCENT_PRESETS, readableForeground } from "@/lib/theme";
 import { HERO_GAMES } from "@/games/registry";
 import { ImageUpload } from "@/components/image-upload";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const gameOptions = Object.entries(HERO_GAMES).map(([key, game]) => ({
   value: key,
@@ -70,17 +78,20 @@ export function AppearanceForm({ initialPreset, initialColor, initialGameId, ini
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Hero Game</h2>
         <p className="text-sm text-muted-foreground">Choose which game appears in the homepage hero section.</p>
-        <select
-          name="heroGameId"
-          value={gameId}
-          onChange={(e) => setGameId(e.target.value)}
-          className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-        >
-          <option value="">None (no game)</option>
-          {gameOptions.map((game) => (
-            <option key={game.value} value={game.value}>{game.label} ({game.presentation})</option>
-          ))}
-        </select>
+        <Select name="heroGameId" value={gameId} onValueChange={(v) => setGameId(v ?? "")}>
+          <SelectTrigger>
+            <SelectValue placeholder="None (no game)" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">None (no game)</SelectItem>
+            {gameOptions.map((game) => (
+              <SelectItem key={game.value} value={game.value}>
+                {game.label} ({game.presentation})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <input type="hidden" name="heroGameId" value={gameId} />
       </div>
 
       <div className="divider-pixel" />
@@ -101,9 +112,9 @@ export function AppearanceForm({ initialPreset, initialColor, initialGameId, ini
           {state?.error && <span className="text-destructive">{state.error}</span>}
           {state?.success && <span className="text-primary">{state.success}</span>}
         </p>
-        <button disabled={pending} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium disabled:opacity-50">
+        <Button type="submit" disabled={pending}>
           {pending ? "Saving..." : "Save appearance"}
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -3,6 +3,9 @@
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "../actions";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,16 +32,13 @@ export default function LoginPage() {
 
         <form action={formAction} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-foreground">
-              Password
-            </label>
-            <input
+            <Label htmlFor="password">Password</Label>
+            <Input
               id="password"
               name="password"
               type="password"
               required
               placeholder="Enter admin password"
-              className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
             />
           </div>
 
@@ -46,13 +46,9 @@ export default function LoginPage() {
             <p className="text-sm text-destructive">{state.error}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="w-full h-10 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 active:scale-[0.98]"
-          >
+          <Button type="submit" disabled={pending} className="w-full">
             {pending ? "Signing in..." : "Sign in"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -2,6 +2,9 @@ import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { updateContact } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/image-upload";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -19,31 +22,31 @@ export default async function AdminContactPage() {
       <form action={async (formData) => { "use server"; await updateContact(formData); }} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Email</label>
-            <input name="email" type="email" defaultValue={contact?.email} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Email</Label>
+            <Input name="email" type="email" defaultValue={contact?.email} required />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">WhatsApp</label>
-            <input name="whatsapp" defaultValue={contact?.whatsapp} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>WhatsApp</Label>
+            <Input name="whatsapp" defaultValue={contact?.whatsapp} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">GitHub</label>
-            <input name="github" defaultValue={contact?.github} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>GitHub</Label>
+            <Input name="github" defaultValue={contact?.github} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">LinkedIn</label>
-            <input name="linkedin" defaultValue={contact?.linkedin} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>LinkedIn</Label>
+            <Input name="linkedin" defaultValue={contact?.linkedin} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Play Store</label>
-            <input name="playStore" defaultValue={contact?.play_store} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Play Store</Label>
+            <Input name="playStore" defaultValue={contact?.play_store} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Play Console</label>
-            <input name="playConsole" defaultValue={contact?.play_console} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <Label>Play Console</Label>
+            <Input name="playConsole" defaultValue={contact?.play_console} />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">CV</label>
+            <Label>CV</Label>
             <ImageUpload
               bucket="portfolio"
               path="data/cv"
@@ -56,9 +59,7 @@ export default async function AdminContactPage() {
         </div>
 
         <div className="flex justify-end">
-          <button type="submit" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
-            Save Contact
-          </button>
+          <Button type="submit">Save Contact</Button>
         </div>
       </form>
     </div>
