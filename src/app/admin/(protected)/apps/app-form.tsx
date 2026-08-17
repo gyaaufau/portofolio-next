@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
+import { ScreenshotUpload } from "@/components/screenshot-upload";
 
 type AppFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -34,9 +35,10 @@ type AppFormProps = {
     slug?: string;
   };
   submitLabel: string;
+  showScreenshots?: boolean;
 };
 
-export function AppForm({ action, initialData, submitLabel }: AppFormProps) {
+export function AppForm({ action, initialData, submitLabel, showScreenshots }: AppFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState(initialData?.title ?? "");
   const slug = useMemo(() => {
@@ -160,6 +162,19 @@ export function AppForm({ action, initialData, submitLabel }: AppFormProps) {
             <input name="thumbnailAlt" defaultValue={initialData?.thumbnailAlt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
         </div>
+
+        {showScreenshots && (
+          <>
+            <div className="divider-pixel" />
+            <h2 className="text-lg font-semibold">Screenshots</h2>
+            <p className="text-sm text-muted-foreground">Optional. Drag to reorder. Images upload directly to storage.</p>
+            <ScreenshotUpload
+              bucket="apps"
+              path={`${slug}/screenshots`}
+              initialScreenshots={[]}
+            />
+          </>
+        )}
 
         <div className="divider-pixel" />
 

@@ -9,6 +9,7 @@ export default function NewAppPage() {
         await createApp(formData);
       }}
       submitLabel="Create"
+      showScreenshots
     />
   );
 }

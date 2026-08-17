@@ -80,6 +80,23 @@ export async function createApp(formData: FormData) {
     sections: parseSections(data.sections),
   });
 
+  // Save screenshots if provided
+  const count = Number(data.screenshotCount || 0);
+  if (count > 0) {
+    const rows: { app_id: string; src: string; alt: string; order: number; width: number; height: number }[] = [];
+    for (let i = 0; i < count; i++) {
+      const src = data[`screenshotSrc_${i}`];
+      const alt = data[`screenshotAlt_${i}`];
+      const order = Number(data[`screenshotOrder_${i}`] || i);
+      if (src) {
+        rows.push({ app_id: slug, src: String(src), alt: String(alt || ""), order, width: 0, height: 0 });
+      }
+    }
+    if (rows.length > 0) {
+      await supabase.from("app_screenshot").insert(rows);
+    }
+  }
+
   revalidatePath("/admin/apps");
   revalidatePath("/apps");
   revalidatePath("/");
