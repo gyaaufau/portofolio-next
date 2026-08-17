@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { updateContact } from "@/app/admin/actions";
+import { ImageUpload } from "@/components/image-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -42,8 +43,15 @@ export default async function AdminContactPage() {
             <input name="playConsole" defaultValue={contact?.play_console} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">CV Path</label>
-            <input name="cv" defaultValue={contact?.cv} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <label className="text-sm font-medium text-foreground">CV</label>
+            <ImageUpload
+              bucket="portfolio"
+              path="data/cv"
+              name="cv"
+              currentSrc={contact?.cv ?? ""}
+              accept="application/pdf"
+              maxSizeMB={20}
+            />
           </div>
         </div>
 

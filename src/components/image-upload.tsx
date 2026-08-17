@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2, File } from "lucide-react";
 
 type ImageUploadProps = {
   bucket: string;
@@ -13,6 +13,19 @@ type ImageUploadProps = {
   maxSizeMB?: number;
 };
 
+function isImageAccept(accept: string): boolean {
+  return accept.includes("image");
+}
+
+function fileNameFromUrl(url: string): string {
+  try {
+    const parts = url.split("/");
+    return parts[parts.length - 1] || url;
+  } catch {
+    return url;
+  }
+}
+
 export function ImageUpload({
   bucket,
   path,
@@ -22,7 +35,11 @@ export function ImageUpload({
   maxSizeMB = 10,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const isImage = isImageAccept(accept);
   const [preview, setPreview] = useState(currentSrc);
+  const [fileName, setFileName] = useState<string | null>(
+    currentSrc && !isImage ? fileNameFromUrl(currentSrc) : null
+  );
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [storagePath, setStoragePath] = useState(currentSrc);
@@ -57,6 +74,7 @@ export function ImageUpload({
 
       setPreview(publicUrl);
       setStoragePath(filePath);
+      if (!isImage) setFileName(file.name);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");
     } finally {
@@ -73,6 +91,7 @@ export function ImageUpload({
   function handleClear() {
     setPreview("");
     setStoragePath("");
+    setFileName(null);
     if (inputRef.current) inputRef.current.value = "";
   }
 
@@ -80,13 +99,20 @@ export function ImageUpload({
     <div className="space-y-2">
       <input type="hidden" name={name} value={storagePath} />
 
-      {preview ? (
+      {storagePath ? (
         <div className="relative group w-fit">
-          <img
-            src={preview}
-            alt="Preview"
-            className="h-24 w-24 rounded-lg border border-border object-cover"
-          />
+          {isImage ? (
+            <img
+              src={preview}
+              alt="Preview"
+              className="h-24 w-24 rounded-lg border border-border object-cover"
+            />
+          ) : (
+            <div className="h-16 w-48 rounded-lg border border-border bg-card flex items-center gap-2 px-3">
+              <File className="size-5 text-muted-foreground shrink-0" />
+              <span className="text-sm text-foreground truncate">{fileName || fileNameFromUrl(storagePath)}</span>
+            </div>
+          )}
           <button
             type="button"
             onClick={handleClear}
