@@ -18,6 +18,7 @@ The goal is selective context loading: read only the documents needed for the cu
 | `data/*.md` | Persistence, schema authority, migration, sync, and data-source rules |
 | `integrations/*.md` | External service boundaries and operational contracts (Prisma, Phaser, Jose, R2) |
 | `decisions/*.md` | Durable architecture decisions and rationale |
+| `plans/*.md` | Approved implementation plans awaiting execution (not current behavior) |
 | `archive/*` | Historical context only |
 
 ---
