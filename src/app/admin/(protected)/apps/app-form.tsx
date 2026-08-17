@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { ImageUpload } from "@/components/image-upload";
 
 type AppFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -30,12 +31,18 @@ type AppFormProps = {
     stack?: string[];
     highlights?: string[];
     sections?: unknown;
+    slug?: string;
   };
   submitLabel: string;
 };
 
 export function AppForm({ action, initialData, submitLabel }: AppFormProps) {
   const router = useRouter();
+  const [title, setTitle] = useState(initialData?.title ?? "");
+  const slug = useMemo(() => {
+    if (initialData?.slug) return initialData.slug;
+    return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") || "temp";
+  }, [title, initialData?.slug]);
   const [state, formAction, pending] = useActionState(
     async (_: { error?: string } | null, formData: FormData) => {
       try {
@@ -69,7 +76,7 @@ export function AppForm({ action, initialData, submitLabel }: AppFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Title</label>
-            <input name="title" defaultValue={initialData?.title} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <input name="title" defaultValue={initialData?.title} onChange={(e) => setTitle(e.target.value)} required className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Tagline</label>
@@ -127,16 +134,26 @@ export function AppForm({ action, initialData, submitLabel }: AppFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">App Icon Path</label>
-            <input name="appIconSrc" defaultValue={initialData?.appIconSrc} placeholder="/data/apps/my-app/icon.png" className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <label className="text-sm font-medium text-foreground">App Icon</label>
+            <ImageUpload
+              bucket="apps"
+              path={`${slug}/logo`}
+              name="appIconSrc"
+              currentSrc={initialData?.appIconSrc ?? ""}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">App Icon Alt</label>
             <input name="appIconAlt" defaultValue={initialData?.appIconAlt} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Thumbnail Path</label>
-            <input name="thumbnailSrc" defaultValue={initialData?.thumbnailSrc} placeholder="/data/apps/my-app/thumb.png" className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <label className="text-sm font-medium text-foreground">Thumbnail</label>
+            <ImageUpload
+              bucket="apps"
+              path={slug}
+              name="thumbnailSrc"
+              currentSrc={initialData?.thumbnailSrc ?? ""}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Thumbnail Alt</label>

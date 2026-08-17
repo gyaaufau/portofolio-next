@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { updateProfile } from "@/app/admin/actions";
+import { ImageUpload } from "@/components/image-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -45,8 +46,14 @@ export default async function AdminProfilePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Photo Path</label>
-            <input name="photoSrc" defaultValue={profile?.photo_src} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <label className="text-sm font-medium text-foreground">Photo</label>
+            <ImageUpload
+              bucket="portfolio"
+              path="data/myself"
+              name="photoSrc"
+              currentSrc={profile?.photo_src ?? ""}
+              accept="image/webp,image/png,image/jpeg"
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Photo Alt</label>

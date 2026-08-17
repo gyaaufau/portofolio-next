@@ -121,6 +121,44 @@ export async function updateApp(id: string, formData: FormData) {
   revalidatePath("/");
 }
 
+export async function updateScreenshots(appId: string, formData: FormData) {
+  await requireAdmin();
+  const supabase = await getSupabase();
+
+  const count = Number(formData.get("screenshotCount") || 0);
+  const screenshots: { src: string; alt: string; order: number; id?: string }[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const src = formData.get(`screenshotSrc_${i}`) as string;
+    const alt = formData.get(`screenshotAlt_${i}`) as string;
+    const order = Number(formData.get(`screenshotOrder_${i}`) || i);
+    const id = formData.get(`screenshotId_${i}`) as string | null;
+    if (src) {
+      screenshots.push({ src, alt: alt || "", order, id: id || undefined });
+    }
+  }
+
+  // Delete existing screenshots for this app
+  await supabase.from("app_screenshot").delete().eq("app_id", appId);
+
+  // Insert updated screenshots
+  if (screenshots.length > 0) {
+    const rows = screenshots.map((s) => ({
+      app_id: appId,
+      src: s.src,
+      alt: s.alt,
+      order: s.order,
+      width: 0,
+      height: 0,
+    }));
+    await supabase.from("app_screenshot").insert(rows);
+  }
+
+  revalidatePath("/admin/apps");
+  revalidatePath(`/apps/${appId}`);
+  revalidatePath("/apps");
+}
+
 export async function deleteApp(id: string) {
   await requireAdmin();
   const supabase = await getSupabase();

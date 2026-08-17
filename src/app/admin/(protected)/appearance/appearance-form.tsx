@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { updateSiteSettings } from "@/app/admin/actions";
 import { ACCENT_PRESETS, readableForeground } from "@/lib/theme";
 import { HERO_GAMES } from "@/games/registry";
+import { ImageUpload } from "@/components/image-upload";
 
 const gameOptions = Object.entries(HERO_GAMES).map(([key, game]) => ({
   value: key,
@@ -15,7 +16,6 @@ export function AppearanceForm({ initialPreset, initialColor, initialGameId, ini
   const [preset, setPreset] = useState(initialPreset);
   const [color, setColor] = useState(initialColor);
   const [gameId, setGameId] = useState(initialGameId);
-  const [logoSrc, setLogoSrc] = useState(initialLogoSrc);
   const [state, action, pending] = useActionState(updateSiteSettings, null);
   const activeColor = preset === "custom"
     ? color
@@ -87,14 +87,12 @@ export function AppearanceForm({ initialPreset, initialColor, initialGameId, ini
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Header Logo</h2>
-        <p className="text-sm text-muted-foreground">Path to logo image in storage (e.g. <code>/data/brand/logo.webp</code>). Leave empty to show text brand.</p>
-        <input
+        <p className="text-sm text-muted-foreground">Upload logo image. Leave empty to show text brand.</p>
+        <ImageUpload
+          bucket="portfolio"
+          path="data/brand"
           name="logoSrc"
-          type="text"
-          value={logoSrc}
-          onChange={(e) => setLogoSrc(e.target.value)}
-          placeholder="/data/brand/logo.webp"
-          className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          currentSrc={initialLogoSrc}
         />
       </div>
 

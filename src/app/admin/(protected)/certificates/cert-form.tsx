@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { ImageUpload } from "@/components/image-upload";
 
 type CertFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -103,8 +104,13 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Image Path</label>
-            <input name="imageSrc" defaultValue={initialData?.imageSrc} placeholder="/data/certifications/my-cert/certificate.jpg" className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
+            <label className="text-sm font-medium text-foreground">Image</label>
+            <ImageUpload
+              bucket="portfolio"
+              path="data/certifications"
+              name="imageSrc"
+              currentSrc={initialData?.imageSrc ?? ""}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Image Alt</label>
