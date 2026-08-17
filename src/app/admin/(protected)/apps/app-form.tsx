@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -93,242 +95,266 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
         </div>
       </div>
 
-      <form action={formAction} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>Title</Label>
-            <Input name="title" defaultValue={initialData?.title} onChange={(e) => setTitle(e.target.value)} required />
-          </div>
-          <div className="space-y-2">
-            <Label>Tagline</Label>
-            <Input name="tagline" defaultValue={initialData?.tagline} />
-          </div>
-        </div>
+      <form action={formAction}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Info</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label>Title</Label>
+                <Input name="title" defaultValue={initialData?.title} onChange={(e) => setTitle(e.target.value)} required />
+              </div>
+              <div className="space-y-2">
+                <Label>Tagline</Label>
+                <Input name="tagline" defaultValue={initialData?.tagline} />
+              </div>
+            </div>
 
-        <div className="space-y-2">
-          <Label>Description</Label>
-          <Textarea name="description" defaultValue={initialData?.description} rows={4} />
-        </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea name="description" defaultValue={initialData?.description} rows={4} />
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-2">
-            <Label>App Type</Label>
-            <Select name="appType" value={appType} onValueChange={(v) => setAppType(v ?? "mobile")}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="mobile">Mobile</SelectItem>
-                <SelectItem value="desktop">Desktop</SelectItem>
-                <SelectItem value="web">Web</SelectItem>
-                <SelectItem value="backend">Backend</SelectItem>
-              </SelectContent>
-            </Select>
-            <input type="hidden" name="appType" value={appType} />
-          </div>
-          <div className="space-y-2">
-            <Label>Work Type</Label>
-            <Select name="workType" defaultValue={initialData?.workType || "personal"}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="personal">Personal</SelectItem>
-                <SelectItem value="work">Work</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>Sort Order</Label>
-            <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} />
-          </div>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <Label>App Type</Label>
+                <Select name="appType" value={appType} onValueChange={(v) => setAppType(v ?? "mobile")}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mobile">Mobile</SelectItem>
+                    <SelectItem value="desktop">Desktop</SelectItem>
+                    <SelectItem value="web">Web</SelectItem>
+                    <SelectItem value="backend">Backend</SelectItem>
+                  </SelectContent>
+                </Select>
+                <input type="hidden" name="appType" value={appType} />
+              </div>
+              <div className="space-y-2">
+                <Label>Work Type</Label>
+                <Select name="workType" defaultValue={initialData?.workType || "personal"}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="personal">Personal</SelectItem>
+                    <SelectItem value="work">Work</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Sort Order</Label>
+                <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} />
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>Period</Label>
-            <Input name="period" defaultValue={initialData?.period} />
-          </div>
-          <div className="space-y-2">
-            <Label>Period Short</Label>
-            <Input name="periodShort" defaultValue={initialData?.periodShort} />
-          </div>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label>Period</Label>
+                <Input name="period" defaultValue={initialData?.period} />
+              </div>
+              <div className="space-y-2">
+                <Label>Period Short</Label>
+                <Input name="periodShort" defaultValue={initialData?.periodShort} />
+              </div>
+            </div>
 
-        <div className="flex items-center gap-3">
-          <Checkbox name="featured" id="featured" defaultChecked={initialData?.featured} />
-          <Label htmlFor="featured">Featured</Label>
-        </div>
+            <div className="flex items-center gap-3">
+              <Checkbox name="featured" id="featured" defaultChecked={initialData?.featured} />
+              <Label htmlFor="featured">Featured</Label>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="divider-pixel" />
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Media</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label>App Icon</Label>
+                <ImageUpload
+                  bucket="apps"
+                  path={`${slug}/logo`}
+                  name="appIconSrc"
+                  currentSrc={initialData?.appIconSrc ?? ""}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>App Icon Alt</Label>
+                <Input name="appIconAlt" defaultValue={initialData?.appIconAlt} />
+              </div>
+              <div className="space-y-2">
+                <Label>Thumbnail</Label>
+                <ImageUpload
+                  bucket="apps"
+                  path={slug}
+                  name="thumbnailSrc"
+                  currentSrc={initialData?.thumbnailSrc ?? ""}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Thumbnail Alt</Label>
+                <Input name="thumbnailAlt" defaultValue={initialData?.thumbnailAlt} />
+              </div>
+            </div>
 
-        <h2 className="text-lg font-semibold">Media</h2>
+            {showScreenshots && (
+              <>
+                <Separator />
+                <div>
+                  <Label className="text-base font-semibold">Screenshots</Label>
+                  <p className="text-sm text-muted-foreground mt-1">Optional. Drag to reorder. Images upload directly to storage.</p>
+                </div>
+                <ScreenshotUpload
+                  bucket="apps"
+                  path={`${slug}/screenshots`}
+                  initialScreenshots={[]}
+                />
+              </>
+            )}
+          </CardContent>
+        </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>App Icon</Label>
-            <ImageUpload
-              bucket="apps"
-              path={`${slug}/logo`}
-              name="appIconSrc"
-              currentSrc={initialData?.appIconSrc ?? ""}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>App Icon Alt</Label>
-            <Input name="appIconAlt" defaultValue={initialData?.appIconAlt} />
-          </div>
-          <div className="space-y-2">
-            <Label>Thumbnail</Label>
-            <ImageUpload
-              bucket="apps"
-              path={slug}
-              name="thumbnailSrc"
-              currentSrc={initialData?.thumbnailSrc ?? ""}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Thumbnail Alt</Label>
-            <Input name="thumbnailAlt" defaultValue={initialData?.thumbnailAlt} />
-          </div>
-        </div>
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Store Links</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label>App Store URL</Label>
+                <Input name="appStoreUrl" defaultValue={initialData?.appStoreUrl} placeholder="https://apps.apple.com/..." />
+              </div>
+              <div className="space-y-2">
+                <Label>Play Store URL</Label>
+                <Input name="playStoreUrl" defaultValue={initialData?.playStoreUrl} placeholder="https://play.google.com/store/..." />
+              </div>
+              <div className="space-y-2">
+                <Label>Website URL</Label>
+                <Input name="websiteUrl" defaultValue={initialData?.websiteUrl} />
+              </div>
+              <div className="space-y-2">
+                <Label>GitHub URL</Label>
+                <Input name="githubUrl" defaultValue={initialData?.githubUrl} />
+              </div>
+              <div className="space-y-2">
+                <Label>Other URL</Label>
+                <Input name="otherUrl" defaultValue={initialData?.otherUrl} />
+              </div>
+              <div className="space-y-2">
+                <Label>Other URL Label</Label>
+                <Input name="otherUrlLabel" defaultValue={initialData?.otherUrlLabel} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {showScreenshots && (
-          <>
-            <div className="divider-pixel" />
-            <h2 className="text-lg font-semibold">Screenshots</h2>
-            <p className="text-sm text-muted-foreground">Optional. Drag to reorder. Images upload directly to storage.</p>
-            <ScreenshotUpload
-              bucket="apps"
-              path={`${slug}/screenshots`}
-              initialScreenshots={[]}
-            />
-          </>
-        )}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Content</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label>Tech Stack (comma separated)</Label>
+              <Input name="stack" defaultValue={initialData?.stack?.join(", ")} placeholder="Flutter, Dart, BLoC" />
+            </div>
 
-        <div className="divider-pixel" />
+            <div className="space-y-2">
+              <Label>Highlights (one per line)</Label>
+              <Textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={5} />
+            </div>
 
-        <h2 className="text-lg font-semibold">Store Links</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label>App Store URL</Label>
-            <Input name="appStoreUrl" defaultValue={initialData?.appStoreUrl} placeholder="https://apps.apple.com/..." />
-          </div>
-          <div className="space-y-2">
-            <Label>Play Store URL</Label>
-            <Input name="playStoreUrl" defaultValue={initialData?.playStoreUrl} placeholder="https://play.google.com/store/..." />
-          </div>
-          <div className="space-y-2">
-            <Label>Website URL</Label>
-            <Input name="websiteUrl" defaultValue={initialData?.websiteUrl} />
-          </div>
-          <div className="space-y-2">
-            <Label>GitHub URL</Label>
-            <Input name="githubUrl" defaultValue={initialData?.githubUrl} />
-          </div>
-          <div className="space-y-2">
-            <Label>Other URL</Label>
-            <Input name="otherUrl" defaultValue={initialData?.otherUrl} />
-          </div>
-          <div className="space-y-2">
-            <Label>Other URL Label</Label>
-            <Input name="otherUrlLabel" defaultValue={initialData?.otherUrlLabel} />
-          </div>
-        </div>
-
-        <div className="divider-pixel" />
-
-        <h2 className="text-lg font-semibold">Content</h2>
-
-        <div className="space-y-2">
-          <Label>Tech Stack (comma separated)</Label>
-          <Input name="stack" defaultValue={initialData?.stack?.join(", ")} placeholder="Flutter, Dart, BLoC" />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Highlights (one per line)</Label>
-          <Textarea name="highlights" defaultValue={initialData?.highlights?.join("\n")} rows={5} />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Sections (JSON)</Label>
-          <p className="text-xs text-muted-foreground">Nested sections with paragraphs, bullets, code blocks. Leave empty for none.</p>
-          <Textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="font-mono" />
-        </div>
+            <div className="space-y-2">
+              <Label>Sections (JSON)</Label>
+              <p className="text-xs text-muted-foreground">Nested sections with paragraphs, bullets, code blocks. Leave empty for none.</p>
+              <Textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="font-mono" />
+            </div>
+          </CardContent>
+        </Card>
 
         {appType === "mobile" && (
-          <>
-            <div className="divider-pixel" />
-
-            <h2 className="text-lg font-semibold">Legal Pages</h2>
-            <p className="text-sm text-muted-foreground">Optional pages for App Store / Play Store compliance.</p>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  name="hasPrivacyPolicy"
-                  id="hasPrivacyPolicy"
-                  checked={hasPrivacyPolicy}
-                  onCheckedChange={(checked) => setHasPrivacyPolicy(checked === true)}
-                />
-                <Label htmlFor="hasPrivacyPolicy">Enable Privacy Policy Page</Label>
-              </div>
-              {hasPrivacyPolicy && (
-                <div className="space-y-2">
-                  <Label>Privacy Policy Content</Label>
-                  <RichTextEditor
-                    name="privacyPolicyContent"
-                    defaultValue={initialData?.privacyPolicyContent ?? ""}
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Legal Pages</CardTitle>
+              <p className="text-sm text-muted-foreground">Optional pages for App Store / Play Store compliance.</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    name="hasPrivacyPolicy"
+                    id="hasPrivacyPolicy"
+                    checked={hasPrivacyPolicy}
+                    onCheckedChange={(checked) => setHasPrivacyPolicy(checked === true)}
                   />
+                  <Label htmlFor="hasPrivacyPolicy">Enable Privacy Policy Page</Label>
                 </div>
-              )}
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  name="hasAccountDeletion"
-                  id="hasAccountDeletion"
-                  checked={hasAccountDeletion}
-                  onCheckedChange={(checked) => setHasAccountDeletion(checked === true)}
-                />
-                <Label htmlFor="hasAccountDeletion">Enable Account Deletion Page</Label>
-              </div>
-              {hasAccountDeletion && (
-                <div className="space-y-4">
+                {hasPrivacyPolicy && (
                   <div className="space-y-2">
-                    <Label>Account Deletion Content</Label>
+                    <Label>Privacy Policy Content</Label>
                     <RichTextEditor
-                      name="accountDeletionContent"
-                      defaultValue={initialData?.accountDeletionContent ?? ""}
+                      name="privacyPolicyContent"
+                      defaultValue={initialData?.privacyPolicyContent ?? ""}
                     />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Checkbox
-                      name="accountDeletionRequiresAuth"
-                      id="accountDeletionRequiresAuth"
-                      checked={accountDeletionRequiresAuth}
-                      onCheckedChange={(checked) => setAccountDeletionRequiresAuth(checked === true)}
-                    />
-                    <Label htmlFor="accountDeletionRequiresAuth">Requires Authentication</Label>
-                  </div>
+                )}
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Checkbox
+                    name="hasAccountDeletion"
+                    id="hasAccountDeletion"
+                    checked={hasAccountDeletion}
+                    onCheckedChange={(checked) => setHasAccountDeletion(checked === true)}
+                  />
+                  <Label htmlFor="hasAccountDeletion">Enable Account Deletion Page</Label>
                 </div>
-              )}
+                {hasAccountDeletion && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Account Deletion Content</Label>
+                      <RichTextEditor
+                        name="accountDeletionContent"
+                        defaultValue={initialData?.accountDeletionContent ?? ""}
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        name="accountDeletionRequiresAuth"
+                        id="accountDeletionRequiresAuth"
+                        checked={accountDeletionRequiresAuth}
+                        onCheckedChange={(checked) => setAccountDeletionRequiresAuth(checked === true)}
+                      />
+                      <Label htmlFor="accountDeletionRequiresAuth">Requires Authentication</Label>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="mt-6">
+          <CardFooter className="justify-between">
+            {state?.error && (
+              <p className="text-sm text-destructive">{state.error}</p>
+            )}
+            <div className="flex gap-3 ml-auto">
+              <Button variant="outline" render={<Link href="/admin/apps" />}>Cancel</Button>
+              <Button type="submit" disabled={pending}>
+                {pending ? "Saving..." : submitLabel}
+              </Button>
             </div>
-          </>
-        )}
-
-        {state?.error && (
-          <p className="text-sm text-destructive">{state.error}</p>
-        )}
-
-        <div className="flex justify-end gap-3">
-          <Button variant="outline" render={<Link href="/admin/apps" />}>Cancel</Button>
-          <Button type="submit" disabled={pending}>
-            {pending ? "Saving..." : submitLabel}
-          </Button>
-        </div>
+          </CardFooter>
+        </Card>
       </form>
     </div>
   );
