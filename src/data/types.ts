@@ -50,6 +50,11 @@ export type AppItem = {
   highlights: string[];
   sections: ProjectSection[];
   screenshots: AppScreenshot[];
+  hasPrivacyPolicy: boolean;
+  privacyPolicyContent: string;
+  hasAccountDeletion: boolean;
+  accountDeletionContent: string;
+  accountDeletionRequiresAuth: boolean;
 };
 
 export type CertificateImage = {

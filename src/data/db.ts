@@ -65,6 +65,11 @@ function mapApp(row: Record<string, unknown>): AppItem {
     highlights: row.highlights as string[],
     sections: (row.sections as ProjectSection[]) ?? [],
     screenshots,
+    hasPrivacyPolicy: (row.has_privacy_policy as boolean) ?? false,
+    privacyPolicyContent: (row.privacy_policy_content as string) ?? "",
+    hasAccountDeletion: (row.has_account_deletion as boolean) ?? false,
+    accountDeletionContent: (row.account_deletion_content as string) ?? "",
+    accountDeletionRequiresAuth: (row.account_deletion_requires_auth as boolean) ?? false,
   };
 }
 

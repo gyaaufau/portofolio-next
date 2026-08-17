@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
 import { ScreenshotUpload } from "@/components/screenshot-upload";
+import { RichTextEditor } from "@/components/rich-text-editor";
 
 type AppFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -33,6 +34,11 @@ type AppFormProps = {
     highlights?: string[];
     sections?: unknown;
     slug?: string;
+    hasPrivacyPolicy?: boolean;
+    privacyPolicyContent?: string;
+    hasAccountDeletion?: boolean;
+    accountDeletionContent?: string;
+    accountDeletionRequiresAuth?: boolean;
   };
   submitLabel: string;
   showScreenshots?: boolean;
@@ -41,6 +47,10 @@ type AppFormProps = {
 export function AppForm({ action, initialData, submitLabel, showScreenshots }: AppFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState(initialData?.title ?? "");
+  const [appType, setAppType] = useState(initialData?.appType ?? "mobile");
+  const [hasPrivacyPolicy, setHasPrivacyPolicy] = useState(initialData?.hasPrivacyPolicy ?? false);
+  const [hasAccountDeletion, setHasAccountDeletion] = useState(initialData?.hasAccountDeletion ?? false);
+  const [accountDeletionRequiresAuth, setAccountDeletionRequiresAuth] = useState(initialData?.accountDeletionRequiresAuth ?? false);
   const slug = useMemo(() => {
     if (initialData?.slug) return initialData.slug;
     return title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") || "temp";
@@ -94,7 +104,7 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">App Type</label>
-            <select name="appType" defaultValue={initialData?.appType || "mobile"} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+            <select name="appType" value={appType} onChange={(e) => setAppType(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
               <option value="mobile">Mobile</option>
               <option value="desktop">Desktop</option>
               <option value="web">Web</option>
@@ -226,6 +236,80 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
           <p className="text-xs text-muted-foreground">Nested sections with paragraphs, bullets, code blocks. Leave empty for none.</p>
           <textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y" />
         </div>
+
+        {appType === "mobile" && (
+          <>
+            <div className="divider-pixel" />
+
+            <h2 className="text-lg font-semibold">Legal Pages</h2>
+            <p className="text-sm text-muted-foreground">Optional pages for App Store / Play Store compliance.</p>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  name="hasPrivacyPolicy"
+                  id="hasPrivacyPolicy"
+                  checked={hasPrivacyPolicy}
+                  onChange={(e) => setHasPrivacyPolicy(e.target.checked)}
+                  className="size-4 rounded border-border accent-primary"
+                />
+                <label htmlFor="hasPrivacyPolicy" className="text-sm font-medium text-foreground">
+                  Enable Privacy Policy Page
+                </label>
+              </div>
+              {hasPrivacyPolicy && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Privacy Policy Content</label>
+                  <RichTextEditor
+                    name="privacyPolicyContent"
+                    defaultValue={initialData?.privacyPolicyContent ?? ""}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  name="hasAccountDeletion"
+                  id="hasAccountDeletion"
+                  checked={hasAccountDeletion}
+                  onChange={(e) => setHasAccountDeletion(e.target.checked)}
+                  className="size-4 rounded border-border accent-primary"
+                />
+                <label htmlFor="hasAccountDeletion" className="text-sm font-medium text-foreground">
+                  Enable Account Deletion Page
+                </label>
+              </div>
+              {hasAccountDeletion && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Account Deletion Content</label>
+                    <RichTextEditor
+                      name="accountDeletionContent"
+                      defaultValue={initialData?.accountDeletionContent ?? ""}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      name="accountDeletionRequiresAuth"
+                      id="accountDeletionRequiresAuth"
+                      checked={accountDeletionRequiresAuth}
+                      onChange={(e) => setAccountDeletionRequiresAuth(e.target.checked)}
+                      className="size-4 rounded border-border accent-primary"
+                    />
+                    <label htmlFor="accountDeletionRequiresAuth" className="text-sm font-medium text-foreground">
+                      Requires Authentication
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         {state?.error && (
           <p className="text-sm text-destructive">{state.error}</p>

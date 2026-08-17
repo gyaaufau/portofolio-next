@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { AppWindow, ExternalLink, GitFork, Globe, Smartphone } from "lucide-react";
+import Link from "next/link";
+import { AppWindow, ExternalLink, GitFork, Globe, Shield, Smartphone, Trash2 } from "lucide-react";
 import { BackLink } from "./back-link";
 import { StoreBadge } from "./store-badge";
 import { ScreenshotCarousel } from "./screenshot-carousel";
@@ -48,6 +49,32 @@ export function AppDetailView({ app }: { app: AppItem }) {
           {app.sections.map((section) => <section key={section.title}><h2 className="text-3xl font-semibold tracking-[-0.04em]">{section.title}</h2><div className="mt-5 space-y-6">{section.entries.map((entry, index) => <div key={`${section.title}-${index}`} className="space-y-4">{entry.title && <h3 className="text-lg font-semibold">{entry.title}</h3>}{entry.paragraphs.map((paragraph) => <p key={paragraph} className="max-w-[68ch] leading-8 text-muted-foreground">{paragraph}</p>)}{entry.bullets.length > 0 && <div className="grid gap-3">{entry.bullets.map((bullet) => <p key={bullet} className="border-l-2 border-border pl-4 leading-7 text-muted-foreground">{bullet}</p>)}</div>}{entry.codeBlocks.map((block, blockIndex) => <pre key={blockIndex} className="overflow-x-auto rounded-[4px] border border-border bg-secondary p-4 text-sm"><code>{block.content}</code></pre>)}</div>)}</div></section>)}
         </div>
       </div>
+
+      {(app.hasPrivacyPolicy || app.hasAccountDeletion) && (
+        <div className="mt-16 border-t border-border pt-12">
+          <h2 className="text-pixel text-[9px] text-primary mb-6">LEGAL</h2>
+          <div className="flex flex-wrap gap-3">
+            {app.hasPrivacyPolicy && (
+              <Link
+                href={`/apps/${app.slug}/privacy-policy`}
+                className="pixel-button bg-card"
+              >
+                <Shield className="size-4" />
+                Privacy Policy
+              </Link>
+            )}
+            {app.hasAccountDeletion && (
+              <Link
+                href={`/apps/${app.slug}/account-deletion`}
+                className="pixel-button bg-card"
+              >
+                <Trash2 className="size-4" />
+                Account Deletion
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </article>
   );
 }

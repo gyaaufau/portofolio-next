@@ -78,6 +78,11 @@ export async function createApp(formData: FormData) {
     stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
     highlights: String(data.highlights || "").split("\n").filter(Boolean),
     sections: parseSections(data.sections),
+    has_privacy_policy: data.hasPrivacyPolicy === "on",
+    privacy_policy_content: String(data.privacyPolicyContent || ""),
+    has_account_deletion: data.hasAccountDeletion === "on",
+    account_deletion_content: String(data.accountDeletionContent || ""),
+    account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
   });
 
   // Save screenshots if provided
@@ -130,6 +135,11 @@ export async function updateApp(id: string, formData: FormData) {
     stack: String(data.stack || "").split(",").map((s) => s.trim()).filter(Boolean),
     highlights: String(data.highlights || "").split("\n").filter(Boolean),
     sections: parseSections(data.sections),
+    has_privacy_policy: data.hasPrivacyPolicy === "on",
+    privacy_policy_content: String(data.privacyPolicyContent || ""),
+    has_account_deletion: data.hasAccountDeletion === "on",
+    account_deletion_content: String(data.accountDeletionContent || ""),
+    account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
   }).eq("id", id);
 
   revalidatePath("/admin/apps");
