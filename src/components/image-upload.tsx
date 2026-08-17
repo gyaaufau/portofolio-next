@@ -73,7 +73,7 @@ export function ImageUpload({
       } = supabase.storage.from(bucket).getPublicUrl(filePath);
 
       setPreview(publicUrl);
-      setStoragePath(filePath);
+      setStoragePath(publicUrl);
       if (!isImage) setFileName(file.name);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");

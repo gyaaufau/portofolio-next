@@ -186,9 +186,22 @@ export async function updateScreenshots(appId: string, formData: FormData) {
   revalidatePath("/apps");
 }
 
+async function deleteStorageFolder(bucket: string, folder: string) {
+  const supabase = await getSupabase();
+  const { data: files } = await supabase.storage.from(bucket).list(folder);
+  if (files && files.length > 0) {
+    const paths = files.map((f) => `${folder}/${f.name}`);
+    await supabase.storage.from(bucket).remove(paths);
+  }
+}
+
 export async function deleteApp(id: string) {
   await requireAdmin();
   const supabase = await getSupabase();
+  const { data: app } = await supabase.from("app").select("slug").eq("id", id).single();
+  if (app?.slug) {
+    await deleteStorageFolder("apps", app.slug);
+  }
   await supabase.from("app").delete().eq("id", id);
   revalidatePath("/admin/apps");
   revalidatePath("/apps");
