@@ -38,16 +38,16 @@ export default async function PrivacyPolicyPage({ params }: Props) {
   }
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1080px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+    <main id="main-content" className="editorial-legal-page">
       <BackLink href={`/apps/${slug}`} label={app.title} />
 
-      <div className="mt-8">
-        <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-2">Legal</p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Privacy Policy</h1>
-        <p className="text-muted-foreground text-sm mb-8">{app.title}</p>
+      <div className="editorial-legal-content">
+        <p>LEGAL</p>
+        <h1>Privacy Policy</h1>
+        <p>{app.title}</p>
 
         <div
-          className="prose prose-sm dark:prose-invert max-w-none"
+          className="editorial-legal-prose"
           dangerouslySetInnerHTML={{ __html: app.privacyPolicyContent }}
         />
       </div>

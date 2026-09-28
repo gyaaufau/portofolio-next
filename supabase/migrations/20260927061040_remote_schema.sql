@@ -1,0 +1,2 @@
+-- Remote schema baseline. The original historical migration files were not
+-- present in this checkout; this marker preserves the recovered remote state.

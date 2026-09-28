@@ -6,7 +6,7 @@
 
 -- Site Settings
 INSERT INTO site_settings (id, accent_preset, accent_color) VALUES
-  ('site', 'moss', '#4F7A68')
+  ('site', 'ember', '#C45132')
 ON CONFLICT (id) DO NOTHING;
 
 -- Profile

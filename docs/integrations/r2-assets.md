@@ -66,7 +66,7 @@ Server Component
 
 ```text
 scripts/migrate-to-r2.ts
-→ Walks public/data/ (excluding .md files and game assets)
+→ Walks public/data/ (excluding .md files)
 → Uploads each file to R2 via S3 PutObjectCommand
 → Skips files already in bucket (checks via ListObjectsV2Command)
 ```
@@ -113,7 +113,7 @@ If the R2 public URL changes, update both `R2_PUBLIC_URL` env var and `remotePat
 
 ## Asset Inventory
 
-Non-game assets in R2:
+Portfolio assets in R2:
 
 | Category | Files | Key Pattern |
 |---|---|---|
@@ -126,7 +126,6 @@ Non-game assets in R2:
 Excluded:
 
 - `.md` files (served from `public/data/` or read server-side)
-- Game assets (`public/FIGHTGAME_Assets/`) — handled separately
 - Root SVGs (`next.svg`, `vercel.svg`) — unused Next.js defaults
 
 ---
@@ -168,7 +167,6 @@ npx tsx scripts/migrate-to-r2.ts
 - No automatic upload on deploy (manual `npx tsx scripts/migrate-to-r2.ts`)
 - No file upload UI in admin panel (paths entered as text)
 - No cache invalidation on R2 (files are immutable once uploaded)
-- Game assets not yet migrated to R2
 
 ---
 
@@ -179,5 +177,4 @@ Update when:
 - R2 bucket or endpoint changes
 - CDN proxy is implemented
 - Asset upload flow changes
-- Game assets are migrated to R2
 - Admin panel gets file upload UI

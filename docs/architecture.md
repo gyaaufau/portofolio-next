@@ -49,7 +49,6 @@ Next.js 16 / React 19 / TypeScript 5 / Node.js
 - Auth: `jose` JWT with HTTP-only cookies
 - Styling: Tailwind CSS 4 + `class-variance-authority` + `tailwind-merge`
 - UI Kit: shadcn/ui primitives (`Button`, `Card`, `Badge`, `Separator`)
-- Game Engine: Phaser 4.1 (lazy-loaded, client-only)
 - Fonts: Geist Sans (self-hosted) + Press Start 2P (pixel accent)
 - SEO: JSON-LD structured data (WebSite, Person, FAQPage, CollectionPage)
 
@@ -93,7 +92,6 @@ Blocking initialization:
 
 Non-blocking initialization:
 
-- Phaser game engine (lazy-loaded via dynamic import when hero approaches viewport)
 - ScrollReveal animations (client-side)
 
 Environment values:
@@ -119,7 +117,7 @@ src/app/layout.tsx
 
 Global responsibilities:
 
-- Theme: CSS custom property `--site-accent` injected into `<html>` style from `SiteSettings`
+- CTA color: `--cta-color` and `--cta-foreground` injected into `<html>` from `SiteSettings`; the public theme and CMS palette keep their own colors
 - Localization: `lang="en"` on `<html>`
 - Fonts: `GeistSans.variable` class on `<html>`, Press Start 2P imported globally
 - SEO: Metadata object, OpenGraph, Twitter cards, JSON-LD scripts
@@ -155,8 +153,8 @@ App
 ├── /admin/(protected)/profile (Profile management)
 ├── /admin/(protected)/contact (Contact management)
 ├── /admin/(protected)/skills (Skills management)
-├── /admin/(protected)/appearance (Theme/accent management)
-└── /game-preview (Empty, reserved)
+├── /admin/(protected)/settings (Profile, contact, and CTA appearance)
+└── /admin/(protected)/appearance (Redirect to settings)
 ```
 
 Redirects:
@@ -221,7 +219,6 @@ Cache:
 
 ### External Services
 
-- `Phaser 4.1` — Client-side game engine for hero section
 - `shadcn/ui` — UI component primitives
 - `Cloudflare R2` — Object storage for all portfolio assets (images, CV, brand files). See `docs/integrations/r2-assets.md`.
 
@@ -238,7 +235,6 @@ src/app/          → Route-level pages (Server Components)
 src/components/   → Shared UI components
 src/data/         → Data access layer (db.ts, types.ts, seo.ts)
 src/lib/          → Shared utilities (prisma, auth, theme, utils)
-src/games/        → Hero game engine
 ```
 
 Default feature structure:
@@ -363,14 +359,12 @@ Ownership rules:
 - Page data → Fetched in Server Components via `src/data/db.ts`
 - Admin auth → JWT cookie (jose)
 - Theme accent → `SiteSettings` singleton in DB, injected into root layout
-- Game state → Client-side Phaser engine (transient)
 
 | Runtime Concept | Owner | Persistence |
 |---|---|---|
 | Portfolio data | PostgreSQL | Permanent |
 | Admin session | JWT cookie | 7 days |
 | Theme accent | SiteSettings DB row | Permanent |
-| Game runtime | Phaser engine | Transient (client) |
 | Scroll animations | ScrollReveal | Transient (client) |
 
 Avoid multiple state owners for the same runtime concept.
@@ -437,19 +431,17 @@ Test ownership:
 ```text
 tests/
   auth.test.ts        → Auth module tests
-  game.test.ts        → Game registry tests
-  hero-game.test.ts   → Hero game tests
+  appearance-save.test.ts → Appearance persistence tests
   theme.test.ts       → Theme utility tests
 ```
 
-Test runner: `tsx --test` (Node.js built-in test runner)
+Test runner: `node --import tsx --test` (Node.js built-in test runner)
 
 Prioritize:
 
 - Auth token creation and verification
 - Theme color resolution and contrast
-- Game registry validation
-- Hero game selection logic
+- CTA settings validation and persistence
 
 Verification commands:
 
@@ -481,8 +473,6 @@ npx prisma validate
 - No production caching layer (every request hits PostgreSQL)
 - No CI/CD configuration in repository
 - No production monitoring or error tracking
-- Game engine has no fallback for browsers without WebGL
-- `src/game/` directory exists but is empty (legacy)
 - CDN proxy for R2 pending (`r2.dev` may be blocked in some countries)
 
 ---

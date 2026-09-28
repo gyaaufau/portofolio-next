@@ -16,7 +16,6 @@ It does not own:
 
 - Static assets (images, CV PDF, brand files) — served from Cloudflare R2 (see `docs/integrations/r2-assets.md`)
 - Admin sessions — JWT in HTTP-only cookie, not persisted in DB
-- Game state — client-side Phaser engine
 
 ---
 
@@ -212,7 +211,7 @@ npx prisma db seed
 
 What seed creates:
 
-- 1 SiteSettings (moss accent)
+- 1 SiteSettings (public CTA color)
 - 1 Profile (Argya Aulia Fauzandika)
 - 1 Contact (email, social links)
 - 2 HeroLinks (View my work, Download CV)

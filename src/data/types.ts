@@ -36,6 +36,8 @@ export type AppItem = {
   workType: WorkType;
   period: string;
   periodShort: string;
+  category: string;
+  releaseYear: number | null;
   appStoreUrl: string | null;
   playStoreUrl: string | null;
   websiteUrl: string | null;
@@ -55,6 +57,17 @@ export type AppItem = {
   hasAccountDeletion: boolean;
   accountDeletionContent: string;
   accountDeletionRequiresAuth: boolean;
+};
+
+export type NoteItem = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  body: string;
+  tags: string[];
+  coverSrc: string | null;
+  publishedAt: string | null;
 };
 
 export type CertificateImage = {
@@ -144,13 +157,4 @@ export type Contact = {
   playStore: string;
   playConsole: string;
   cv: string;
-};
-
-export type SiteSettings = {
-  id: string;
-  accentPreset: string;
-  accentColor: string;
-  heroGameId: string;
-  colorScheme: string;
-  logoSrc: string;
 };

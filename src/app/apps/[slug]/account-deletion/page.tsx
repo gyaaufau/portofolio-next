@@ -39,20 +39,20 @@ export default async function AccountDeletionPage({ params }: Props) {
   }
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1080px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+    <main id="main-content" className="editorial-legal-page">
       <BackLink href={`/apps/${slug}`} label={app.title} />
 
-      <div className="mt-8">
-        <p className="text-pixel text-[10px] text-primary tracking-wider uppercase mb-2">Legal</p>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Account Deletion</h1>
-        <p className="text-muted-foreground text-sm mb-8">{app.title}</p>
+      <div className="editorial-legal-content">
+        <p>LEGAL</p>
+        <h1>Account Deletion</h1>
+        <p>{app.title}</p>
 
         {app.accountDeletionRequiresAuth && (
-          <div className="mb-8 flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3">
-            <ShieldAlert className="size-5 text-yellow-500 shrink-0 mt-0.5" />
+          <div className="editorial-legal-alert">
+            <ShieldAlert size={20} />
             <div>
-              <p className="text-sm font-medium text-yellow-500">Authentication Required</p>
-              <p className="text-sm text-muted-foreground mt-1">
+              <strong>Authentication Required</strong>
+              <p>
                 You must be signed in to your account to request deletion.
               </p>
             </div>
@@ -60,7 +60,7 @@ export default async function AccountDeletionPage({ params }: Props) {
         )}
 
         <div
-          className="prose prose-sm dark:prose-invert max-w-none"
+          className="editorial-legal-prose"
           dangerouslySetInnerHTML={{ __html: app.accountDeletionContent }}
         />
       </div>

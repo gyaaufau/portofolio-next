@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun, Monitor } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark" | "system";
 
@@ -21,22 +21,27 @@ function applyTheme(theme: Theme) {
   }
 }
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("system");
+function subscribeTheme(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("theme-change", callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("theme-change", callback);
+  };
+}
 
-  useEffect(() => {
-    setTheme(getStoredTheme());
-  }, []);
+export function ThemeToggle() {
+  const theme = useSyncExternalStore(subscribeTheme, getStoredTheme, () => "system" as Theme);
 
   const cycle = useCallback(() => {
     const next: Theme = theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
-    setTheme(next);
     if (next === "system") {
       localStorage.removeItem("theme");
     } else {
       localStorage.setItem("theme", next);
     }
     applyTheme(next);
+    window.dispatchEvent(new Event("theme-change"));
   }, [theme]);
 
   const Icon = theme === "light" ? Sun : theme === "dark" ? Moon : Monitor;

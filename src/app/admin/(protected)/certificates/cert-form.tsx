@@ -13,6 +13,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 type CertFormProps = {
   action: (formData: FormData) => Promise<void>;
+  draftAction?: (formData: FormData) => Promise<void>;
+  publishAction?: (formData: FormData) => Promise<void>;
   initialData?: {
     title?: string;
     issuer?: string;
@@ -31,7 +33,7 @@ type CertFormProps = {
   submitLabel: string;
 };
 
-export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
+export function CertForm({ action, draftAction, publishAction, initialData, submitLabel }: CertFormProps) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
     async (_: { error?: string } | null, formData: FormData) => {
@@ -99,6 +101,11 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
               <Textarea name="relevance" defaultValue={initialData?.relevance} rows={3} />
             </div>
 
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="featured" defaultChecked={initialData?.featured} />
+              Feature this certificate
+            </label>
+
             <div className="space-y-2">
               <Label>Issuer Notes (one per line)</Label>
               <Textarea name="issuerNotes" defaultValue={initialData?.issuerNotes?.join("\n")} rows={2} />
@@ -144,8 +151,10 @@ export function CertForm({ action, initialData, submitLabel }: CertFormProps) {
             )}
             <div className="flex gap-3 ml-auto">
               <Button variant="outline" render={<Link href="/admin/certificates" />}>Cancel</Button>
+              {draftAction && <Button type="submit" formAction={draftAction} variant="outline">Save draft</Button>}
+              {publishAction && <Button type="submit" formAction={publishAction} variant="outline">Publish saved draft</Button>}
               <Button type="submit" disabled={pending}>
-                {pending ? "Saving..." : submitLabel}
+                {pending ? "Publishing..." : submitLabel}
               </Button>
             </div>
           </CardFooter>

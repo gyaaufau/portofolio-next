@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import "@fontsource/press-start-2p/latin.css";
@@ -6,8 +5,6 @@ import "./globals.css";
 import { PublicChrome } from "@/components/public-chrome";
 import { Footer } from "@/components/footer";
 import { siteConfig, websiteSchema, personSchema } from "@/data/seo";
-import { getSiteSettings } from "@/data/db";
-import { readableForeground } from "@/lib/theme";
 import { storageUrl } from "@/lib/storage";
 
 export const metadata: Metadata = {
@@ -33,22 +30,15 @@ export const metadata: Metadata = {
   icons: { icon: storageUrl("/data/brand/logo-loop.svg") },
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const settings = await getSiteSettings();
-  const themeStyle = {
-    "--site-accent": settings.accentColor,
-    "--site-accent-foreground": readableForeground(settings.accentColor),
-  } as CSSProperties;
-
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={GeistSans.variable} style={themeStyle} data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="en" className={GeistSans.variable} data-scroll-behavior="smooth">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)})()` }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
       <body>
-        <PublicChrome logoSrc={settings.logoSrc} footer={<Footer />}>{children}</PublicChrome>
+        <PublicChrome footer={<Footer />}>{children}</PublicChrome>
       </body>
     </html>
   );

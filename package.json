@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
-    "game:atlas": "node scripts/build-fightgame-atlas.mjs"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "seed:engineering-notes": "tsx scripts/seed-engineering-notes.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -28,7 +28,6 @@
     "jose": "^6.2.3",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
-    "phaser": "4.1.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "shadcn": "^4.7.0",

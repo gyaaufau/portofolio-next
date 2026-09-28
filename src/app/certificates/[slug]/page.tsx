@@ -53,7 +53,7 @@ export default async function CertificatePage({ params }: Props) {
   };
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+    <main id="main-content" className="editorial-detail-page">
       <CertificateDetailView certificate={certificate} />
 
       <script

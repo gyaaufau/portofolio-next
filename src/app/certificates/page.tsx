@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function CertificatesPage() {
   const certificates = await getCertificates();
   return (
-    <main id="main-content" className="mx-auto w-full max-w-[1280px] px-5 pb-20 pt-10 md:px-6 md:pt-16">
+    <main id="main-content" className="editorial-detail-page">
       <BackLink href="/" label="Home" />
       <PublicPageHeader eyebrow="ACHIEVEMENT ROOM" title="Proof of practice." description="Training, conferences, and focused study that strengthened the way I build mobile products." ornament="certificate-plaque" />
       <Certificates certificates={certificates} />

@@ -4,6 +4,8 @@
 - **Date:** 2026-01-01
 - **Decision Owners:** Argya Aulia Fauzandika
 
+> Historical context: this decision predates the September 2026 removal of playable games. Its game references describe the original rationale; the current hero is a static pixel city scene.
+
 ---
 
 ## Context

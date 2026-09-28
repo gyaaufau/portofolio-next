@@ -3,7 +3,6 @@
 import { cookies } from "next/headers";
 import { storageUrl } from "@/lib/storage";
 import { revalidatePath } from "next/cache";
-import { HERO_GAMES } from "@/games/registry";
 import {
   ADMIN_COOKIE,
   adminCookieOptions,
@@ -11,7 +10,6 @@ import {
   passwordMatches,
   requireAdmin,
 } from "@/lib/auth";
-import { resolveAccent } from "@/lib/theme";
 import { createAdminClient } from "@/utils/supabase/admin";
 
 function getSupabase() {
@@ -401,33 +399,4 @@ export async function updateSkillCategory(id: string, formData: FormData) {
 
   revalidatePath("/admin/skills");
   revalidatePath("/");
-}
-
-export type AppearanceState = { error?: string; success?: string } | null;
-
-export async function updateSiteSettings(
-  _previousState: AppearanceState,
-  formData: FormData
-): Promise<AppearanceState> {
-  await requireAdmin();
-  const supabase = await getSupabase();
-  const result = resolveAccent(formData.get("accentPreset"), formData.get("accentColor"));
-  if ("error" in result) return { error: result.error };
-
-  const heroGameId = formData.get("heroGameId") as string;
-  const validGameIds = Object.keys(HERO_GAMES);
-  const gameId = heroGameId === "" ? "" : validGameIds.includes(heroGameId) ? heroGameId : "pixel-fighter";
-  const logoSrc = (formData.get("logoSrc") as string)?.trim() ?? "";
-
-  await supabase.from("site_settings").upsert({
-    id: "site",
-    accent_preset: result.preset,
-    accent_color: result.color,
-    hero_game_id: gameId,
-    logo_src: logoSrc,
-  });
-
-  revalidatePath("/", "layout");
-  revalidatePath("/admin/appearance");
-  return { success: "Appearance updated." };
 }

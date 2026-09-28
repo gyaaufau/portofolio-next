@@ -202,23 +202,22 @@ test("the work-experience rail stays visibly alive in both themes", async () => 
   }
 });
 
-test("the homepage retains its approved supporting ornaments decoratively", async () => {
-  const component = await readFile(path.resolve("src/components/pixel-ornament.tsx"), "utf8");
-  const homepage = await readFile(path.resolve("src/app/page.tsx"), "utf8");
-  const approved = [
-    "mossy-masonry-vine",
-    "abandoned-workstation-window",
-  ];
+test("public templates use the editorial system without retired pixel ornaments", async () => {
+  const pages = await Promise.all([
+    "src/components/editorial-home.tsx",
+    "src/app/apps/page.tsx",
+    "src/app/not-found.tsx",
+  ].map((file) => readFile(path.resolve(file), "utf8")));
 
-  for (const name of approved) {
-    assert.ok(component.includes(`\"${name}\"`), `${name} is missing from the typed ornament registry`);
-    assert.ok(homepage.includes(`name=\"${name}\"`), `${name} is not integrated on the homepage`);
+  assert.ok(pages[0].includes("editorial-hero"));
+  assert.ok(pages[1].includes("editorial-catalog-page"));
+  assert.ok(pages[2].includes("editorial-state"));
+
+  for (const page of pages) {
+    assert.ok(!page.includes("PixelOrnament"));
+    assert.ok(!page.includes("mossy-masonry-vine"));
+    assert.ok(!page.includes("abandoned-workstation-window"));
   }
-  assert.ok(component.includes('"weathered-conduit"'), "weathered-conduit must remain available to secondary pages");
-  assert.ok(!homepage.includes('name="weathered-conduit"'), "the legacy conduit must stay off the homepage");
-  assert.ok(component.includes('alt=""'));
-  assert.ok(component.includes('aria-hidden="true"'));
-  assert.ok(component.includes("unoptimized"));
 });
 
 test("secondary-page icons have production-safe paired geometry", async () => {
@@ -264,7 +263,7 @@ test("secondary-page icons have production-safe paired geometry", async () => {
   }
 });
 
-test("public secondary routes use the professional ornament system", async () => {
+test("public secondary routes use the editorial system", async () => {
   const files = await Promise.all([
     "src/components/public-page-header.tsx",
     "src/app/apps/page.tsx",
@@ -279,15 +278,13 @@ test("public secondary routes use the professional ornament system", async () =>
   const [header, apps, certificates, blog, cv, appDetail, certificateDetail, article, notFound] = files;
 
   assert.ok(!header.includes('"use client"'));
-  assert.ok(header.includes("PixelOrnament"));
-  assert.ok(apps.includes('ornament="reclaimed-computer-folder"'));
-  assert.ok(certificates.includes('ornament="certificate-plaque"'));
-  assert.ok(blog.includes('ornament="blog-notebook"'));
-  assert.ok(blog.includes('name="abandoned-workstation-window"'));
-  assert.ok(cv.includes('ornament="cv-document"'));
-  assert.ok(appDetail.includes('name="weathered-conduit"'));
-  assert.ok(certificateDetail.includes('name="certificate-plaque"'));
-  assert.ok(article.includes('name="blog-notebook"'));
-  assert.ok(article.includes('name="weathered-conduit"'));
-  assert.ok(notFound.includes('name="mossy-masonry-vine"'));
+  assert.ok(apps.includes("EditorialAppCatalog"));
+  assert.ok(certificates.includes("editorial-detail-page"));
+  assert.ok(blog.includes("getNotes"));
+  assert.ok(blog.includes("editorial-note-grid"));
+  assert.ok(cv.includes("editorial-detail-page"));
+  assert.ok(appDetail.includes("app.title"));
+  assert.ok(certificateDetail.includes("certificate.title"));
+  assert.ok(article.includes("getNoteBySlug"));
+  assert.ok(notFound.includes("editorial-state"));
 });

@@ -8,7 +8,7 @@ A database-backed Next.js portfolio for Argya Aulia Fauzandika. The public site 
 - TypeScript and Tailwind CSS 4
 - PostgreSQL through Prisma 7
 - Signed admin sessions with `jose`
-- Phaser 4.1 platform-fighter hero with generated pixel atlases
+- Static pixel city hero with light and dark artwork
 - Self-hosted Geist and Press Start 2P fonts
 
 ## Local setup
@@ -47,7 +47,7 @@ The public site is available at `http://localhost:3000`. The admin login is at `
 
 Admin sessions use a signed, HTTP-only cookie that expires after seven days. Protected pages and every mutating Server Action verify the session.
 
-The Appearance screen offers four contrast-tested cozy accent presets and a custom hex picker. The selected accent is stored in the `SiteSettings` singleton and becomes the single accent token across light and dark modes.
+The appearance editor in `/admin/settings` offers four warm CTA presets and a custom hex picker. The selected color is stored in `site_settings` and colors public-site CTA buttons. The CMS keeps its own ink, paper, red, yellow, and cobalt palette.
 
 ## Content
 
@@ -55,19 +55,9 @@ Portfolio records live in PostgreSQL. Images, app screenshots, certificate artwo
 
 Legacy `/projects` URLs permanently redirect to `/apps`, including detail slugs.
 
-## Playable hero
+## Homepage hero
 
-The homepage uses a typed hero-game registry in `src/games/registry.ts`. Change `ACTIVE_HERO_GAME_ID` to select one registered game; visitors see only that curated game. Each game owns its engine, domain rules, UI, and runtime assets while the shared shell owns loading, fullscreen reveal, visibility, focus, and failure handling.
-
-The pixel fighter uses the licensed source pack in `public/FIGHTGAME_Assets`. Original files and `ReadMePLS.txt` remain untouched. Compact Phaser atlases are committed under `public/games/pixel-fighter/generated` so deployments do not process the source art. Curated CC0 battle sounds and their provenance are committed under `public/games/pixel-fighter/audio`.
-
-Regenerate the derived atlases after changing game art:
-
-```bash
-npm run game:atlas
-```
-
-The CSS idle preview loads before Phaser, then the complete engine is imported only as the hero approaches the viewport. Pressing Enter Battle fades the preview fighter and expands the circular aperture to reveal a centered 3:2 arena. Screens below 768px keep fullscreen HUD and multi-touch controls around a letterboxed arena. The Play interaction enables sound, and visitors can mute it during the match.
+The homepage uses a static pixel city scene with responsive light and dark artwork. Profile content and calls to action sit over the scene; no game engine is loaded.
 
 ## Verification
 

@@ -12,6 +12,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 type WorkFormProps = {
   action: (formData: FormData) => Promise<void>;
+  draftAction?: (formData: FormData) => Promise<void>;
+  publishAction?: (formData: FormData) => Promise<void>;
   initialData?: {
     company?: string;
     location?: string;
@@ -26,7 +28,7 @@ type WorkFormProps = {
   submitLabel: string;
 };
 
-export function WorkForm({ action, initialData, submitLabel }: WorkFormProps) {
+export function WorkForm({ action, draftAction, publishAction, initialData, submitLabel }: WorkFormProps) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
     async (_: { error?: string } | null, formData: FormData) => {
@@ -88,6 +90,10 @@ export function WorkForm({ action, initialData, submitLabel }: WorkFormProps) {
                 <Label>Sort Order</Label>
                 <Input name="sortOrder" type="number" defaultValue={initialData?.sortOrder ?? 0} />
               </div>
+              <div className="space-y-2">
+                <Label>Period</Label>
+                <Input name="period" defaultValue={initialData?.period} />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -109,8 +115,10 @@ export function WorkForm({ action, initialData, submitLabel }: WorkFormProps) {
             )}
             <div className="flex gap-3 ml-auto">
               <Button variant="outline" render={<Link href="/admin/work-experience" />}>Cancel</Button>
+              {draftAction && <Button type="submit" formAction={draftAction} variant="outline">Save draft</Button>}
+              {publishAction && <Button type="submit" formAction={publishAction} variant="outline">Publish saved draft</Button>}
               <Button type="submit" disabled={pending}>
-                {pending ? "Saving..." : submitLabel}
+                {pending ? "Publishing..." : submitLabel}
               </Button>
             </div>
           </CardFooter>

@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Download } from "lucide-react";
-import { BackLink } from "@/components/back-link";
-import { PublicPageHeader } from "@/components/public-page-header";
-import { storageUrl } from "@/lib/storage";
+import { ArrowLeft, Download } from "lucide-react";
+import { getContact } from "@/data/db";
 
 export const metadata: Metadata = { title: "CV | Argya Aulia Fauzandika", description: "Resume for Argya Aulia Fauzandika.", robots: "noindex, nofollow" };
+export const dynamic = "force-dynamic";
 
-export default function CVPage() {
-  const cvFile = storageUrl("/data/myself/CV_ARGYA AULIA FAUZANDIKA.pdf");
-  return (
-    <main id="main-content" className="mx-auto w-full max-w-[1200px] px-5 pb-10 pt-10 md:px-6 md:pt-16">
-      <BackLink href="/" label="Home" />
-      <PublicPageHeader eyebrow="CHARACTER SHEET" title="Curriculum Vitae" description="Experience, tools, and shipped work in one document." ornament="cv-document" className="md:py-14" action={<Link href={cvFile} target="_blank" rel="noreferrer" download className="pixel-button bg-primary text-primary-foreground">Download PDF <Download className="size-4" /></Link>} />
-      <div className="pixel-frame min-h-[78vh] overflow-hidden bg-card p-2 md:p-3"><object className="min-h-[78vh] w-full rounded-[4px]" data={cvFile} type="application/pdf"><div className="grid min-h-[78vh] place-items-center p-6 text-center"><p>Your browser cannot preview this PDF. <Link className="font-semibold text-primary" href={cvFile} target="_blank">Open it directly.</Link></p></div></object></div>
-    </main>
-  );
+export default async function CVPage() {
+  const { cv: cvFile } = await getContact();
+  return <main id="main-content" className="editorial-detail-page"><article className="editorial-cv"><Link href="/" className="editorial-back"><ArrowLeft size={16} /> Home</Link><header><span>CURRICULUM VITAE</span><h1>A record of work, learning, and craft.</h1><p>Experience, tools, and shipped work in one document.</p>{cvFile ? <Link href={cvFile} target="_blank" rel="noreferrer" download className="editorial-button editorial-button-dark">Download PDF <Download size={16} /></Link> : null}</header>{cvFile ? <object title="Curriculum Vitae" data={cvFile} type="application/pdf"><p>Your browser cannot preview this PDF. <Link href={cvFile} target="_blank">Open it directly.</Link></p></object> : <p className="editorial-empty">The CV will be available shortly.</p>}</article></main>;
 }

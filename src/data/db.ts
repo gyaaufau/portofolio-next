@@ -14,9 +14,8 @@ import type {
   AppType,
   WorkType,
   ProjectSection,
-  SiteSettings,
+  NoteItem,
 } from "./types";
-import { DEFAULT_ACCENT } from "@/lib/theme";
 
 function normalizeAppType(value: string): AppType {
   const v = value.toLowerCase();
@@ -51,6 +50,8 @@ function mapApp(row: Record<string, unknown>): AppItem {
     workType: normalizeWorkType(row.work_type as string),
     period: row.period as string,
     periodShort: row.period_short as string,
+    category: (row.category as string | null) ?? "",
+    releaseYear: (row.release_year as number | null) ?? null,
     appStoreUrl: row.app_store_url as string | null,
     playStoreUrl: row.play_store_url as string | null,
     websiteUrl: row.website_url as string | null,
@@ -70,6 +71,19 @@ function mapApp(row: Record<string, unknown>): AppItem {
     hasAccountDeletion: (row.has_account_deletion as boolean) ?? false,
     accountDeletionContent: (row.account_deletion_content as string) ?? "",
     accountDeletionRequiresAuth: (row.account_deletion_requires_auth as boolean) ?? false,
+  };
+}
+
+function mapNote(row: Record<string, unknown>): NoteItem {
+  return {
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
+    summary: row.summary as string,
+    body: row.body as string,
+    tags: (row.tags as string[]) ?? [],
+    coverSrc: (row.cover_src as string | null) ?? null,
+    publishedAt: (row.published_at as string | null) ?? (row.updated_at as string | null) ?? null,
   };
 }
 
@@ -140,17 +154,6 @@ function mapContact(row: Record<string, unknown>): Contact {
   };
 }
 
-function mapSiteSettings(row: Record<string, unknown>): SiteSettings {
-  return {
-    id: row.id as string,
-    accentPreset: row.accent_preset as string,
-    accentColor: row.accent_color as string,
-    heroGameId: (row.hero_game_id as string) ?? "pixel-fighter",
-    colorScheme: (row.color_scheme as string) ?? "system",
-    logoSrc: (row.logo_src as string) ?? "",
-  };
-}
-
 async function getSupabase() {
   const cookieStore = await cookies();
   return createClient(cookieStore);
@@ -193,6 +196,7 @@ export const getApps = cache(async function getApps(): Promise<AppItem[]> {
   const { data } = await supabase
     .from("app")
     .select("*, app_screenshot(*)")
+    .eq("publication_status", "published")
     .order("sort_order", { ascending: false });
   return (data ?? []).map(mapApp);
 });
@@ -202,6 +206,7 @@ export const getFeaturedApps = cache(async function getFeaturedApps(): Promise<A
   const { data } = await supabase
     .from("app")
     .select("*, app_screenshot(*)")
+    .eq("publication_status", "published")
     .eq("featured", true)
     .order("sort_order", { ascending: false })
     .limit(3);
@@ -213,6 +218,7 @@ export const getAppBySlug = cache(async function getAppBySlug(slug: string): Pro
   const { data } = await supabase
     .from("app")
     .select("*, app_screenshot(*)")
+    .eq("publication_status", "published")
     .eq("slug", slug)
     .single();
   return data ? mapApp(data) : null;
@@ -223,6 +229,7 @@ export const getCertificates = cache(async function getCertificates(): Promise<C
   const { data } = await supabase
     .from("certificate")
     .select("*")
+    .eq("publication_status", "published")
     .order("issued", { ascending: false });
   return (data ?? []).map(mapCertificate);
 });
@@ -232,6 +239,7 @@ export const getFeaturedCertificates = cache(async function getFeaturedCertifica
   const { data: featured } = await supabase
     .from("certificate")
     .select("*")
+    .eq("publication_status", "published")
     .eq("featured", true)
     .order("issued", { ascending: false })
     .limit(3);
@@ -239,6 +247,7 @@ export const getFeaturedCertificates = cache(async function getFeaturedCertifica
   const { data: fallback } = await supabase
     .from("certificate")
     .select("*")
+    .eq("publication_status", "published")
     .order("issued", { ascending: false })
     .limit(3);
   return (fallback ?? []).map(mapCertificate);
@@ -248,24 +257,58 @@ export const getCertificateBySlug = cache(async function getCertificateBySlug(
   id: string
 ): Promise<CertificateItem | null> {
   const supabase = await getSupabase();
-  const { data } = await supabase.from("certificate").select("*").eq("id", id).single();
+  const { data } = await supabase.from("certificate").select("*").eq("publication_status", "published").eq("id", id).single();
   return data ? mapCertificate(data) : null;
 });
 
 export const getWorkExperiences = cache(async function getWorkExperiences(): Promise<WorkExperienceItem[]> {
   const supabase = await getSupabase();
-  const { data } = await supabase.from("work_experience").select("*").order("sort_order");
+  const { data } = await supabase.from("work_experience").select("*").eq("publication_status", "published").order("sort_order");
   return (data ?? []).map(mapWorkExperience);
 });
 
-export const getSiteSettings = cache(async function getSiteSettings(): Promise<SiteSettings> {
-  try {
-    const supabase = await getSupabase();
-    const { data } = await supabase.from("site_settings").select("*").eq("id", "site").single();
-    return data ? mapSiteSettings(data) : { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT, heroGameId: "pixel-fighter", colorScheme: "system", logoSrc: "" };
-  } catch {
-    return { id: "site", accentPreset: "moss", accentColor: DEFAULT_ACCENT, heroGameId: "pixel-fighter", colorScheme: "system", logoSrc: "" };
-  }
+export const getNotes = cache(async function getNotes(): Promise<NoteItem[]> {
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("cms_note")
+    .select("*")
+    .eq("publication_status", "published")
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .order("updated_at", { ascending: false });
+  return (data ?? []).map(mapNote);
+});
+
+export const getNoteBySlug = cache(async function getNoteBySlug(slug: string): Promise<NoteItem | null> {
+  const supabase = await getSupabase();
+  const { data } = await supabase
+    .from("cms_note")
+    .select("*")
+    .eq("publication_status", "published")
+    .eq("slug", slug)
+    .maybeSingle();
+  return data ? mapNote(data) : null;
+});
+
+export type CmsSectionRow = {
+  id: string;
+  label: string;
+  anchor: string;
+  sortOrder: number;
+  visible: boolean;
+  settings: Record<string, unknown>;
+};
+
+export const getCmsSections = cache(async function getCmsSections(): Promise<CmsSectionRow[]> {
+  const supabase = await getSupabase();
+  const { data } = await supabase.from("cms_section").select("*").order("sort_order");
+  return (data ?? []).map((section) => ({
+    id: section.id,
+    label: section.label,
+    anchor: section.anchor,
+    sortOrder: section.sort_order,
+    visible: section.visible,
+    settings: (section.settings as Record<string, unknown>) ?? {},
+  }));
 });
 
 export async function getPortfolio() {

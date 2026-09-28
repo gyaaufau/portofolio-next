@@ -127,18 +127,20 @@ test("the footer ground tile joins cleanly across its horizontal seam", async ()
 });
 
 test("every non-hero homepage section uses its mapped leading icon", async () => {
-  const [homepage, registry] = await Promise.all([
-    readFile(path.resolve("src/app/page.tsx"), "utf8"),
+  const [sections, registry] = await Promise.all([
+    Promise.all(["about", "apps", "work", "certs", "contact"].map((name) =>
+      readFile(path.resolve(`src/components/sections/${name}-section.tsx`), "utf8"),
+    )).then((files) => files.join("\n")),
     readFile(path.resolve("src/components/section-leading-icon.tsx"), "utf8"),
   ]);
   const names = ["about", "app-catalog", "work-experience", "certificates", "contact"];
 
-  assert.equal((homepage.match(/<SectionLeadingIcon /g) ?? []).length, 5);
+  assert.equal((sections.match(/<SectionLeadingIcon /g) ?? []).length, 5);
   for (const name of names) {
-    assert.match(homepage, new RegExp(`SectionLeadingIcon name="${name}"`));
+    assert.match(sections, new RegExp(`SectionLeadingIcon name="${name}"`));
     assert.match(registry, new RegExp(`(?:"${name}"|${name}):`));
   }
-  assert.doesNotMatch(homepage.match(/<Hero[^>]*>/)?.[0] ?? "", /SectionLeadingIcon/);
+  assert.doesNotMatch(await readFile(path.resolve("src/components/hero.tsx"), "utf8"), /SectionLeadingIcon/);
   assert.match(registry, /alt=""/);
   assert.match(registry, /aria-hidden="true"/);
   assert.match(registry, /image-rendering:pixelated/);
@@ -151,31 +153,19 @@ test("copyright years use a single year in 2026 and an en-dash range later", () 
   assert.notEqual(formatCopyrightYear(2026), "2026–2026");
 });
 
-test("the public footer is responsive, decorative, and server-slotted", async () => {
-  const [footer, footerStyles, chrome, layout] = await Promise.all([
+test("the public footer is server-slotted and uses published profile/contact data", async () => {
+  const [footer, chrome, layout] = await Promise.all([
     readFile(path.resolve("src/components/footer.tsx"), "utf8"),
-    readFile(path.resolve("src/components/footer.module.css"), "utf8"),
     readFile(path.resolve("src/components/public-chrome.tsx"), "utf8"),
     readFile(path.resolve("src/app/layout.tsx"), "utf8"),
   ]);
 
   assert.match(footer, /<footer/);
-  for (const filename of Object.keys(footerAssetDimensions).filter((name) => name !== "footer_ground_tile.png")) {
-    assert.match(footer, new RegExp(filename.replace(".", "\\.")));
-  }
-  assert.doesNotMatch(footer, /copyright_pixel_icon\.png/);
-  assert.match(footer, /alt=""/);
-  assert.match(footer, /aria-hidden="true"/);
+  assert.match(footer, /getContact/);
+  assert.match(footer, /getProfile/);
+  assert.match(footer, /editorial-footer/);
   assert.match(footer, /new Date\(\)\.getFullYear\(\)/);
-  assert.doesNotMatch(footer, /<Link|href=/);
-  assert.match(footerStyles, /footer_ground_tile\.png/);
-  assert.match(footerStyles, /background-repeat: repeat-x/);
-  assert.match(footerStyles, /width: 420px/);
-  assert.match(footerStyles, /width: 336px/);
-  assert.match(footerStyles, /width: min\(220px, calc\(100vw - 24px\)\)/);
-  assert.match(footerStyles, /height: 145px/);
-  assert.match(footerStyles, /image-rendering: pixelated/);
-  assert.match(footerStyles, /pointer-events: none/);
+  assert.match(footer, /<Link/);
   assert.match(chrome, /footer: React\.ReactNode/);
   assert.match(layout, /footer=\{<Footer \/>\}/);
 });

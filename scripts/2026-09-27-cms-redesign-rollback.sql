@@ -1,0 +1,13 @@
+DROP FUNCTION IF EXISTS cms_publish_app(text, jsonb, jsonb);
+DROP TABLE IF EXISTS cms_media;
+DROP TABLE IF EXISTS cms_section;
+DROP TABLE IF EXISTS cms_note;
+DROP TABLE IF EXISTS cms_draft;
+ALTER TABLE app DROP CONSTRAINT IF EXISTS app_publication_status_check;
+ALTER TABLE certificate DROP CONSTRAINT IF EXISTS certificate_publication_status_check;
+ALTER TABLE work_experience DROP CONSTRAINT IF EXISTS work_publication_status_check;
+ALTER TABLE app DROP COLUMN IF EXISTS publication_status;
+ALTER TABLE certificate DROP COLUMN IF EXISTS publication_status;
+ALTER TABLE work_experience DROP COLUMN IF EXISTS publication_status;
+ALTER TABLE app DROP COLUMN IF EXISTS category;
+ALTER TABLE app DROP COLUMN IF EXISTS release_year;

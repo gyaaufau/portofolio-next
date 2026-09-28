@@ -34,7 +34,7 @@ test("authorizes every mutating server action before database access", () => {
     "createApp", "updateApp", "deleteApp", "toggleAppFeatured",
     "createCertificate", "updateCertificate", "deleteCertificate",
     "createWorkExperience", "updateWorkExperience", "deleteWorkExperience",
-    "updateProfile", "updateContact", "updateSkillCategory", "updateSiteSettings",
+    "updateProfile", "updateContact", "updateSkillCategory",
   ];
 
   for (const name of mutations) {

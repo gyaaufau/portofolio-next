@@ -25,7 +25,7 @@ Use:
 **Product:** Gialoop Portfolio
 
 **One-line description:**
-A database-backed Next.js portfolio for Argya Aulia Fauzandika, showcasing Flutter apps, certificates, work experience, and a playable pixel-art hero game. Static assets served from Cloudflare R2.
+A database-backed Next.js portfolio for Argya Aulia Fauzandika, showcasing Flutter apps, certificates, work experience, and a static pixel-art city hero. Static assets served from Cloudflare R2.
 
 **Primary users:**
 - Visitors: recruiters, collaborators, and developers viewing portfolio work
@@ -70,7 +70,7 @@ Responsibilities:
 - Browse app catalog and detail pages
 - Browse certificate list and detail pages
 - Download/view CV
-- Play hero game (if WebGL available)
+- Explore the portfolio from the full-screen city hero
 
 Not the same as:
 
@@ -243,7 +243,7 @@ Managed by Admin via `/admin/appearance`. Singleton record (id="site").
 
 Related concepts:
 
-- `AccentPreset` — "moss" | "ember" | "berry" | "lake" | "custom"
+- `AccentPreset` — "moss" | "ember" | "berry" | "lake" | "custom" (stable stored IDs for warm CTA choices)
 
 Not the same as:
 
@@ -297,29 +297,6 @@ Status:
 
 `current`
 
-### HeroGame
-
-Definition:
-
-A playable game rendered in the hero section. Managed via a typed registry in `src/games/registry.ts`. Currently only "pixel-fighter" (Pixel Duel) is registered.
-
-Lifecycle or ownership:
-
-Defined in `src/games/`. Loaded lazily via dynamic import. Engine: Phaser 4.1.
-
-Related concepts:
-
-- `HeroGameDefinition` — type definition for a registered game
-- `HeroGameId` — type union of registered game IDs
-
-Not the same as:
-
-- Regular portfolio content — HeroGame is interactive, not informational
-
-Status:
-
-`current`
-
 ### AppScreenshot
 
 Definition:
@@ -365,7 +342,7 @@ Visitor Request
 → Next.js Server Component
 → Prisma Query (src/data/db.ts)
 → HTML Response
-→ Client Hydration (ScrollReveal, Navbar, Game)
+→ Client Hydration (ScrollReveal, Navbar)
 ```
 
 ---
@@ -381,7 +358,6 @@ Visitor Request
 | Data queries | `src/data/db.ts` | All Prisma queries (wrapped with `React.cache()`) |
 | Types | `src/data/types.ts` | All TypeScript types |
 | Server Actions | `src/app/admin/actions.ts` | All mutations |
-| Game engine | `src/games/` | Phaser 4.1 |
 | UI components | `src/components/` | Shared + shadcn |
 | Routes | `src/app/` | File-based routing |
 
@@ -420,7 +396,6 @@ For Apps, `id` and `slug` are currently identical. For Certificates, `id` is use
 | Canonical Term | Alias / Historical Name | Guidance |
 |---|---|---|
 | App | Project | Legacy. Use `App` in new code/docs. `/projects` redirects to `/apps`. |
-| HeroGame | FightGame | Legacy. Use `HeroGame` in new code. `public/FIGHTGAME_Assets` is the source art directory. |
 | SiteSettings | Theme Settings | Use `SiteSettings` (matches Prisma model). |
 | AccentPreset | Theme Preset | Use `AccentPreset` (matches TypeScript type). |
 
@@ -437,19 +412,16 @@ For Apps, `id` and `slug` are currently identical. For Certificates, `id` is use
 - `Contact` — fully implemented with update and public display
 - `SkillCategory` — fully implemented with update and public display
 - `SiteSettings` — fully implemented with update and theme injection
-- `HeroGame` — fully implemented with game registry and Phaser engine
 
 ### Reserved / Future Concepts
 
 - `Blog` — route exists (`/blog`) but content is hardcoded; no CMS management
-- `GamePreview` — route directory exists (`/game-preview`) but is empty
 - `HeroLink` — seeded but no admin management UI
 - `DirectoryLink` — seeded but no admin management UI
 
 ### Legacy Concepts
 
 - `Project` — renamed to `App`; `/projects` redirects to `/apps`
-- `FightGame` — renamed to HeroGame; `FIGHTGAME_Assets` is legacy naming in public assets
 
 ---
 

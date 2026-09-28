@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The homepage is the primary entry point for visitors. It presents the full portfolio in a single scrollable page: hero with playable game, featured apps, work experience, skills/about, certificates, and contact.
+The homepage is the primary entry point for visitors. It presents the full portfolio in a single scrollable page: a static pixel city hero, featured apps, work experience, skills/about, certificates, and contact.
 
 ---
 
@@ -22,13 +22,11 @@ This feature does not own:
 - App detail pages (owned by `apps`)
 - Certificate detail pages (owned by `certificates`)
 - Navbar and footer (owned by `public-chrome`)
-- Hero game engine (owned by `hero-game`)
 
 Related features:
 
 - `apps` — displays featured apps; links to `/apps` catalog
 - `certificates` — displays featured certificates; links to `/certificates` list
-- `hero-game` — playable game in hero section
 - `admin` — manages all displayed data
 
 ---
@@ -53,7 +51,7 @@ Primary route(s):
 
 ```text
 Visitor lands on /
-→ Hero section (name, role, intro, game)
+→ Hero section (name, role, intro, city artwork)
 → Scroll down through sections
 → Click "Browse all apps" → /apps
 → Click "View all certificates" → /certificates
@@ -154,8 +152,6 @@ Read rules:
 
 ## External Integrations
 
-- `Canvas 2D` — Active embedded Pixel Fishing game (lazy-loaded)
-- `Phaser 4.1` — Retained Pixel Fighter implementation (loaded only when selected)
 - `JSON-LD` — WebSite and Person schema for SEO
 
 ---
@@ -168,7 +164,7 @@ Read rules:
 | No apps exist | Empty state (no featured apps section) |
 | No certificates exist | Empty state (no certificates section) |
 | No work experience | Empty state (no experience section) |
-| Game fails to load | CSS idle preview remains visible |
+| Hero artwork fails to load | Intro content remains readable over the hero background |
 
 ---
 

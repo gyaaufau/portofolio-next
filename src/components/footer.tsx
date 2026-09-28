@@ -1,44 +1,17 @@
-import Image from "next/image";
-import { siteConfig } from "@/data/seo";
+import Link from "next/link";
+import { getContact, getProfile } from "@/data/db";
 import { formatCopyrightYear } from "@/lib/copyright";
-import styles from "./footer.module.css";
 
-export function Footer() {
+export async function Footer() {
   const copyrightYear = formatCopyrightYear(new Date().getFullYear());
+  const [profile, contact] = await Promise.all([getProfile(), getContact()]);
 
   return (
-    <footer className={`${styles.footer} mb-20 mt-8 md:mb-0`}>
-      <div className={styles.copyright}>
-        <span>© {copyrightYear} {siteConfig.personName}</span>
-      </div>
-
-      <div className={styles.environment} aria-hidden="true">
-        <div className={styles.ground} />
-        <Image
-          src="/assets/pixel-ornaments/footer/footer_left_environment.png"
-          alt=""
-          width={240}
-          height={128}
-          unoptimized
-          className={`${styles.artwork} ${styles.leftEnvironment}`}
-        />
-        <Image
-          src="/assets/pixel-ornaments/footer/footer_utility_cluster.png"
-          alt=""
-          width={420}
-          height={220}
-          unoptimized
-          className={`${styles.artwork} ${styles.utilityCluster}`}
-        />
-        <Image
-          src="/assets/pixel-ornaments/footer/footer_mobile_utility_cluster.png"
-          alt=""
-          width={260}
-          height={160}
-          unoptimized
-          className={`${styles.artwork} ${styles.mobileUtilityCluster}`}
-        />
-      </div>
+    <footer className="editorial-footer">
+      <div><strong>{profile.name}</strong><p>{profile.role}</p><Link href={contact.github}>GitHub</Link><Link href={contact.linkedin}>LinkedIn</Link></div>
+      <div><span>Pages</span><Link href="/">Home</Link><Link href="/apps">Apps</Link><Link href="/blog">Notes</Link><Link href="/cv">CV</Link></div>
+      <div><span>Contact</span><Link href={`mailto:${contact.email}`}>{contact.email}</Link><Link href={contact.whatsapp}>WhatsApp</Link></div>
+      <small>© {copyrightYear} {profile.name}</small>
     </footer>
   );
 }

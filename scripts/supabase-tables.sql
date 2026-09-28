@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS skill_category (
 
 CREATE TABLE IF NOT EXISTS site_settings (
   id TEXT PRIMARY KEY DEFAULT 'site',
-  accent_preset TEXT DEFAULT 'moss',
-  accent_color TEXT DEFAULT '#4F7A68',
+  accent_preset TEXT DEFAULT 'ember',
+  accent_color TEXT DEFAULT '#C45132',
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
