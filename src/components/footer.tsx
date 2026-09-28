@@ -8,10 +8,26 @@ export async function Footer() {
 
   return (
     <footer className="editorial-footer">
-      <div><strong>{profile.name}</strong><p>{profile.role}</p><Link href={contact.github}>GitHub</Link><Link href={contact.linkedin}>LinkedIn</Link></div>
-      <div><span>Pages</span><Link href="/">Home</Link><Link href="/apps">Apps</Link><Link href="/blog">Notes</Link><Link href="/cv">CV</Link></div>
-      <div><span>Contact</span><Link href={`mailto:${contact.email}`}>{contact.email}</Link><Link href={contact.whatsapp}>WhatsApp</Link></div>
-      <small>© {copyrightYear} {profile.name}</small>
+      <div className="editorial-footer-main">
+        <div className="editorial-footer-brand">
+          <Link href="/" className="editorial-footer-name">{profile.name}</Link>
+          <p>{profile.role}</p>
+        </div>
+        <nav aria-label="Footer navigation" className="editorial-footer-links">
+          <Link href="/">Home</Link>
+          <Link href="/apps">Apps</Link>
+          <Link href="/blog">Notes</Link>
+          <Link href="/cv">CV</Link>
+        </nav>
+      </div>
+      <div className="editorial-footer-meta">
+        <div className="editorial-footer-contact">
+          <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
+          <Link href={contact.github} target="_blank" rel="noreferrer">GitHub</Link>
+          <Link href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</Link>
+        </div>
+        <small>© {copyrightYear} {profile.name}</small>
+      </div>
     </footer>
   );
 }

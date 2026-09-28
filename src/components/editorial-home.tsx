@@ -56,7 +56,23 @@ function Notes({ notes }: { notes: NoteItem[] }) {
 }
 
 function Contact({ profile, contact }: { profile: Profile; contact: Contact }) {
-  return <section id="contact" className="editorial-contact"><span>AVAILABLE FOR THOUGHTFUL COLLABORATIONS</span><div><h2>Let&apos;s make something feel effortless.</h2><div><Link className="editorial-button" href={`mailto:${contact.email}`}>Start a conversation <ArrowUpRight size={16} /></Link><p>{contact.email}</p><p>{[profile.location, contact.github ? "GitHub" : ""].filter(Boolean).join(" · ")}</p></div></div></section>;
+  return <section id="contact" className="editorial-contact">
+    <span className="editorial-contact-eyebrow">AVAILABLE FOR THOUGHTFUL COLLABORATIONS</span>
+    <div className="editorial-contact-layout">
+      <div className="editorial-contact-copy">
+        <h2>Let&apos;s make something feel effortless.</h2>
+        <p>Have a mobile product in mind? I can help shape the architecture, ship the first version, or untangle the hard parts.</p>
+      </div>
+      <div className="editorial-contact-action">
+        <Link className="editorial-button" href={`mailto:${contact.email}`}>Start a conversation <ArrowUpRight size={16} /></Link>
+        <div className="editorial-contact-details">
+          <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
+          <span>{profile.location}</span>
+          {contact.github ? <Link href={contact.github} target="_blank" rel="noreferrer">GitHub ↗</Link> : null}
+        </div>
+      </div>
+    </div>
+  </section>;
 }
 
 export function EditorialHome({ profile, contact, apps, certificates, experience, skills, notes, sections, hasConfiguredSections }: HomeProps) {
