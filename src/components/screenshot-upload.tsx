@@ -46,6 +46,10 @@ export function ScreenshotUpload({
           continue;
         }
 
+        const bitmap = await createImageBitmap(file);
+        const { width, height } = bitmap;
+        bitmap.close();
+
         const ext = file.name.split(".").pop() || "webp";
         const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
         const filePath = `${path.replace(/\/$/, "")}/${fileName}`;
@@ -68,6 +72,8 @@ export function ScreenshotUpload({
 
         newScreenshots.push({
           src: publicUrl,
+          width,
+          height,
           alt: file.name.replace(/\.[^.]+$/, ""),
           order: screenshots.length + newScreenshots.length,
         });
@@ -120,6 +126,8 @@ export function ScreenshotUpload({
           <input type="hidden" name={`screenshotSrc_${i}`} value={s.src} />
           <input type="hidden" name={`screenshotAlt_${i}`} value={s.alt} />
           <input type="hidden" name={`screenshotOrder_${i}`} value={s.order} />
+          <input type="hidden" name={`screenshotWidth_${i}`} value={s.width ?? 0} />
+          <input type="hidden" name={`screenshotHeight_${i}`} value={s.height ?? 0} />
           {s.id && <input type="hidden" name={`screenshotId_${i}`} value={s.id} />}
         </div>
       ))}

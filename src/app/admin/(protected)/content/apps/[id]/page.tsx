@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { screenshotDimensions } from "@/lib/screenshots";
 import { supportEmailOrDefault } from "@/lib/support";
 import { notFound } from "next/navigation";
 import { getCmsDraft } from "@/lib/cms-data";
@@ -33,7 +34,7 @@ export default async function CmsAppEditor({ params, searchParams }: { params: P
   const legalFlag = (name: string, column: string) => draft?.[name] !== undefined ? draft[name] === "on" : Boolean(app?.[column]);
   const legalHtml = (name: string, column: string) => <ReactMarkdown>{toLegalMarkdown(String(value(name, column)))}</ReactMarkdown>;
   const screenshots = draft?.screenshotCount !== undefined
-    ? Array.from({ length: Math.max(0,Math.min(50,Number(draft.screenshotCount) || 0)) },(_,index) => ({ src:draft[`screenshotSrc_${index}`] || "", alt:draft[`screenshotAlt_${index}`] || "", order:index })).filter((shot) => shot.src)
+    ? Array.from({ length: Math.max(0,Math.min(50,Number(draft.screenshotCount) || 0)) },(_,index) => ({ src:draft[`screenshotSrc_${index}`] || "", alt:draft[`screenshotAlt_${index}`] || "", order:index, ...screenshotDimensions(draft[`screenshotWidth_${index}`], draft[`screenshotHeight_${index}`]) })).filter((shot) => shot.src)
     : (app?.app_screenshot ?? []).map((shot: { id: string; src: string; alt: string; order: number }) => ({ ...shot }));
   return <div className="cms-editor"><div className="cms-page-head"><div><div className="cms-eyebrow">Content / Apps / {id === "new" ? "New" : "Edit"}</div><h1>{value("title") || "Add an app."}</h1><p>{draft ? "Unsaved changes restored. Save to apply them to your site." : app ? "Changes go live when saved." : "Add your app and save it to your portfolio."}</p></div><Link href="/admin/content?type=app" className="cms-button">← Content</Link></div>
     {(notice.saved || notice.published || notice.error) && <div className="cms-flash" role="status">{notice.error ? decodeURIComponent(notice.error) : "App saved."}</div>}

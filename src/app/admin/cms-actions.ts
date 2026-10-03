@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { draftEntityId, slugify } from "@/lib/cms-content";
 import { appLegalFields, appSupportFields } from "@/lib/cms-app";
+import { screenshotDimensions } from "@/lib/screenshots";
 import { publishDraftBatch } from "@/lib/cms-publish";
 import { createAdminClient } from "@/utils/supabase/admin";
 
@@ -93,7 +94,7 @@ async function publishRecord(draft: DraftRecord) {
       if (!Number.isInteger(count) || count < 0 || count > 50) throw new Error("Invalid screenshot count.");
       screenshots = Array.from({ length: count }, (_, index) => ({
         app_id: id, src: p[`screenshotSrc_${index}`] || "", alt: p[`screenshotAlt_${index}`] || "",
-        order: index, width: 0, height: 0,
+        order: index, ...screenshotDimensions(p[`screenshotWidth_${index}`], p[`screenshotHeight_${index}`]),
       })).filter((item) => item.src);
     }
     const result = await db.rpc("cms_publish_app", { p_id: id, p_record: record, p_screenshots: screenshots });

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { screenshotDimensions } from "../src/lib/screenshots";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
@@ -11,6 +12,7 @@ type Row = Record<string, unknown>;
 function cmsActions() {
   const tables: Record<string, Row[]> = { app:[], cms_note:[], certificate:[], work_experience:[], cms_draft:[], cms_section:[] };
   const paths: string[] = [];
+  let screenshotWrites: Row[] | null | undefined;
   let failure = false;
   let authorized = true;
   let databaseAccess = 0;
@@ -49,10 +51,12 @@ function cmsActions() {
     "next/navigation": { redirect:(path: string) => { throw new Error(`Redirect:${path}`); } },
     "@/lib/auth": { requireAdmin:async () => { if (!authorized) throw new Error("Unauthorized"); } },
     "@/lib/cms-content": { draftEntityId, slugify },
+    "@/lib/screenshots": { screenshotDimensions },
     "@/lib/cms-app": { appLegalFields, appSupportFields },
     "@/lib/cms-publish": { publishDraftBatch },
-    "@/utils/supabase/admin": { createAdminClient:() => ({ from, rpc:async (_: string, args: { p_record: Row }) => {
+    "@/utils/supabase/admin": { createAdminClient:() => ({ from, rpc:async (_: string, args: { p_record: Row; p_screenshots: Row[] | null }) => {
       if (failure) return { error:{ message:"Database unavailable" } };
+      screenshotWrites = args.p_screenshots;
       const existing = tables.app.find((row) => row.id === args.p_record.id);
       if (existing) Object.assign(existing, args.p_record); else tables.app.push({ ...args.p_record });
       return { error:null };
@@ -64,7 +68,7 @@ function cmsActions() {
     if (!(name in imports)) throw new Error(`Unexpected import:${name}`);
     return imports[name];
   } });
-  return { exports, tables, paths, fail:() => { failure = true; }, deny:() => { authorized = false; }, accesses:() => databaseAccess };
+  return { exports, tables, paths, screenshots: () => screenshotWrites, fail:() => { failure = true; }, deny:() => { authorized = false; }, accesses:() => databaseAccess };
 }
 function appForm() {
   const form = new FormData();
@@ -170,4 +174,23 @@ test("invalid support emails fail without publishing or deleting restored change
   assert.match(result?.error || "", /valid support email/);
   assert.equal(state.tables.app.length, 0);
   assert.equal(state.tables.cms_draft.length, 1);
+});
+
+
+test("saving screenshot uploads preserves dimensions and reordered positions", async () => {
+  const state = cmsActions();
+  const form = appForm();
+  form.set("screenshotCount", "2");
+  for (const [index, width, height] of [[0, 223, 483], [1, 1200, 800]]) {
+    form.set(`screenshotSrc_${index}`, `https://example.com/shot-${index}.png`);
+    form.set(`screenshotAlt_${index}`, `Screenshot ${index}`);
+    form.set(`screenshotWidth_${index}`, String(width));
+    form.set(`screenshotHeight_${index}`, String(height));
+  }
+  assert.equal(await state.exports.saveCmsContent("app", "new", form), undefined);
+  assert.equal(state.screenshots()?.[0].width, 223);
+  assert.equal(state.screenshots()?.[0].height, 483);
+  assert.equal(state.screenshots()?.[1].width, 1200);
+  assert.equal(state.screenshots()?.[1].height, 800);
+  assert.equal(state.screenshots()?.[1].order, 1);
 });

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { screenshotDimensions } from "../src/lib/screenshots";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
@@ -24,6 +25,7 @@ function appActions(error: { message: string } | null = null) {
     "@/lib/auth": { requireAdmin: async () => {} },
     "@/utils/supabase/admin": { createAdminClient: () => database },
     "@/lib/legal-content": { validateLegalContent },
+    "@/lib/screenshots": { screenshotDimensions },
     "@/lib/cms-app": { appSupportFields },
   };
   const output = ts.transpileModule(readFileSync("src/app/admin/actions.ts", "utf8"), {

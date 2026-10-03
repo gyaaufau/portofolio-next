@@ -1,5 +1,6 @@
 "use server";
 import { appSupportFields } from "@/lib/cms-app";
+import { screenshotDimensions } from "@/lib/screenshots";
 
 import { cookies } from "next/headers";
 import { storageUrl } from "@/lib/storage";
@@ -98,7 +99,7 @@ export async function createApp(formData: FormData) {
       const alt = data[`screenshotAlt_${i}`];
       const order = Number(data[`screenshotOrder_${i}`] || i);
       if (src) {
-        rows.push({ app_id: slug, src: String(src), alt: String(alt || ""), order, width: 0, height: 0 });
+        rows.push({ app_id: slug, src: String(src), alt: String(alt || ""), order, ...screenshotDimensions(data[`screenshotWidth_${i}`], data[`screenshotHeight_${i}`]) });
       }
     }
     if (rows.length > 0) {
@@ -169,7 +170,7 @@ export async function updateScreenshots(appId: string, formData: FormData) {
   const supabase = await getSupabase();
 
   const count = Number(formData.get("screenshotCount") || 0);
-  const screenshots: { src: string; alt: string; order: number; id?: string }[] = [];
+  const screenshots: { src: string; alt: string; order: number; id?: string; width: number; height: number }[] = [];
 
   for (let i = 0; i < count; i++) {
     const src = formData.get(`screenshotSrc_${i}`) as string;
@@ -177,7 +178,7 @@ export async function updateScreenshots(appId: string, formData: FormData) {
     const order = Number(formData.get(`screenshotOrder_${i}`) || i);
     const id = formData.get(`screenshotId_${i}`) as string | null;
     if (src) {
-      screenshots.push({ src, alt: alt || "", order, id: id || undefined });
+      screenshots.push({ src, alt: alt || "", order, id: id || undefined, ...screenshotDimensions(formData.get(`screenshotWidth_${i}`), formData.get(`screenshotHeight_${i}`)) });
     }
   }
 
@@ -191,8 +192,8 @@ export async function updateScreenshots(appId: string, formData: FormData) {
       src: s.src,
       alt: s.alt,
       order: s.order,
-      width: 0,
-      height: 0,
+      width: s.width,
+      height: s.height,
     }));
     await supabase.from("app_screenshot").insert(rows);
   }
