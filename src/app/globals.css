@@ -373,6 +373,8 @@ body { font-family: Arial, Helvetica, sans-serif; background-image: none; }
 
 .editorial-legal-content { margin-top: 34px; }.editorial-legal-content > p:first-child { font: 11px ui-monospace, monospace; letter-spacing: .1em; color: var(--editorial-muted); }.editorial-legal-content > h1 { margin: 18px 0 8px; font-size: clamp(42px, 6vw, 70px); line-height: .95; letter-spacing: -.07em; }.editorial-legal-content > h1 + p { margin: 0 0 42px; color: var(--editorial-muted); font-size: 15px; }.editorial-legal-prose { color: #4e5363; font-size: 16px; line-height: 1.7; }.editorial-legal-prose h2, .editorial-legal-prose h3 { margin: 40px 0 14px; color: var(--editorial-ink); letter-spacing: -.04em; }.editorial-legal-prose p, .editorial-legal-prose ul, .editorial-legal-prose ol { margin: 0 0 18px; }.editorial-legal-prose ul, .editorial-legal-prose ol { padding-left: 22px; }.editorial-legal-alert { display: flex; gap: 12px; margin: 0 0 28px; border: 1px solid #d2a33e; border-radius: 12px; background: #fff6dc; padding: 16px; color: #69500c; }.editorial-legal-alert p { margin: 6px 0 0; color: #69500c; }
 
+.editorial-legal-content > .editorial-legal-app-name { margin: 0 0 42px; color: var(--editorial-muted); font-size: 15px; }
+
 /* Work-experience vine rail */
 .work-experience-vine {
   position: absolute;

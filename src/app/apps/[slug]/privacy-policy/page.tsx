@@ -44,8 +44,7 @@ export default async function PrivacyPolicyPage({ params }: Props) {
 
       <div className="editorial-legal-content">
         <p>LEGAL</p>
-        <h1>Privacy Policy</h1>
-        <p>{app.title}</p>
+        <p className="editorial-legal-app-name">{app.title}</p>
 
         <LegalContent content={app.privacyPolicyContent} />
       </div>
