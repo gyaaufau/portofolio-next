@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { draftEntityId, slugify } from "@/lib/cms-content";
+import { appLegalFields } from "@/lib/cms-app";
 import { publishDraftBatch } from "@/lib/cms-publish";
 import { createAdminClient } from "@/utils/supabase/admin";
 
@@ -25,13 +26,14 @@ function readPayload(formData: FormData): Record<string, string> {
 
 async function stageDraft(kind: DraftKind, id: string, formData: FormData) {
   await requireAdmin();
+  if (kind !== "note") throw new Error("Only notes support drafts.");
   const payload = readPayload(formData);
-  const entityId = id === "new" ? (kind === "experience" ? crypto.randomUUID() : draftEntityId(payload.title || payload.role || payload.label || "")) : id;
+  const entityId = id === "new" ? draftEntityId(payload.title || "") : id;
   const title = (payload.title || payload.role || payload.label || "").trim();
   if (!title) throw new Error("A title is required.");
   const db = createAdminClient();
-  if (id === "new" && (kind === "app" || kind === "note" || kind === "certificate")) {
-    const table = kind === "app" ? "app" : kind === "note" ? "cms_note" : "certificate";
+  if (id === "new") {
+    const table = "cms_note";
     const existing = await db.from(table).select("id").eq("id", entityId).maybeSingle();
     if (existing.error) throw new Error(existing.error.message);
     if (existing.data) throw new Error("An entry with this title already exists.");
@@ -64,7 +66,13 @@ async function publishRecord(draft: DraftRecord) {
     if (!p.title?.trim() || !slug) throw new Error("App title and slug are required.");
     const existing = await db.from("app").select("sort_order,other_url,other_url_label,app_icon_alt,thumbnail_alt,app_icon_src,thumbnail_src").eq("id",id).maybeSingle();
     if (existing.error) throw new Error(existing.error.message);
+    let sections: unknown;
+    if (p.sections !== undefined) {
+      try { sections = JSON.parse(p.sections || "[]"); } catch { throw new Error("Additional sections must be valid JSON."); }
+      if (!Array.isArray(sections)) throw new Error("Additional sections must be a JSON array.");
+    }
     const record = {
+      ...(sections !== undefined ? { sections } : {}),
       id, slug, title: p.title.trim(), tagline: p.tagline || "", description: p.description || "",
       featured: p.featured === "on", app_type: p.appType || "mobile", work_type: p.workType || "personal",
       period: p.period || "", period_short: p.periodShort || "", sort_order: Number(p.sortOrder ?? existing.data?.sort_order ?? 0),
@@ -75,6 +83,7 @@ async function publishRecord(draft: DraftRecord) {
       thumbnail_src: p.thumbnailSrc || existing.data?.thumbnail_src || "/data/myself/me.webp", thumbnail_alt: p.thumbnailAlt ?? existing.data?.thumbnail_alt ?? "",
       stack: (p.stack || "").split(",").map((v) => v.trim()).filter(Boolean),
       highlights: (p.highlights || "").split("\n").map((v) => v.trim()).filter(Boolean),
+      ...appLegalFields(p),
       publication_status: "published", updated_at: new Date().toISOString(),
     };
     let screenshots: Array<{ app_id: string; src: string; alt: string; order: number; width: number; height: number }> | null = null;
@@ -119,16 +128,6 @@ async function publishRecord(draft: DraftRecord) {
       publication_status:"published", updated_at:new Date().toISOString(),
     }, { onConflict:"id" });
     error = result.error;
-  } else if (draft.kind === "section") {
-    const result = await db.from("cms_section").upsert({
-      id, label: p.label || id, anchor: p.anchor || `#${id}`, sort_order: Number(p.sortOrder || 0),
-      visible: p.visible === "on", settings: {
-        headline: p.headline || "", subheadline: p.subheadline || "", cta: p.cta || "",
-        heroAppId: p.heroAppId || "", metrics: (() => { try { const value: unknown = JSON.parse(p.metrics || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } })(),
-      },
-      updated_at: new Date().toISOString(),
-    }, { onConflict: "id" });
-    error = result.error;
   } else {
     throw new Error(`Publishing ${draft.kind} drafts is not available.`);
   }
@@ -136,6 +135,7 @@ async function publishRecord(draft: DraftRecord) {
   revalidatePath("/admin");
   revalidatePath("/admin/content");
   revalidatePath(routeFor(draft.kind, id));
+  revalidatePath("/", "layout");
 }
 
 async function removeDraft(draft: DraftRecord) {
@@ -146,6 +146,7 @@ async function removeDraft(draft: DraftRecord) {
 
 export async function publishCmsDraft(kind: DraftKind, id: string) {
   await requireAdmin();
+  if (kind !== "note") throw new Error("Only notes can be published.");
   const db = createAdminClient();
   const { data, error } = await db.from("cms_draft").select("kind,entity_id,payload,title").eq("kind", kind).eq("entity_id", id).single();
   if (error || !data) redirect(`${routeFor(kind, id)}?error=missing-draft`);
@@ -164,33 +165,69 @@ export async function saveAndPublishCmsDraft(kind: DraftKind, id: string, formDa
 export async function publishAllCmsDrafts() {
   await requireAdmin();
   const db = createAdminClient();
-  const { data, error } = await db.from("cms_draft").select("kind,entity_id,payload,title").order("updated_at");
+  const { data, error } = await db.from("cms_draft").select("kind,entity_id,payload,title").eq("kind", "note").order("updated_at");
   if (error) redirect(`/admin?error=${encodeURIComponent(error.message)}`);
   const outcome = await publishDraftBatch((data ?? []) as DraftRecord[],publishRecord,removeDraft,(draft) => `${draft.kind}:${draft.entity_id}`);
   const details = outcome.failed.slice(0, 3).map((failure) => `${failure.id}: ${failure.message}`).join(" | ");
-  redirect(`/admin?published=${outcome.succeeded}&failed=${outcome.failed.length}&details=${encodeURIComponent(details)}`);
+  redirect(`/admin/content?type=note&published=${outcome.succeeded}&failed=${outcome.failed.length}&details=${encodeURIComponent(details)}`);
+}
+
+/** Direct saving never stages new drafts. Legacy changes are removed only after saving. */
+export async function saveCmsContent(kind: DraftKind, id: string, formData: FormData) {
+  await requireAdmin();
+  try {
+    if (!["app", "certificate", "experience"].includes(kind)) throw new Error("Unsupported content type.");
+    const payload = readPayload(formData);
+    const title = (payload.title || payload.role || "").trim();
+    if (!title) throw new Error("A title is required.");
+    const entityId = id === "new" ? (kind === "experience" ? crypto.randomUUID() : draftEntityId(title)) : id;
+    if (id === "new") {
+      const db = createAdminClient();
+      const table = kind === "app" ? "app" : kind === "certificate" ? "certificate" : "work_experience";
+      const existing = await db.from(table).select("id").eq("id", entityId).maybeSingle();
+      if (existing.error) throw new Error(existing.error.message);
+      const staged = await db.from("cms_draft").select("id").eq("kind", kind).eq("entity_id", entityId).maybeSingle();
+      if (staged.error) throw new Error(staged.error.message);
+      if (existing.data || staged.data) throw new Error("An entry with this title already exists. Open it from its content tab.");
+    }
+    const record = { kind, entity_id: entityId, payload, title };
+    await publishRecord(record);
+    await removeDraft(record);
+  } catch (failure) {
+    return { error:failure instanceof Error ? failure.message : "Unable to save changes. Please try again." };
+  }
 }
 
 export async function saveCmsSections(formData: FormData) {
   await requireAdmin();
-  const value = formData.get("sections");
-  const parsed: unknown = JSON.parse(String(value || "[]"));
-  if (!Array.isArray(parsed) || parsed.length > 30) throw new Error("Invalid sections.");
-  const db = createAdminClient();
-  for (const [index, item] of parsed.entries()) {
-    if (!item || typeof item !== "object") throw new Error("Invalid section.");
-    const section = item as Record<string, unknown>;
-    const id = String(section.id || "");
-    if (!/^[a-z0-9-]+$/.test(id)) throw new Error("Invalid section ID.");
-    const payload = {
-      label: String(section.label || id), anchor: String(section.anchor || `#${id}`),
-      sortOrder: String(index), visible: section.visible ? "on" : "",
-      headline: String(section.headline || ""), subheadline: String(section.subheadline || ""), cta: String(section.cta || ""),
-      heroAppId: String(section.heroAppId || ""), metrics: JSON.stringify(Array.isArray(section.metrics) ? section.metrics : []),
-    };
-    const { error } = await db.from("cms_draft").upsert({ kind: "section", entity_id: id, title: payload.label, payload, updated_at: new Date().toISOString() }, { onConflict: "kind,entity_id" });
-    if (error) throw new Error(error.message);
+  try {
+    const parsed: unknown = JSON.parse(String(formData.get("sections") || "[]"));
+    if (!Array.isArray(parsed) || parsed.length > 30) throw new Error("Invalid sections.");
+    const ids = new Set<string>();
+    const records = parsed.map((item, index) => {
+      if (!item || typeof item !== "object") throw new Error("Invalid section.");
+      const section = item as Record<string, unknown>;
+      const id = String(section.id || "");
+      if (!/^[a-z0-9-]+$/.test(id) || ids.has(id)) throw new Error("Invalid or duplicate section ID.");
+      ids.add(id);
+      return {
+        id, label:String(section.label || id), anchor:String(section.anchor || `#${id}`),
+        sort_order:index, visible:Boolean(section.visible),
+        settings: { headline:String(section.headline || ""), subheadline:String(section.subheadline || ""), cta:String(section.cta || ""), heroAppId:String(section.heroAppId || ""), metrics:Array.isArray(section.metrics) ? section.metrics : [] },
+        updated_at:new Date().toISOString(),
+      };
+    });
+    if (records.length) {
+      const db = createAdminClient();
+      const result = await db.from("cms_section").upsert(records, { onConflict:"id" });
+      if (result.error) throw new Error(result.error.message);
+      const removed = await db.from("cms_draft").delete().eq("kind","section").in("entity_id", [...ids]);
+      if (removed.error) throw new Error(removed.error.message);
+    }
+    revalidatePath("/admin/sections");
+    revalidatePath("/admin");
+    revalidatePath("/");
+  } catch (failure) {
+    return { error:failure instanceof Error ? failure.message : "Unable to save changes. Please try again." };
   }
-  revalidatePath("/admin/sections");
-  redirect("/admin/sections?saved=1");
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import type { CmsSaveAction } from "@/lib/cms-content";
+import { CmsSaveForm, CmsSubmitButton } from "@/components/cms-save-form";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
 import { Input } from "@/components/ui/input";
@@ -12,9 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type CertFormProps = {
-  action: (formData: FormData) => Promise<void>;
-  draftAction?: (formData: FormData) => Promise<void>;
-  publishAction?: (formData: FormData) => Promise<void>;
+  action: CmsSaveAction;
+  hasUnsavedChanges?: boolean;
   initialData?: {
     title?: string;
     issuer?: string;
@@ -33,26 +32,12 @@ type CertFormProps = {
   submitLabel: string;
 };
 
-export function CertForm({ action, draftAction, publishAction, initialData, submitLabel }: CertFormProps) {
-  const router = useRouter();
-  const [state, formAction, pending] = useActionState(
-    async (_: { error?: string } | null, formData: FormData) => {
-      try {
-        await action(formData);
-        router.push("/admin/certificates");
-        router.refresh();
-        return null;
-      } catch (e) {
-        return { error: e instanceof Error ? e.message : "Something went wrong" };
-      }
-    },
-    null
-  );
+export function CertForm({ action, hasUnsavedChanges, initialData, submitLabel }: CertFormProps) {
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" render={<Link href="/admin/certificates" />}>
+        <Button variant="ghost" size="icon" render={<Link href="/admin/content?type=certificate" />}>
           <ChevronLeft className="size-5" />
         </Button>
         <div>
@@ -61,7 +46,8 @@ export function CertForm({ action, draftAction, publishAction, initialData, subm
         </div>
       </div>
 
-      <form action={formAction}>
+      {hasUnsavedChanges && <p role="status">Unsaved changes restored. Save changes to apply them to the site.</p>}
+      <CmsSaveForm action={action} successHref="/admin/content?type=certificate">
         <Card>
           <CardHeader>
             <CardTitle>Details</CardTitle>
@@ -146,20 +132,13 @@ export function CertForm({ action, draftAction, publishAction, initialData, subm
 
         <Card className="mt-6">
           <CardFooter className="justify-between">
-            {state?.error && (
-              <p className="text-sm text-destructive">{state.error}</p>
-            )}
             <div className="flex gap-3 ml-auto">
-              <Button variant="outline" render={<Link href="/admin/certificates" />}>Cancel</Button>
-              {draftAction && <Button type="submit" formAction={draftAction} variant="outline">Save draft</Button>}
-              {publishAction && <Button type="submit" formAction={publishAction} variant="outline">Publish saved draft</Button>}
-              <Button type="submit" disabled={pending}>
-                {pending ? "Publishing..." : submitLabel}
-              </Button>
+              <Button variant="outline" render={<Link href="/admin/content?type=certificate" />}>Cancel</Button>
+              <CmsSubmitButton>{submitLabel}</CmsSubmitButton>
             </div>
           </CardFooter>
         </Card>
-      </form>
+      </CmsSaveForm>
     </div>
   );
 }

@@ -1,6 +1,18 @@
 export type ContentKind = "app" | "note" | "certificate" | "experience" | "skills";
-export type ContentStatus = "draft" | "published";
-export type ContentRow = { id: string; kind: ContentKind; title: string; status: ContentStatus; hasPublished: boolean; updatedAt: string; href: string };
+export type ContentStatus = "draft" | "published" | "unsaved";
+export type ContentRow = { id: string; kind: ContentKind; title: string; status: ContentStatus; hasPublished: boolean; updatedAt: string; href: string; icon?: string; platform?: string; workType?: string; featured?: boolean; privacy?: boolean; accountDeletion?: boolean; summary?: string };
+
+export const contentTabs = [
+  { kind: "app", label: "Apps", createHref: "/admin/content/apps/new", createLabel: "New app" },
+  { kind: "note", label: "Notes / Blog", createHref: "/admin/content/notes/new", createLabel: "New note" },
+  { kind: "experience", label: "Experience", createHref: "/admin/work-experience/new", createLabel: "Add role" },
+  { kind: "certificate", label: "Certificates", createHref: "/admin/certificates/new", createLabel: "New certificate" },
+  { kind: "skills", label: "Skills", createHref: "/admin/skills", createLabel: "Edit skills" },
+] as const;
+
+export function contentTab(type?: string): ContentKind {
+  return contentTabs.find((tab) => tab.kind === type)?.kind ?? "app";
+}
 
 export function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -29,12 +41,15 @@ export function normalizeContentRows(
 ): ContentRow[] {
   const rows = new Map<string, ContentRow>();
   for (const item of published) rows.set(item.id, {
-    id: item.id, kind, title: item.title, status: contentStatus(item), hasPublished: contentStatus(item) === "published",
+    id: item.id, kind, title: item.title, status: kind !== "note" && contentStatus(item) === "draft" ? "unsaved" : contentStatus(item), hasPublished: contentStatus(item) === "published",
     updatedAt: item.updated_at ?? "", href: contentHref(kind, item.id),
   });
   for (const draft of drafts) if (draft.kind === kind) rows.set(draft.entity_id, {
-    id: draft.entity_id, kind, title: draft.title, status: "draft", hasPublished: rows.get(draft.entity_id)?.hasPublished ?? false,
+    ...rows.get(draft.entity_id),
+    id: draft.entity_id, kind, title: draft.title, status: kind === "note" ? "draft" : "unsaved", hasPublished: rows.get(draft.entity_id)?.hasPublished ?? false,
     updatedAt: draft.updated_at ?? "", href: contentHref(kind, draft.entity_id),
   });
   return [...rows.values()];
 }
+
+export type CmsSaveAction = (data: FormData) => Promise<void | { error: string }>;

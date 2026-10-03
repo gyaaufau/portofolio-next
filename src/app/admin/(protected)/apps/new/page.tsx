@@ -1,15 +1,5 @@
-import { createApp } from "@/app/admin/actions";
-import { AppForm } from "../app-form";
+import { redirect } from "next/navigation";
 
 export default function NewAppPage() {
-  return (
-    <AppForm
-      action={async (formData) => {
-        "use server";
-        await createApp(formData);
-      }}
-      submitLabel="Create"
-      showScreenshots
-    />
-  );
+  redirect("/admin/content/apps/new");
 }

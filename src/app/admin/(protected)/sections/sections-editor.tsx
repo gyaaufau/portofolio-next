@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowDown, ArrowUp, GripVertical } from "lucide-react";
+import { CmsSaveForm, CmsSubmitButton } from "@/components/cms-save-form";
 import { saveCmsSections } from "@/app/admin/cms-actions";
 
 export type SectionItem = {
@@ -43,14 +44,14 @@ export function SectionsEditor({ initial, apps }: { initial: SectionItem[]; apps
   }
 
   return (
-    <form action={saveCmsSections} className="cms-section-grid">
+    <CmsSaveForm action={saveCmsSections} className="cms-section-grid">
       <input type="hidden" name="sections" value={JSON.stringify(items)} />
 
       <div className="cms-card">
         <div className="cms-card-heading">
           <span className="cms-mono">Landing sections · drag to reorder</span>
         </div>
-        <p className="cms-help">Changes remain in the CMS until published.</p>
+        <p className="cms-help">Save changes to update section visibility, content, and order immediately.</p>
 
         <div className="cms-section-list">
           {items.map((item, index) => (
@@ -122,8 +123,8 @@ export function SectionsEditor({ initial, apps }: { initial: SectionItem[]; apps
             </>}
           </div>}
         </div>
-        <button className="cms-button cms-button-primary" type="submit">Save section drafts</button>
+        <CmsSubmitButton>Save changes</CmsSubmitButton>
       </aside>
-    </form>
+    </CmsSaveForm>
   );
 }

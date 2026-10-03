@@ -404,10 +404,14 @@ export async function updateSkillCategory(id: string, formData: FormData) {
   const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
 
-  await supabase.from("skill_category").update({
+  const { error } = await supabase.from("skill_category").update({
     items: String(data.items || "").split("\n").filter(Boolean),
   }).eq("id", id);
 
+  if (error) return { error:`Unable to save skills: ${error.message}` };
+  const removed = await supabase.from("cms_draft").delete().eq("kind", "skills").eq("entity_id", id);
+  if (removed.error) return { error:`Skills saved, but unsaved changes could not be cleared: ${removed.error.message}` };
+  revalidatePath("/admin/content");
   revalidatePath("/admin/skills");
   revalidatePath("/");
 }

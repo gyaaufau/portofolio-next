@@ -14,11 +14,11 @@ test("section controls expose a labeled visibility switch and keyboard reorder a
   assert.match(editor, /Move \$\{item\.label\} down/);
 });
 
-test("section changes save the current visibility and visual order as drafts", () => {
+test("section changes save the current visibility and visual order directly", () => {
   const editor = source("src/app/admin/(protected)/sections/sections-editor.tsx");
   const actions = source("src/app/admin/cms-actions.ts");
 
   assert.match(editor, /name="sections" value=\{JSON\.stringify\(items\)\}/);
-  assert.match(actions, /sortOrder: String\(index\), visible: section\.visible \? "on" : ""/);
-  assert.match(actions, /sort_order: Number\(p\.sortOrder \|\| 0\)/);
+  assert.match(actions, /sort_order:index, visible:Boolean\(section\.visible\)/);
+  assert.match(actions, /from\("cms_section"\)\.upsert\(records/);
 });

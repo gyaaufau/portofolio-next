@@ -10,7 +10,7 @@ test("draft edits remain separate from published entries in the library", () => 
   );
   assert.equal(rows.length, 1);
   assert.equal(rows[0].title, "Focus Garden refresh");
-  assert.equal(rows[0].status, "draft");
+  assert.equal(rows[0].status, "unsaved");
   assert.equal(rows[0].href, "/admin/content/apps/garden");
 });
 
