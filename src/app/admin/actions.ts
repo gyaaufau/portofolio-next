@@ -11,6 +11,7 @@ import {
   requireAdmin,
 } from "@/lib/auth";
 import { createAdminClient } from "@/utils/supabase/admin";
+import { validateLegalContent } from "@/lib/legal-content";
 
 function getSupabase() {
   return createAdminClient();
@@ -49,9 +50,10 @@ export async function createApp(formData: FormData) {
   await requireAdmin();
   const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
+  validateLegalContent(data);
   const slug = String(data.slug || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
-  await supabase.from("app").insert({
+  const { error } = await supabase.from("app").insert({
     id: slug,
     title: String(data.title),
     slug,
@@ -82,6 +84,7 @@ export async function createApp(formData: FormData) {
     account_deletion_content: String(data.accountDeletionContent || ""),
     account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
   });
+  if (error) throw new Error(`Unable to save app: ${error.message}`);
 
   // Save screenshots if provided
   const count = Number(data.screenshotCount || 0);
@@ -96,11 +99,15 @@ export async function createApp(formData: FormData) {
       }
     }
     if (rows.length > 0) {
-      await supabase.from("app_screenshot").insert(rows);
+      const { error } = await supabase.from("app_screenshot").insert(rows);
+      if (error) throw new Error(`App saved, but screenshots failed: ${error.message}`);
     }
   }
 
   revalidatePath("/admin/apps");
+  revalidatePath(`/apps/${slug}`);
+  revalidatePath(`/apps/${slug}/privacy-policy`);
+  revalidatePath(`/apps/${slug}/account-deletion`);
   revalidatePath("/apps");
   revalidatePath("/");
 }
@@ -109,8 +116,9 @@ export async function updateApp(id: string, formData: FormData) {
   await requireAdmin();
   const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
+  validateLegalContent(data);
 
-  await supabase.from("app").update({
+  const { data: savedApp, error } = await supabase.from("app").update({
     title: String(data.title),
     tagline: String(data.tagline || ""),
     description: String(data.description || ""),
@@ -138,10 +146,13 @@ export async function updateApp(id: string, formData: FormData) {
     has_account_deletion: data.hasAccountDeletion === "on",
     account_deletion_content: String(data.accountDeletionContent || ""),
     account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
-  }).eq("id", id);
+  }).eq("id", id).select("slug").single();
+  if (error) throw new Error(`Unable to save app: ${error.message}`);
 
   revalidatePath("/admin/apps");
-  revalidatePath(`/apps/${id}`);
+  revalidatePath(`/apps/${savedApp.slug}`);
+  revalidatePath(`/apps/${savedApp.slug}/privacy-policy`);
+  revalidatePath(`/apps/${savedApp.slug}/account-deletion`);
   revalidatePath("/apps");
   revalidatePath("/");
 }

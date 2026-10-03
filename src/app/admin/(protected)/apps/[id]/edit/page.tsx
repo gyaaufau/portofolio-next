@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { updateApp, updateScreenshots } from "@/app/admin/actions";
 import { AppForm } from "../../app-form";
 import { ScreenshotUpload } from "@/components/screenshot-upload";
+import { toLegalMarkdown } from "@/lib/legal-content";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function EditAppPage({ params }: { params: Promise<{ id: st
 
   if (!app) notFound();
 
-  const slug = app.title?.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") || "app";
+  const slug = app.slug;
   const screenshots = (app.app_screenshot ?? [])
     .sort((a: { order: number }, b: { order: number }) => a.order - b.order)
     .map((s: { id: string; src: string; alt: string; width: number; height: number; order: number }) => ({
@@ -61,6 +62,11 @@ export default async function EditAppPage({ params }: { params: Promise<{ id: st
           highlights: app.highlights,
           sections: app.sections as unknown,
           slug,
+          hasPrivacyPolicy: app.has_privacy_policy ?? false,
+          privacyPolicyContent: toLegalMarkdown(app.privacy_policy_content ?? ""),
+          hasAccountDeletion: app.has_account_deletion ?? false,
+          accountDeletionContent: toLegalMarkdown(app.account_deletion_content ?? ""),
+          accountDeletionRequiresAuth: app.account_deletion_requires_auth ?? false,
         }}
         submitLabel="Update"
       />

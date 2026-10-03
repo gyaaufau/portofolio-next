@@ -3,6 +3,7 @@ import { absoluteUrl } from "@/data/seo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { BackLink } from "@/components/back-link";
+import { LegalContent } from "@/components/legal-content";
 
 export const dynamic = "force-dynamic";
 
@@ -46,10 +47,7 @@ export default async function PrivacyPolicyPage({ params }: Props) {
         <h1>Privacy Policy</h1>
         <p>{app.title}</p>
 
-        <div
-          className="editorial-legal-prose"
-          dangerouslySetInnerHTML={{ __html: app.privacyPolicyContent }}
-        />
+        <LegalContent content={app.privacyPolicyContent} />
       </div>
     </main>
   );

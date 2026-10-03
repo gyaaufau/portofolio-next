@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
 import { ScreenshotUpload } from "@/components/screenshot-upload";
-import { RichTextEditor } from "@/components/rich-text-editor";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -63,7 +62,9 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [appType, setAppType] = useState(initialData?.appType ?? "mobile");
   const [hasPrivacyPolicy, setHasPrivacyPolicy] = useState(initialData?.hasPrivacyPolicy ?? false);
+  const [privacyPolicyContent, setPrivacyPolicyContent] = useState(initialData?.privacyPolicyContent ?? "");
   const [hasAccountDeletion, setHasAccountDeletion] = useState(initialData?.hasAccountDeletion ?? false);
+  const [accountDeletionContent, setAccountDeletionContent] = useState(initialData?.accountDeletionContent ?? "");
   const [accountDeletionRequiresAuth, setAccountDeletionRequiresAuth] = useState(initialData?.accountDeletionRequiresAuth ?? false);
   const slug = useMemo(() => {
     if (initialData?.slug) return initialData.slug;
@@ -296,10 +297,16 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
                 </div>
                 {hasPrivacyPolicy && (
                   <div className="space-y-2">
-                    <Label>Privacy Policy Content</Label>
-                    <RichTextEditor
+                    <Label htmlFor="privacyPolicyContent">Privacy Policy Content (Markdown)</Label>
+                    <p className="text-xs text-muted-foreground">Paste Markdown. Use ## for headings, **bold** for emphasis, and - for lists.</p>
+                    <Textarea
+                      id="privacyPolicyContent"
                       name="privacyPolicyContent"
-                      defaultValue={initialData?.privacyPolicyContent ?? ""}
+                      value={privacyPolicyContent}
+                      onChange={(event) => setPrivacyPolicyContent(event.target.value)}
+                      rows={18}
+                      className="font-mono"
+                      required
                     />
                   </div>
                 )}
@@ -320,10 +327,15 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
                 {hasAccountDeletion && (
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label>Account Deletion Content</Label>
-                      <RichTextEditor
+                      <Label htmlFor="accountDeletionContent">Account Deletion Content (Markdown)</Label>
+                      <Textarea
+                        id="accountDeletionContent"
                         name="accountDeletionContent"
-                        defaultValue={initialData?.accountDeletionContent ?? ""}
+                        value={accountDeletionContent}
+                        onChange={(event) => setAccountDeletionContent(event.target.value)}
+                        rows={12}
+                        className="font-mono"
+                        required
                       />
                     </div>
                     <div className="flex items-center gap-3">
