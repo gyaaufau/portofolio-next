@@ -1,4 +1,5 @@
 "use server";
+import { appSupportFields } from "@/lib/cms-app";
 
 import { cookies } from "next/headers";
 import { storageUrl } from "@/lib/storage";
@@ -51,6 +52,7 @@ export async function createApp(formData: FormData) {
   const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
   validateLegalContent(data);
+  const supportFields = appSupportFields(data);
   const slug = String(data.slug || data.title).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 
   const { error } = await supabase.from("app").insert({
@@ -83,6 +85,7 @@ export async function createApp(formData: FormData) {
     has_account_deletion: data.hasAccountDeletion === "on",
     account_deletion_content: String(data.accountDeletionContent || ""),
     account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
+    ...supportFields,
   });
   if (error) throw new Error(`Unable to save app: ${error.message}`);
 
@@ -106,6 +109,7 @@ export async function createApp(formData: FormData) {
 
   revalidatePath("/admin/apps");
   revalidatePath(`/apps/${slug}`);
+  revalidatePath(`/apps/${slug}/support`);
   revalidatePath(`/apps/${slug}/privacy-policy`);
   revalidatePath(`/apps/${slug}/account-deletion`);
   revalidatePath("/apps");
@@ -117,6 +121,7 @@ export async function updateApp(id: string, formData: FormData) {
   const supabase = await getSupabase();
   const data = Object.fromEntries(formData);
   validateLegalContent(data);
+  const supportFields = appSupportFields(data);
 
   const { data: savedApp, error } = await supabase.from("app").update({
     title: String(data.title),
@@ -146,11 +151,13 @@ export async function updateApp(id: string, formData: FormData) {
     has_account_deletion: data.hasAccountDeletion === "on",
     account_deletion_content: String(data.accountDeletionContent || ""),
     account_deletion_requires_auth: data.accountDeletionRequiresAuth === "on",
+    ...supportFields,
   }).eq("id", id).select("slug").single();
   if (error) throw new Error(`Unable to save app: ${error.message}`);
 
   revalidatePath("/admin/apps");
   revalidatePath(`/apps/${savedApp.slug}`);
+  revalidatePath(`/apps/${savedApp.slug}/support`);
   revalidatePath(`/apps/${savedApp.slug}/privacy-policy`);
   revalidatePath(`/apps/${savedApp.slug}/account-deletion`);
   revalidatePath("/apps");

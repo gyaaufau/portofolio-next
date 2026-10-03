@@ -1,4 +1,17 @@
 import { toLegalMarkdown, validateLegalContent } from "./legal-content";
+import { supportEmailOrDefault } from "./support";
+
+/** Missing fields come from older forms and must leave saved values intact. */
+export function appSupportFields(payload: Record<string, unknown>) {
+  const fields: Record<string, string> = {};
+  if (payload.supportEmail !== undefined) {
+    const email = supportEmailOrDefault(payload.supportEmail);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Enter a valid support email.");
+    fields.support_email = email;
+  }
+  if (payload.supportContent !== undefined) fields.support_content = toLegalMarkdown(String(payload.supportContent || "")).trim();
+  return fields;
+}
 
 /** Omitted fields belong to older editors; never overwrite their saved values. */
 export function appLegalFields(payload: Record<string, string>) {

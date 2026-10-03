@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
-import { appLegalFields } from "../src/lib/cms-app";
+import { appLegalFields, appSupportFields } from "../src/lib/cms-app";
 import { draftEntityId, slugify } from "../src/lib/cms-content";
 import { publishDraftBatch } from "../src/lib/cms-publish";
 
@@ -49,7 +49,7 @@ function cmsActions() {
     "next/navigation": { redirect:(path: string) => { throw new Error(`Redirect:${path}`); } },
     "@/lib/auth": { requireAdmin:async () => { if (!authorized) throw new Error("Unauthorized"); } },
     "@/lib/cms-content": { draftEntityId, slugify },
-    "@/lib/cms-app": { appLegalFields },
+    "@/lib/cms-app": { appLegalFields, appSupportFields },
     "@/lib/cms-publish": { publishDraftBatch },
     "@/utils/supabase/admin": { createAdminClient:() => ({ from, rpc:async (_: string, args: { p_record: Row }) => {
       if (failure) return { error:{ message:"Database unavailable" } };
@@ -60,7 +60,7 @@ function cmsActions() {
   };
   const output = ts.transpileModule(readFileSync("src/app/admin/cms-actions.ts", "utf8"), { compilerOptions:{ module:ts.ModuleKind.CommonJS, target:ts.ScriptTarget.ES2020 } }).outputText;
   const exports: Record<string, (...args: unknown[]) => Promise<void | { error: string }>> = {};
-  vm.runInNewContext(output, { exports, crypto, require:(name: string) => {
+  vm.runInNewContext(output, { exports, crypto, Error, require:(name: string) => {
     if (!(name in imports)) throw new Error(`Unexpected import:${name}`);
     return imports[name];
   } });
@@ -135,4 +135,39 @@ test("section saving writes live order and visibility without creating drafts", 
   assert.equal(state.tables.cms_section[1].sort_order, 1);
   assert.equal(state.tables.cms_section[1].visible, true);
   assert.equal(state.tables.cms_draft.length, 0);
+});
+
+
+test("CMS saves support content for every platform and preserves omitted fields", async () => {
+  for (const appType of ["mobile", "web", "desktop", "backend"]) {
+    const state = cmsActions();
+    const form = appForm();
+    form.set("appType", appType);
+    form.set("supportEmail", "  help@example.com  ");
+    form.set("supportContent", "<h2>FAQ</h2><p>Restart the app.</p>");
+    assert.equal(await state.exports.saveCmsContent("app", "new", form), undefined);
+    assert.equal(state.tables.app[0].support_email, "help@example.com");
+    assert.equal(state.tables.app[0].support_content, "## FAQ\n\nRestart the app.");
+    assert.ok(state.paths.includes("/"));
+    const legacy = appForm();
+    await state.exports.saveCmsContent("app", "garden", legacy);
+    assert.equal(state.tables.app[0].support_email, "help@example.com");
+    assert.equal(state.tables.app[0].support_content, "## FAQ\n\nRestart the app.");
+    form.set("supportEmail", "");
+    form.set("supportContent", "");
+    await state.exports.saveCmsContent("app", "garden", form);
+    assert.equal(state.tables.app[0].support_email, "gyaaufau@gmail.com");
+    assert.equal(state.tables.app[0].support_content, "");
+  }
+});
+
+test("invalid support emails fail without publishing or deleting restored changes", async () => {
+  const state = cmsActions();
+  state.tables.cms_draft.push({ kind:"app", entity_id:"garden", payload:{ title:"Garden" } });
+  const form = appForm();
+  form.set("supportEmail", "invalid-email");
+  const result = await state.exports.saveCmsContent("app", "garden", form);
+  assert.match(result?.error || "", /valid support email/);
+  assert.equal(state.tables.app.length, 0);
+  assert.equal(state.tables.cms_draft.length, 1);
 });

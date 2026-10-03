@@ -3,6 +3,9 @@
 import { useActionState, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import { RichTextEditor } from "@/components/rich-text-editor";
+import { DEFAULT_SUPPORT_EMAIL } from "@/lib/support";
 import { ChevronLeft } from "lucide-react";
 import { ImageUpload } from "@/components/image-upload";
 import { ScreenshotUpload } from "@/components/screenshot-upload";
@@ -47,6 +50,8 @@ type AppFormProps = {
     highlights?: string[];
     sections?: unknown;
     slug?: string;
+    supportEmail?: string;
+    supportContent?: string;
     hasPrivacyPolicy?: boolean;
     privacyPolicyContent?: string;
     hasAccountDeletion?: boolean;
@@ -275,6 +280,19 @@ export function AppForm({ action, initialData, submitLabel, showScreenshots }: A
               <p className="text-xs text-muted-foreground">Nested sections with paragraphs, bullets, code blocks. Leave empty for none.</p>
               <Textarea name="sections" defaultValue={initialData?.sections ? JSON.stringify(initialData.sections, null, 2) : "[]"} rows={8} className="font-mono" />
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-6">
+          <CardHeader><CardTitle>Support</CardTitle></CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="supportEmail">Support email</Label>
+              <Input id="supportEmail" name="supportEmail" type="email" defaultValue={initialData?.supportEmail ?? DEFAULT_SUPPORT_EMAIL} placeholder={DEFAULT_SUPPORT_EMAIL} />
+              <p className="text-xs text-muted-foreground">Leave blank to use {DEFAULT_SUPPORT_EMAIL}.</p>
+            </div>
+            <RichTextEditor name="supportContent" label="Support content" initialContent={<ReactMarkdown>{initialData?.supportContent ?? ""}</ReactMarkdown>} />
+            <p className="text-xs text-muted-foreground">Optional FAQs or troubleshooting instructions for your public support page.</p>
           </CardContent>
         </Card>
 

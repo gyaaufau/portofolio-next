@@ -52,6 +52,8 @@ export type AppItem = {
   highlights: string[];
   sections: ProjectSection[];
   screenshots: AppScreenshot[];
+  supportEmail: string;
+  supportContent: string;
   hasPrivacyPolicy: boolean;
   privacyPolicyContent: string;
   hasAccountDeletion: boolean;

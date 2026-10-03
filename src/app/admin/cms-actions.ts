@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { draftEntityId, slugify } from "@/lib/cms-content";
-import { appLegalFields } from "@/lib/cms-app";
+import { appLegalFields, appSupportFields } from "@/lib/cms-app";
 import { publishDraftBatch } from "@/lib/cms-publish";
 import { createAdminClient } from "@/utils/supabase/admin";
 
@@ -84,6 +84,7 @@ async function publishRecord(draft: DraftRecord) {
       stack: (p.stack || "").split(",").map((v) => v.trim()).filter(Boolean),
       highlights: (p.highlights || "").split("\n").map((v) => v.trim()).filter(Boolean),
       ...appLegalFields(p),
+      ...appSupportFields(p),
       publication_status: "published", updated_at: new Date().toISOString(),
     };
     let screenshots: Array<{ app_id: string; src: string; alt: string; order: number; width: number; height: number }> | null = null;

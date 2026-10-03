@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { supportEmailOrDefault } from "@/lib/support";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import type {
@@ -41,6 +42,8 @@ function mapApp(row: Record<string, unknown>): AppItem {
 
   return {
     id: row.id as string,
+    supportEmail: supportEmailOrDefault(row.support_email),
+    supportContent: (row.support_content as string) ?? "",
     title: row.title as string,
     slug: row.slug as string,
     tagline: row.tagline as string,

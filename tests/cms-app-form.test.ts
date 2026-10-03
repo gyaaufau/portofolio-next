@@ -26,6 +26,7 @@ test("CMS legal controls preserve text across toggles, platform changes, and sav
       React.createElement(AppEditorForm, {
         isNew:true,
         initial: { platform:"mobile", privacy:true, deletion:true, requiresAuth:true,
+          supportEmail:"help@example.com", supportHtml:React.createElement("p", null, "Support FAQ"),
           privacyHtml:React.createElement("p", null, "Original policy"), deletionHtml:React.createElement("p", null, "Delete your account") },
         action:async (form) => { submitted = form; return { error:"Database unavailable" }; },
       }, React.createElement("section", null,
@@ -37,6 +38,14 @@ test("CMS legal controls preserve text across toggles, platform changes, and sav
     await React.act(async () => { await new Promise((resolve) => setTimeout(resolve, 30)); });
     const form = dom.window.document.querySelector("form")!;
     const data = () => new dom.window.FormData(form);
+    assert.equal(data().get("supportEmail"), "help@example.com");
+    assert.match(String(data().get("supportContent")), /Support FAQ/);
+    const supportEditor = form.querySelector<HTMLElement>('[contenteditable][aria-label="Support content"]')!;
+    await React.act(async () => {
+      supportEditor.innerHTML = "<p>Edited FAQ</p>";
+      supportEditor.dispatchEvent(new dom.window.Event("input", { bubbles:true }));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
     assert.match(String(data().get("privacyPolicyContent")), /Original policy/);
     const policyEditor = form.querySelector<HTMLElement>('[contenteditable][aria-label="Privacy Policy content"]')!;
     await React.act(async () => {
@@ -59,6 +68,17 @@ test("CMS legal controls preserve text across toggles, platform changes, and sav
       platform.dispatchEvent(new dom.window.Event("change", { bubbles:true }));
     });
     assert.equal(form.querySelector<HTMLElement>("#app-legal")!.hidden, true);
+    assert.equal(form.querySelector<HTMLElement>("#app-support")!.hidden, false);
+    assert.match(String(data().get("supportContent")), /Edited FAQ/);
+    for (const value of ["desktop", "backend"]) {
+      platform.add(new dom.window.Option(value, value));
+      await React.act(async () => {
+        platform.value = value;
+        platform.dispatchEvent(new dom.window.Event("change", { bubbles:true }));
+      });
+      assert.equal(form.querySelector<HTMLElement>("#app-support")!.hidden, false);
+      assert.match(String(data().get("supportContent")), /Edited FAQ/);
+    }
     await React.act(async () => {
       platform.value = "mobile";
       platform.dispatchEvent(new dom.window.Event("change", { bubbles:true }));
@@ -67,6 +87,8 @@ test("CMS legal controls preserve text across toggles, platform changes, and sav
     assert.match(String(data().get("privacyPolicyContent")), /Edited policy/);
     await React.act(async () => { form.dispatchEvent(new dom.window.Event("submit", { bubbles:true, cancelable:true })); });
     assert.equal(submitted?.get("title"), "Edited title");
+    assert.equal(submitted?.get("supportEmail"), "help@example.com");
+    assert.match(String(submitted?.get("supportContent")), /Edited FAQ/);
     assert.match(String(submitted?.get("privacyPolicyContent")), /Edited policy/);
     assert.equal(submitted?.get("accountDeletionRequiresAuth"), "on");
     assert.match(dom.window.document.body.textContent || "", /Database unavailable/);

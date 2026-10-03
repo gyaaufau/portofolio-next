@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
+import { appSupportFields } from "../src/lib/cms-app";
 import { validateLegalContent } from "../src/lib/legal-content";
 
 function appActions(error: { message: string } | null = null) {
@@ -23,6 +24,7 @@ function appActions(error: { message: string } | null = null) {
     "@/lib/auth": { requireAdmin: async () => {} },
     "@/utils/supabase/admin": { createAdminClient: () => database },
     "@/lib/legal-content": { validateLegalContent },
+    "@/lib/cms-app": { appSupportFields },
   };
   const output = ts.transpileModule(readFileSync("src/app/admin/actions.ts", "utf8"), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
@@ -61,5 +63,22 @@ test("empty policies fail before a write and database failures do not report suc
     assert.equal(state.saved(), undefined);
     await assert.rejects(invoke(policyForm()), /Unable to save app: Database unavailable/);
     assert.deepEqual(state.paths, []);
+  }
+});
+
+
+test("legacy save actions store support Markdown and refresh support paths", async () => {
+  for (const action of ["createApp", "updateApp"]) {
+    const state = appActions();
+    const form = policyForm();
+    form.set("supportEmail", "  help@example.com  ");
+    form.set("supportContent", "<h2>Help</h2><p>Email us.</p>");
+    const invoke = (data: FormData) => action === "createApp" ? state.exports[action](data) : state.exports[action]("tilejoy", data);
+    await invoke(form);
+    assert.equal(state.saved()?.support_email, "help@example.com");
+    assert.equal(state.saved()?.support_content, "## Help\n\nEmail us.");
+    assert.ok(state.paths.includes(`/apps/${action === "createApp" ? "tilejoy" : "different-slug"}/support`));
+    form.set("supportEmail", "invalid");
+    await assert.rejects(invoke(form), /valid support email/);
   }
 });
